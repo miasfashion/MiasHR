@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {}
+    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
+    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
         "projectName": "MiasHR.Web",
-        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
         "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\obj\\",
+        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

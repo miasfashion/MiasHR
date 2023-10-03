@@ -17,7 +17,7 @@ namespace MiasHR.Api.Repositories
         {
             var dayTimeOffRequests = await this._miasHRDbContext.HrWebRequests
                 .Where(r => r.EmplCode == empl_code
-                    && ).ToListAsync();
+                    && r.ReqType != "CHANGE").ToListAsync();
             return dayTimeOffRequests;
         }
 

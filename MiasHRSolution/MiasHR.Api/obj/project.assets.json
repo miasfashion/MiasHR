@@ -4618,11 +4618,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
+      "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
       "projectName": "MiasHR.Api",
-      "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
+      "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
       "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Api\\obj\\",
+      "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -4646,11 +4646,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
-              "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj"
+            "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
+              "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj"
             },
-            "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
-              "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj"
+            "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
+              "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj"
             }
           }
         }
