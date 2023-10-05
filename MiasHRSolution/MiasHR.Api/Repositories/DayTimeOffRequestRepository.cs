@@ -21,9 +21,5 @@ namespace MiasHR.Api.Repositories
             return dayTimeOffRequests;
         }
 
-        public Task<HrWebRequest> GetDayTimeOffRequest(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
