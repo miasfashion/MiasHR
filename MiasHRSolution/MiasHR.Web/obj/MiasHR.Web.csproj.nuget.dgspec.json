@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {}
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "projectUniqueName": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
         "projectName": "MiasHR.Web",
-        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
         "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\obj\\",
+        "outputPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WinForms.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
         ],
         "originalTargetFrameworks": [
@@ -29,7 +27,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -47,6 +46,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
             "Microsoft.AspNetCore.Components.WebAssembly": {
               "target": "Package",
               "version": "[7.0.11, )"
@@ -55,6 +58,14 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
             }
           },
           "imports": [
@@ -71,7 +82,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[7.0.11, 7.0.11]"
+              "version": "[7.0.10, 7.0.10]"
             }
           ],
           "frameworkReferences": {
@@ -79,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

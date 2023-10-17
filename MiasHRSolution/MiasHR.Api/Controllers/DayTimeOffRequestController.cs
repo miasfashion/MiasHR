@@ -5,7 +5,7 @@ using MiasHR.Models.DTOs;
 
 namespace MiasHR.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DayTimeOffRequestController : ControllerBase
     {
@@ -15,7 +15,8 @@ namespace MiasHR.Api.Controllers
             this._dayTimeOffRequestRepository = dayTimeOffRequestRepository;
         }
 
-        [HttpGet]
+        // Getting for specific Employee
+        [HttpGet("{empl_code}")]
         public async Task<ActionResult<IEnumerable<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequests(string empl_code)
         {
             try

@@ -13,6 +13,7 @@ namespace MiasHR.Api.Repositories
         {
             this._miasHRDbContext = miasHRDbContext;
         }
+
         public async Task<IEnumerable<HrWebRequest>> GetAllEmployeeDayTimeOffRequests(string empl_code)
         {
             var dayTimeOffRequests = await this._miasHRDbContext.HrWebRequests

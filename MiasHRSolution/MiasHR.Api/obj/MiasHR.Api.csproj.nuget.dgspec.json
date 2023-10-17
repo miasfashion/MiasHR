@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj": {}
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj": {
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
+        "projectUniqueName": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
         "projectName": "MiasHR.Api",
-        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
+        "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Api\\MiasHR.Api.csproj",
         "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Api\\obj\\",
+        "outputPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WinForms.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
         ],
         "originalTargetFrameworks": [
@@ -29,17 +27,18 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
-                "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj"
+              "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
+                "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj"
               },
-              "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
-                "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj"
+              "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
+                "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj"
               }
             }
           }
@@ -54,6 +53,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.11, )"
@@ -64,7 +67,7 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.4, )"
+              "version": "[7.0.11, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -75,6 +78,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
             }
           },
           "imports": [
@@ -96,28 +103,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj",
+        "projectUniqueName": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj",
         "projectName": "MiasHR.Models",
-        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj",
+        "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\MiasHR.Models.csproj",
         "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Models\\obj\\",
+        "outputPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WinForms.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
         ],
         "originalTargetFrameworks": [
@@ -125,69 +130,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
-        "projectName": "MiasHR.Web",
-        "projectPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
-        "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
-        ],
-        "originalTargetFrameworks": [
-          "net7.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -205,6 +149,85 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "projectName": "MiasHR.Web",
+        "projectPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
+        "packagesPath": "C:\\Users\\IT\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\IT\\Desktop\\EMHRS_GIT\\MiasHR\\MiasHRSolution\\MiasHR.Web\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\IT\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WinForms.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
             "Microsoft.AspNetCore.Components.WebAssembly": {
               "target": "Package",
               "version": "[7.0.11, )"
@@ -213,6 +236,14 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.5, )"
             }
           },
           "imports": [
@@ -229,7 +260,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[7.0.11, 7.0.11]"
+              "version": "[7.0.10, 7.0.10]"
             }
           ],
           "frameworkReferences": {
@@ -237,7 +268,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
