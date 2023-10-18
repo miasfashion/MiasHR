@@ -17,12 +17,12 @@ namespace MiasHR.Api.Controllers
             this._employeeInfoRequestRepository = employeeInfoRequestRepository;
         }
 
-        [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetBasicEmployeeInfo(string empl_code)
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetBasicEmployeeInfo(string emplCode)
         {
             try
             {
-                var employeeInfoRequests = await this._employeeInfoRequestRepository.GetBasicEmployeeInfo(empl_code);
+                var employeeInfoRequests = await this._employeeInfoRequestRepository.GetBasicEmployeeInfo(emplCode);
 
                 if (employeeInfoRequests == null)
                 {
@@ -65,12 +65,12 @@ namespace MiasHR.Api.Controllers
 
         }
 
-        [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<EmployeeDetailDTO>>> GetDetailEmployeeInfo(string empl_code)
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IEnumerable<EmployeeDetailDTO>>> GetDetailEmployeeInfo(string emplCode)
         {
             try
             {
-                var employeeDetailInfo = await this._employeeInfoRequestRepository.GetDetailEmployeeInfo(empl_code);
+                var employeeDetailInfo = await this._employeeInfoRequestRepository.GetDetailEmployeeInfo(emplCode);
 
                 if (employeeDetailInfo == null)
                 {
@@ -88,12 +88,12 @@ namespace MiasHR.Api.Controllers
 
         }
 
-        [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<TransferHistoryDTO>>> GetEmployeeTransferHistory(string empl_code)
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IEnumerable<TransferHistoryDTO>>> GetEmployeeTransferHistory(string emplCode)
         {
             try
             {
-                var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(empl_code);
+                var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(emplCode);
 
                 if(employeeTransfer == null)
                 {
@@ -111,12 +111,12 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string empl_code)
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IEnumerable<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string emplCode)
         {
             try
             {
-                var employeeAward = await this._employeeInfoRequestRepository.GetEmployeeAwardDiscHistory(empl_code);
+                var employeeAward = await this._employeeInfoRequestRepository.GetEmployeeAwardDiscHistory(emplCode);
 
                 if (employeeAward == null)
                 {
@@ -134,12 +134,12 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpPut("{empl_code}")]
-        public async Task<ActionResult<int>> UpdateUserPassword(string empl_code, string newPass)
+        [HttpPut("{emplCode}")]
+        public ActionResult<int> UpdateUserPassword(string emplCode, string newPass)
         {
             try
             {
-                var employeePassword = await this._employeeInfoRequestRepository.UpdateUserPassword(empl_code, newPass);
+                var employeePassword =  this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
                 if (employeePassword == null)
                 {
                     return BadRequest();

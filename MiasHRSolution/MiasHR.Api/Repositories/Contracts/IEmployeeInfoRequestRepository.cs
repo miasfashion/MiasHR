@@ -9,7 +9,7 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code);
         Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code);
         Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code);
-        Task<int> UpdateUserPassword(string empl_code, string newPass);
+        int UpdateUserPassword(string empl_code, string newPass);
 
     }
 }

@@ -55,89 +55,86 @@ namespace MiasHR.Api.Repositories
         // Retrieves employee transfer history by employee code.
         public async Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code)
         {
-            try
+
+
+            var parameters = new
             {
-                var parameters = new
-                {
-                    pOrgCode = "WEB",
-                    pCategory = "HISTORY",
-                    pEmplCode = empl_code
-                };
+                pOrgCode = "WEB",
+                pCategory = "HISTORY",
+                pEmplCode = empl_code
+            };
 
-                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    await connection.OpenAsync();
-
-                    var result = await connection.QueryAsync<TransferHistoryDTO>(
-                        "sp_HR_PersonalInfo_Other",
-                        parameters,
-                        commandType: CommandType.StoredProcedure);
-
-                    return result;
-                }
-            }
-            catch (Exception ex)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                throw ex;
-                // Log the exception or handle it appropriately.
-                // You can also rethrow it if needed.
-                // Example: throw ex;
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<TransferHistoryDTO>(
+                    "sp_HR_PersonalInfo_Other",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result;
             }
+
         }
 
         // Retrieves employee award and disciplinary history by employee code.
         public async Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code)
         {
-            try
+
+
+            var parameters = new
             {
-                var parameters = new
-                {
-                    pOrgCode = "WEB",
-                    pCategory = "RP",
-                    pEmplCode = empl_code
-                };
+                pOrgCode = "WEB",
+                pCategory = "RP",
+                pEmplCode = empl_code
+            };
 
-                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    await connection.OpenAsync();
-
-                    var result = await connection.QueryAsync<ADHistoryDTO>(
-                        "sp_HR_PersonalInfo_Other",
-                        parameters,
-                        commandType: CommandType.StoredProcedure);
-
-                    return result;
-                }
-            }
-            catch (Exception ex)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                throw ex;
+                await connection.OpenAsync();
 
+                var result = await connection.QueryAsync<ADHistoryDTO>(
+                    "sp_HR_PersonalInfo_Other",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result;
             }
+
         }
-        public async Task<int> UpdateUserPassword(string empl_code, string newPass)
+        public int UpdateUserPassword(string empl_code, string newPass)
         {
-            try
-            {
-                var parameters = new
-                {
-                    empl = empl_code,
-                    pw = newPass
-                };
-                var sql = @"UPDATE HR_WEB_USER SET pw = @pw, modified_date = GETDATE() WHERE empl_code = @empl ";
-                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    await connection.OpenAsync();
 
-                    var result = await connection.ExecuteAsync(sql, parameters);
-                    return result;
-                }
-            }
-            catch (Exception ex)
+            var updatePassword = _miasHRDbContext.HrWebUsers
+                .First(r => r.EmplCode == empl_code);
+            if (updatePassword != null)
             {
-                throw ex;
-
+                updatePassword.Pw = newPass;
+                updatePassword.ModifiedDate = DateTime.Now;
+                //TODO: modified user
+                return _miasHRDbContext.SaveChanges();
             }
+            else
+            {
+                throw new Exception($"Update Password Failed with ID {empl_code}");
+            }
+
+            /*
+            var parameters = new
+            {
+                empl = empl_code,
+                pw = newPass
+            };
+            var sql = @"UPDATE HR_WEB_USER SET pw = @pw, modified_date = GETDATE() WHERE empl_code = @empl ";
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.ExecuteAsync(sql, parameters);
+                return result;
+            }*/
+
         }
 
 
