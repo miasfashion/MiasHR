@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "lqwxHJtSUUjtt17CPgAQnfpLDT0TrPHXoHHbgubq+mzTZNu62cGbCI4G5VujhiAEeHfhZjmObSSEL1rcly5Qww==",
+  "dgSpecHash": "ObtrPO7nYGEzcIneH87IqMcXxnHvCIM9zyXtEtsDiKAsJtoQgBobVUQC1X63NRi53y+MUYCFQZahl7B1R+KVtw==",
   "success": true,
   "projectFilePath": "C:\\Users\\IT\\Desktop\\jaehoon\\MiasHR\\MiasHRSolution\\MiasHR.Web\\MiasHR.Web.csproj",
   "expectedPackageFiles": [
@@ -31,7 +31,7 @@
     "C:\\Users\\IT\\.nuget\\packages\\system.io.pipelines\\7.0.0\\system.io.pipelines.7.0.0.nupkg.sha512",
     "C:\\Users\\IT\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
     "C:\\Users\\IT\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512",
-    "C:\\Users\\IT\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\7.0.11\\microsoft.netcore.app.runtime.mono.browser-wasm.7.0.11.nupkg.sha512"
+    "C:\\Users\\IT\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\7.0.12\\microsoft.netcore.app.runtime.mono.browser-wasm.7.0.12.nupkg.sha512"
   ],
   "logs": []
 }

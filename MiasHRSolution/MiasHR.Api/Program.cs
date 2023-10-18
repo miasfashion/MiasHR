@@ -14,7 +14,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.LogTo(Console.WriteLine, LogLevel.Information);
+    }
 );
 
 builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestRepository>();

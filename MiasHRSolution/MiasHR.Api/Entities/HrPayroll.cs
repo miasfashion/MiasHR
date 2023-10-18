@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MiasHR.Api;
+namespace MiasHR.Api.Entities;
 
 public partial class HrPayroll
 {
