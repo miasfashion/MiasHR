@@ -3,6 +3,7 @@ using MiasHR.Api.Data;
 using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -65,7 +66,17 @@ namespace MiasHR.Api.Repositories
 
         public Task<int> UpdateDayTimeOffRequest(int Id, HrWebRequest entity)
         {
-            throw new NotImplementedException();
+            var dayTimeOffRequest = _miasHRDbContext.HrWebRequests
+                .First(r => r.Seq == Id);
+            if (dayTimeOffRequest != null)
+            {
+                dayTimeOffRequest.Status = entity.Status;
+                return _miasHRDbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception($"DayTimeOffRequest with ID {Id} not found.");
+            }
         }
 
         /// <summary>
@@ -82,7 +93,10 @@ namespace MiasHR.Api.Repositories
                 dayTimeOffRequest.Status = 3;
                 return await _miasHRDbContext.SaveChangesAsync();
             }
-            return 0;
+            else
+            {
+                throw new Exception($"DayTimeOffRequest with ID {Id} not found.");
+            }
         }
 
         /// <summary>
