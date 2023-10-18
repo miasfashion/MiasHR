@@ -4,11 +4,12 @@ namespace MiasHR.Api.Repositories.Contracts
 {
     public interface IEmployeeInfoRequestRepository
     {
-        Task<IEnumerable<HrEmployee>> GetBasicEmployeeInfo(string empl_code);
-        Task<IEnumerable<HrEmployee>> GetAllEmployeeInfo();
-        Task<IEnumerable<HrEmployeeDetail>> GetDetailEmployeeInfo(string empl_code);
+        Task<HrEmployee> GetBasicEmployeeInfo(string empl_code);
+        Task<IReadOnlyList<HrEmployee>> GetAllEmployeeInfo();
+        Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code);
         Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code);
         Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code);
+        Task<int> UpdateUserPassword(string empl_code, string newPass);
 
     }
 }

@@ -112,19 +112,19 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<TransferHistoryDTO>>> Get(string empl_code)
+        public async Task<ActionResult<IEnumerable<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string empl_code)
         {
             try
             {
-                var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(empl_code);
+                var employeeAward = await this._employeeInfoRequestRepository.GetEmployeeAwardDiscHistory(empl_code);
 
-                if (employeeTransfer == null)
+                if (employeeAward == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(employeeTransfer);
+                    return Ok(employeeAward);
 
                 }
             }
@@ -134,6 +134,26 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        [HttpPut("{empl_code}")]
+        public async Task<ActionResult<int>> UpdateUserPassword(string empl_code, string newPass)
+        {
+            try
+            {
+                var employeePassword = await this._employeeInfoRequestRepository.UpdateUserPassword(empl_code, newPass);
+                if (employeePassword == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return Ok(employeePassword);
+                }
+            }
+            catch(Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from database");
+            }
+        }
 
     }
 }

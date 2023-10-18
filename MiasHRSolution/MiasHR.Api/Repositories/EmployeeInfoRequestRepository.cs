@@ -26,27 +26,30 @@ namespace MiasHR.Api.Repositories
         }
 
         // Retrieves basic employee information by employee code.
-        public async Task<IEnumerable<HrEmployee>> GetBasicEmployeeInfo(string empl_code)
+        public async Task<HrEmployee> GetBasicEmployeeInfo(string empl_code)
         {
             return await _miasHRDbContext.HrEmployees
-                .Where(r => r.EmplCode == empl_code && r.Status != 3)
-                .ToListAsync();
+                .Where(r => r.EmplCode == empl_code
+                        && r.Status != 3)
+                .FirstAsync();
         }
 
         // Retrieves information for all active employees in the "MIAS" organization.
-        public async Task<IEnumerable<HrEmployee>> GetAllEmployeeInfo()
+        public async Task<IReadOnlyList<HrEmployee>> GetAllEmployeeInfo()
         {
             return await _miasHRDbContext.HrEmployees
-                .Where(r => r.Status == 1 && r.OrgCode == "MIAS" && r.ActiveYn == "Y")
+                .Where(r => r.Status == 1
+                        && r.OrgCode == "MIAS"
+                        && r.ActiveYn == "Y")
                 .ToListAsync();
         }
 
         // Retrieves detailed employee information by employee code.
-        public async Task<IEnumerable<HrEmployeeDetail>> GetDetailEmployeeInfo(string empl_code)
+        public async Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code)
         {
             return await _miasHRDbContext.HrEmployeeDetails
                 .Where(r => r.EmplCode == empl_code)
-                .ToListAsync();
+                .FirstAsync();
         }
 
         // Retrieves employee transfer history by employee code.
@@ -60,8 +63,8 @@ namespace MiasHR.Api.Repositories
                     pCategory = "HISTORY",
                     pEmplCode = empl_code
                 };
-                string connectionString = _configuration.GetConnectionString("DefaultConnection");
-                using (var connection = new SqlConnection(connectionString))
+
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     await connection.OpenAsync();
 
@@ -93,8 +96,8 @@ namespace MiasHR.Api.Repositories
                     pCategory = "RP",
                     pEmplCode = empl_code
                 };
-                string connectionString = _configuration.GetConnectionString("DefaultConnection");
-                using (var connection = new SqlConnection(connectionString))
+
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     await connection.OpenAsync();
 
@@ -112,5 +115,31 @@ namespace MiasHR.Api.Repositories
 
             }
         }
+        public async Task<int> UpdateUserPassword(string empl_code, string newPass)
+        {
+            try
+            {
+                var parameters = new
+                {
+                    empl = empl_code,
+                    pw = newPass
+                };
+                var sql = @"UPDATE HR_WEB_USER SET pw = @pw, modified_date = GETDATE() WHERE empl_code = @empl ";
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    await connection.OpenAsync();
+
+                    var result = await connection.ExecuteAsync(sql, parameters);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+        }
+
+
     }
 }
