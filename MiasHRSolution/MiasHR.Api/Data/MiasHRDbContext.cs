@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using MiasHR.Api.Entities;
 using Microsoft.EntityFrameworkCore;
+using MiasHR.Api.Entities;
+using MiasHR.Models.DTOs;
 
 namespace MiasHR.Api.Data;
 
@@ -203,6 +204,17 @@ public partial class MiasHRDbContext : DbContext
     public virtual DbSet<VwOpMpsmaster> VwOpMpsmasters { get; set; }
 
     public virtual DbSet<XxLabel> XxLabels { get; set; }
+
+    public virtual DbSet<HrEmployeeDayTimeOffRemaining> HrEmployeeDayTimeOffRemainings { get; set; }
+
+    public virtual DbSet<HrEmployeeDayTimeOffHistory> HrEmployeeDayTimeOffHistories { get; set; }
+
+    public virtual DbSet<HrDayTimeOffRequestResult> HrDayTimeOffRequestResults { get; set; }
+
+    public virtual DbSet<HrPendingDayTimeOffApproval> HrPendingDayTimeOffApprovals { get; set; }
+
+    public virtual DbSet<HrDayTimeOffApprovalHistory> HrDayTimeOffApprovalHistories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<GbCustomer>(entity =>
@@ -6318,6 +6330,16 @@ public partial class MiasHRDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("user_name");
         });
+
+        modelBuilder.Entity<HrDayTimeOffApprovalHistory>(entity => { entity.HasNoKey(); });
+
+        modelBuilder.Entity<HrDayTimeOffRequestResult>(entity => { entity.HasNoKey(); });
+
+        modelBuilder.Entity<HrEmployeeDayTimeOffHistory>(entity => { entity.HasNoKey(); });
+
+        modelBuilder.Entity<HrEmployeeDayTimeOffRemaining>(entity => { entity.HasNoKey(); });
+
+        modelBuilder.Entity<HrPendingDayTimeOffApproval>(entity => { entity.HasNoKey(); });
 
         OnModelCreatingPartial(modelBuilder);
     }
