@@ -20,6 +20,7 @@ builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
 );
 
 builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestRepository>();
+builder.Services.AddScoped<ITimeAttendanceRepository, TimeAttendanceRepository>();
 builder.Services.AddScoped<IEmployeeInfoRequestRepository, EmployeeInfoRequestRepository>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();

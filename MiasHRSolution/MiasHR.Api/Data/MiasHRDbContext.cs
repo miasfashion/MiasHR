@@ -205,16 +205,6 @@ public partial class MiasHRDbContext : DbContext
 
     public virtual DbSet<XxLabel> XxLabels { get; set; }
 
-    public virtual DbSet<HrEmployeeDayTimeOffRemaining> HrEmployeeDayTimeOffRemainings { get; set; }
-
-    public virtual DbSet<HrEmployeeDayTimeOffHistory> HrEmployeeDayTimeOffHistories { get; set; }
-
-    public virtual DbSet<HrDayTimeOffRequestResult> HrDayTimeOffRequestResults { get; set; }
-
-    public virtual DbSet<HrPendingDayTimeOffApproval> HrPendingDayTimeOffApprovals { get; set; }
-
-    public virtual DbSet<HrDayTimeOffApprovalHistory> HrDayTimeOffApprovalHistories { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<GbCustomer>(entity =>
