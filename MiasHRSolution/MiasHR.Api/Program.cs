@@ -1,4 +1,3 @@
-
 using MiasHR.Api.Data;
 using MiasHR.Api.Repositories;
 using MiasHR.Api.Repositories.Contracts;
@@ -21,7 +20,12 @@ builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
 );
 
 builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestRepository>();
-
+builder.Services.AddScoped<IEmployeeInfoRequestRepository, EmployeeInfoRequestRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var dbContext = provider.GetRequiredService<MiasHRDbContext>();
+    return new EmployeeInfoRequestRepository(dbContext,configuration);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

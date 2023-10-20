@@ -1,4 +1,4 @@
-﻿using MiasHR.Api.Entities;
+using MiasHR.Api.Entities;
 using MiasHR.Models.DTOs;
 using System.Collections.Generic;
 

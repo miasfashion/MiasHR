@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using MiasHR.Api.Data;
 using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;

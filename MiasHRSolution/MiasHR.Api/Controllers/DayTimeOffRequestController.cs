@@ -1,4 +1,4 @@
-﻿using MiasHR.Api.Repositories.Contracts;
+using MiasHR.Api.Repositories.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
@@ -15,6 +15,7 @@ namespace MiasHR.Api.Controllers
             this._dayTimeOffRequestRepository = dayTimeOffRequestRepository;
         }
 
+        // Getting for specific Employee
         [HttpGet("{empl_code}")]
         public async Task<ActionResult<IEnumerable<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequests(string empl_code)
         {
