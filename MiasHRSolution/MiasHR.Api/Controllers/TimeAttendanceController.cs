@@ -24,7 +24,7 @@ namespace MiasHR.Api.Controllers
         /// <param name="dateTo">The end date of the date range.</param>
         /// <returns>A list of HrEmployeeTimeHistory objects.</returns>
         [HttpGet("{empl_code}/{dateFrom}/{dateTo}")]
-        public async Task<ActionResult<IEnumerable<HrEmployeeTimeHistory>>> GetHrEmployeeTimeHistory(string empl_code, DateOnly dateFrom, DateOnly dateTo)
+        public async Task<ActionResult<IEnumerable<EmployeeTimeHistoryDTO>>> GetHrEmployeeTimeHistory(string empl_code, DateOnly dateFrom, DateOnly dateTo)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace MiasHR.Api.Controllers
         /// <param name="dateFrom">The start date of the date range.</param>
         /// <param name="dateTo">The end date of the date range.</param>
         /// <returns>A list of HrEmployeeTimeList objects.</returns>
-        public async Task<ActionResult<HrEmployeeTimeList>> GetEmployeeTimeList(string empl_code, DateOnly dateFrom, DateOnly dateTo)
+        public async Task<ActionResult<EmployeeTimeListDTO>> GetEmployeeTimeList(string empl_code, DateOnly dateFrom, DateOnly dateTo)
         {
             try
             {

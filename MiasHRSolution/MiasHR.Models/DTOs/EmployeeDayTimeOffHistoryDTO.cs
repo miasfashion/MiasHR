@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrEmployeeDayTimeOffHistory
+    public class EmployeeDayTimeOffHistoryDTO
     {
         public int seq { get; }
 

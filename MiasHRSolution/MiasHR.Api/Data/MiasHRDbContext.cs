@@ -6321,15 +6321,15 @@ public partial class MiasHRDbContext : DbContext
                 .HasColumnName("user_name");
         });
 
-        modelBuilder.Entity<HrDayTimeOffApprovalHistory>(entity => { entity.HasNoKey(); });
+        modelBuilder.Entity<DayTimeOffApprovalHistoryDTO>(entity => { entity.HasNoKey(); });
 
-        modelBuilder.Entity<HrDayTimeOffRequestResult>(entity => { entity.HasNoKey(); });
+        modelBuilder.Entity<DayTimeOffRequestResultDTO>(entity => { entity.HasNoKey(); });
 
-        modelBuilder.Entity<HrEmployeeDayTimeOffHistory>(entity => { entity.HasNoKey(); });
+        modelBuilder.Entity<EmployeeDayTimeOffHistoryDTO>(entity => { entity.HasNoKey(); });
 
-        modelBuilder.Entity<HrEmployeeDayTimeOffRemaining>(entity => { entity.HasNoKey(); });
+        modelBuilder.Entity<EmployeeDayTimeOffRemainingDTO>(entity => { entity.HasNoKey(); });
 
-        modelBuilder.Entity<HrPendingDayTimeOffApproval>(entity => { entity.HasNoKey(); });
+        modelBuilder.Entity<PendingDayTimeOffApprovalDTO>(entity => { entity.HasNoKey(); });
 
         OnModelCreatingPartial(modelBuilder);
     }

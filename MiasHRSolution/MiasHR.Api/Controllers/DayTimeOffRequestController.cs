@@ -81,7 +81,7 @@ namespace MiasHR.Api.Controllers
         //GetDayTimeOffRemainingByEmployee
         [HttpGet]
         [Route("GetDayTimeOffRemainingByEmployee/{empl_code}/{year}")]
-        public async Task<ActionResult<HrEmployeeDayTimeOffRemaining>>? GetDayTimeOffRemainingByEmployee(string empl_code, string year)
+        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRemainingByEmployee(string empl_code, string year)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetEmployeeDayTimeOffHistoryList/{empl_code}/{year}")]
-        public async Task<ActionResult<HrEmployeeDayTimeOffRemaining>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
+        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetDayTimeOffRequestResultList/{empl_code}/{year}")]
-        public async Task<ActionResult<HrEmployeeDayTimeOffRemaining>>? GetDayTimeOffRequestResultList(string empl_code, string year)
+        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRequestResultList(string empl_code, string year)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetPendingDayTimeOffRequestList/{manager_empl_code}")]
-        public async Task<ActionResult<HrPendingDayTimeOffApproval>>? GetPendingDayTimeOffRequestList(string manager_empl_code)
+        public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string manager_empl_code)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetHrDayTimeOffApprovalHistories/{manager_empl_code}")]
-        public async Task<ActionResult<HrPendingDayTimeOffApproval>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code)
+        public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code)
         {
             try
             {

@@ -21,12 +21,8 @@ builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
 
 builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestRepository>();
 builder.Services.AddScoped<ITimeAttendanceRepository, TimeAttendanceRepository>();
-builder.Services.AddScoped<IEmployeeInfoRequestRepository, EmployeeInfoRequestRepository>(provider =>
-{
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var dbContext = provider.GetRequiredService<MiasHRDbContext>();
-    return new EmployeeInfoRequestRepository(dbContext,configuration);
-});
+builder.Services.AddScoped<IEmployeeInfoRequestRepository, EmployeeInfoRequestRepository>();
+builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

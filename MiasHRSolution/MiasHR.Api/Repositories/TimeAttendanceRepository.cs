@@ -29,7 +29,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="dateFrom">The start date in yyyyMMdd format.</param>
         /// <param name="dateTo">The end date in yyyyMMdd format.</param>
         /// <returns>The time list for the given employee.</returns>
-        public async Task<HrEmployeeTimeList> GetEmployeeTimeList(string empl_code, string dateFrom, string dateTo)
+        public async Task<EmployeeTimeListDTO> GetEmployeeTimeList(string empl_code, string dateFrom, string dateTo)
         {
             var param = new
             {
@@ -41,7 +41,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryFirstAsync<HrEmployeeTimeList>(
+                var result = await connection.QueryFirstAsync<EmployeeTimeListDTO>(
                     "sp_HR_EmployeeTimeList",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -57,7 +57,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="dateFrom">The start date in yyyyMMdd format.</param>
         /// <param name="dateTo">The end date in yyyyMMdd format.</param>
         /// <returns>The time history for the given employee.</returns>
-        public async Task<IReadOnlyList<HrEmployeeTimeHistory>> GetHrEmployeeTimeHistory(string empl_code, string dateFrom, string dateTo)
+        public async Task<IReadOnlyList<EmployeeTimeHistoryDTO>> GetHrEmployeeTimeHistory(string empl_code, string dateFrom, string dateTo)
         {
             var param = new
             {
@@ -69,7 +69,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrEmployeeTimeHistory>(
+                var result = await connection.QueryAsync<EmployeeTimeHistoryDTO>(
                     "sp_HR_EmployeeTimeHistory",
                     param,
                     commandType: CommandType.StoredProcedure
