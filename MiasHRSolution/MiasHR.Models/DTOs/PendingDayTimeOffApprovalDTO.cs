@@ -2,13 +2,17 @@
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrDayTimeOffApprovalHistory
+    public class PendingDayTimeOffApprovalDTO
     {
         public int seq { get; }
 
+        public int status { get; }
+
+        public string empl_code { get; }
+
         public string? req_date { get; }
 
-        public string? req_trpe { get; }
+        public string? req_type { get; }
 
         public string? req_sub_type { get; }
 
@@ -52,17 +56,40 @@ namespace MiasHR.Models.DTOs
 
         public string? sickday_yn { get; }
 
-        public string? empl_name { get; }
+        public DateTime? created_date { get; }
+
+        public string? created_user { get; }
+
+        public DateTime? modified_date { get; }
+
+        public string? modified_user { get; }
+
+        public string? approve_type { get; }
 
         public string? req_date2 { get; }
 
         public string? period { get; }
 
-        public string? req_status { get; }
+        public decimal? pto_left_days { get; }
 
-        public string? req_content2 { get; }
+        public decimal? pto_curr_days { get; }
+
+        public decimal? sick_left_days { get; }
+
+        public decimal? sick_curr_days { get; }
+
+        public string? empl_name { get; }
+
+        public string? div_name { get; }
+
+        public string? dept_name { get; }
+
+        public string? div_dept { get; }
+
+        public decimal? left_days { get; }
+
+        public decimal? curr_days { get; }
 
         public string? req_content3 { get; }
-
     }
 }

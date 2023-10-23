@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrDayTimeOffRequestResult
+    public class DayTimeOffRequestResultDTO
     {
         public int seq { get; }
 

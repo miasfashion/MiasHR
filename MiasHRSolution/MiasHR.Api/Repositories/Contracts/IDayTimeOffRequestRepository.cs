@@ -14,17 +14,17 @@ namespace MiasHR.Api.Repositories.Contracts
 
         Task<int> DeleteDayTimeOffRequest(int Id);
 
-        Task<IReadOnlyList<HrEmployeeDayTimeOffHistory>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year);
+        Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year);
 
-        Task<HrEmployeeDayTimeOffRemaining>? GetDayTimeOffRemainingByEmployee(string empl_code, string year);
+        Task<EmployeeDayTimeOffRemainingDTO>? GetDayTimeOffRemainingByEmployee(string empl_code, string year);
 
-        Task<IReadOnlyList<HrDayTimeOffRequestResult>>? GetDayTimeOffRequestResultList(string empl_code, string year);
+        Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string empl_code, string year);
 
-        Task<IReadOnlyList<HrPendingDayTimeOffApproval>>? GetPendingDayTimeOffRequestList(string manager_empl_code);
+        Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string manager_empl_code);
 
         Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string empl_code);
 
-        Task<IReadOnlyList<HrDayTimeOffApprovalHistory>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code);
+        Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code);
 
     }
 }

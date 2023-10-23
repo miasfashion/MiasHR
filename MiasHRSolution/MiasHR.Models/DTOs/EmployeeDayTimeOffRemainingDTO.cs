@@ -2,7 +2,7 @@
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrEmployeeDayTimeOffRemaining
+    public class EmployeeDayTimeOffRemainingDTO
     {
         public string? div_name { get; set; }
 

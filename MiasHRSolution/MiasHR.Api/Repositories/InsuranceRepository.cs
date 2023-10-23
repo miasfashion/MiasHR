@@ -19,7 +19,7 @@ namespace MiasHR.Api.Repositories
             _configuration = configuration;
         }
 
-        public async Task<IReadOnlyList<HrInsuranceSurfing>> GetInsuranceOptions(string insurance_type, int empl_code, string selected_coverage)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insurance_type, int empl_code, string selected_coverage)
         {
             var param = new
             {
@@ -30,7 +30,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrInsuranceSurfing>(
+                var result = await connection.QueryAsync<InsuranceSurfingDTO>(
                     "sp_HR_InsuranceSurfing",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -39,7 +39,7 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<HrInsuranceSurfing>> GetSelectedInsurance(int empl_code)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(int empl_code)
         {
             var param = new
             {
@@ -50,7 +50,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrInsuranceSurfing>(
+                var result = await connection.QueryAsync<InsuranceSurfingDTO>(
                     "sp_HR_InsuranceSurfing",
                     param,
                     commandType: CommandType.StoredProcedure

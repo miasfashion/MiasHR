@@ -105,7 +105,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="empl_code">The employee code.</param>
         /// <param name="year">The year for which the employee's day time off history is requested.</param>
         /// <returns>A read-only list of day time off requests.</returns>
-        public async Task<IReadOnlyList<HrEmployeeDayTimeOffHistory>> GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
+        public async Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>> GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
         {
             var param = new
             {
@@ -117,7 +117,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrEmployeeDayTimeOffHistory>(
+                var result = await connection.QueryAsync<EmployeeDayTimeOffHistoryDTO>(
                     "sp_HR_EmployeeVacation",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -132,7 +132,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="empl_code">The employee code.</param>
         /// <param name="year">The year for which the employee's day time off is requested.</param>
         /// <returns>The remaining day time off for the employee.</returns>
-        public async Task<HrEmployeeDayTimeOffRemaining> GetDayTimeOffRemainingByEmployee(string empl_code, string year)
+        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string empl_code, string year)
         {
             var param = new
             {
@@ -144,7 +144,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryFirstAsync<HrEmployeeDayTimeOffRemaining>(
+                var result = await connection.QueryFirstAsync<EmployeeDayTimeOffRemainingDTO>(
                     "sp_HR_EmployeeVacation",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -159,7 +159,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="empl_code">The employee code.</param>
         /// <param name="year">The year for which the employee's day time off requests are requested.</param>
         /// <returns>A read-only list of day time off requests.</returns>
-        public async Task<IReadOnlyList<HrDayTimeOffRequestResult>> GetDayTimeOffRequestResultList(string empl_code, string year)
+        public async Task<IReadOnlyList<DayTimeOffRequestResultDTO>> GetDayTimeOffRequestResultList(string empl_code, string year)
         {
             var param = new
             {
@@ -171,7 +171,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrDayTimeOffRequestResult>(
+                var result = await connection.QueryAsync<DayTimeOffRequestResultDTO>(
                     "sp_HR_WebRequestList",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -185,9 +185,9 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="manager_empl_code">The manager's employee code.</param>
         /// <returns>A read-only list of pending day time off requests.</returns>
-        public async Task<IReadOnlyList<HrPendingDayTimeOffApproval>> GetPendingDayTimeOffRequestList(string manager_empl_code)
+        public async Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>> GetPendingDayTimeOffRequestList(string manager_empl_code)
         {
-            List<HrPendingDayTimeOffApproval> result = new List<HrPendingDayTimeOffApproval>();
+            List<PendingDayTimeOffApprovalDTO> result = new List<PendingDayTimeOffApprovalDTO>();
             var param = new
             {
                 pEmplCode = manager_empl_code,
@@ -198,7 +198,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var pto = await connection.QueryAsync<HrPendingDayTimeOffApproval>(
+                var pto = await connection.QueryAsync<PendingDayTimeOffApprovalDTO>(
                     "sp_HR_WebApprovalWaiting",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -215,7 +215,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var vacation = await connection.QueryAsync<HrPendingDayTimeOffApproval>(
+                var vacation = await connection.QueryAsync<PendingDayTimeOffApprovalDTO>(
                     "sp_HR_WebApprovalWaiting",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -232,7 +232,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var sickDay = await connection.QueryAsync<HrPendingDayTimeOffApproval>(
+                var sickDay = await connection.QueryAsync<PendingDayTimeOffApprovalDTO>(
                     "sp_HR_WebApprovalWaiting",
                     param,
                     commandType: CommandType.StoredProcedure
@@ -247,7 +247,7 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="manager_empl_code">The manager's employee code.</param>
         /// <returns>A read-only list of day time off approval histories.</returns>
-        public async Task<IReadOnlyList<HrDayTimeOffApprovalHistory>> GetHrDayTimeOffApprovalHistories(string manager_empl_code)
+        public async Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>> GetHrDayTimeOffApprovalHistories(string manager_empl_code)
         {
             var param = new
             {
@@ -260,7 +260,7 @@ namespace MiasHR.Api.Repositories
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                var result = await connection.QueryAsync<HrDayTimeOffApprovalHistory>(
+                var result = await connection.QueryAsync<DayTimeOffApprovalHistoryDTO>(
                     "sp_HR_WebRequestList",
                     param,
                     commandType: CommandType.StoredProcedure

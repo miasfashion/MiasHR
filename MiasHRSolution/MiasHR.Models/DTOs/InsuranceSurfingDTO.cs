@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrInsuranceSurfing
+    public class InsuranceSurfingDTO
     {
         public int plan_id { get; }
         public string? contract_code { get; }

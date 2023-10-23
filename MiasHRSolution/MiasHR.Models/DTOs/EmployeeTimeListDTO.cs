@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiasHR.Models.DTOs
 {
-    public class HrEmployeeTimeList
+    public class EmployeeTimeListDTO
     {
         public string empl_name { get; }
         public int day_cnt { get; }
