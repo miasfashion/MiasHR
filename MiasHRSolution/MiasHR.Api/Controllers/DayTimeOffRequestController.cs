@@ -12,7 +12,7 @@ namespace MiasHR.Api.Controllers
         private readonly IDayTimeOffRequestRepository _dayTimeOffRequestRepository;
         public DayTimeOffRequestController(IDayTimeOffRequestRepository dayTimeOffRequestRepository)
         {
-            this._dayTimeOffRequestRepository = dayTimeOffRequestRepository;
+            _dayTimeOffRequestRepository = dayTimeOffRequestRepository;
         }
 
         // Getting for specific Employee
