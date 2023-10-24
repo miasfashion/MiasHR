@@ -7,9 +7,9 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<HrEmployee> GetBasicEmployeeInfo(string empl_code);
         Task<IReadOnlyList<HrEmployee>> GetAllEmployeeInfo();
         Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code);
-        Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code);
-        Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code);
+        Task<IReadOnlyList<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code);
+        Task<IReadOnlyList<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code);
         int UpdateUserPassword(string empl_code, string newPass);
-        Task<IEnumerable<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code);
+        Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code);
     }
 }
