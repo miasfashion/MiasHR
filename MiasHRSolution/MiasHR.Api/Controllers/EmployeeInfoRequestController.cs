@@ -17,6 +17,7 @@ namespace MiasHR.Api.Controllers
             this._employeeInfoRequestRepository = employeeInfoRequestRepository;
         }
 
+        //Get Employee's basic information
         [HttpGet("{emplCode}")]
         public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetBasicEmployeeInfo(string emplCode)
         {
@@ -41,6 +42,7 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get all Active Employees' information
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetAllEmployeeInfo()
         {
@@ -65,6 +67,7 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get Personal Information of Employee
         [HttpGet("{emplCode}")]
         public async Task<ActionResult<IEnumerable<EmployeeDetailDTO>>> GetDetailEmployeeInfo(string emplCode)
         {
@@ -88,6 +91,7 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get Transfer History of Employee
         [HttpGet("{emplCode}")]
         public async Task<ActionResult<IEnumerable<TransferHistoryDTO>>> GetEmployeeTransferHistory(string emplCode)
         {
@@ -95,7 +99,7 @@ namespace MiasHR.Api.Controllers
             {
                 var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(emplCode);
 
-                if(employeeTransfer == null)
+                if (employeeTransfer == null)
                 {
                     return NotFound();
                 }
@@ -111,6 +115,7 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        //Get Award And Disciplinary History of Employee 
         [HttpGet("{emplCode}")]
         public async Task<ActionResult<IEnumerable<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string emplCode)
         {
@@ -134,12 +139,13 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        //Update User's Password
         [HttpPut("{emplCode}")]
         public ActionResult<int> UpdateUserPassword(string emplCode, string newPass)
         {
             try
             {
-                var employeePassword =  this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
+                var employeePassword = this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
                 if (employeePassword == null)
                 {
                     return BadRequest();
@@ -149,7 +155,29 @@ namespace MiasHR.Api.Controllers
                     return Ok(employeePassword);
                 }
             }
-            catch(Exception)
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from database");
+            }
+        }
+
+        //Get the List of Employee for Manager
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IEnumerable<ManagerEmployeeListDTO>>> GetManagerEmployeeList(string emplCode)
+        {
+            try
+            {
+                var managingEmployee = await this._employeeInfoRequestRepository.GetManagerEmployeeList(emplCode);
+                if (managingEmployee == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(managingEmployee);
+                }
+            }
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from database");
             }

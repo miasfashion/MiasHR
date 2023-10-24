@@ -103,6 +103,8 @@ namespace MiasHR.Api.Repositories
             }
 
         }
+
+        //Updates User's existing Password
         public int UpdateUserPassword(string empl_code, string newPass)
         {
 
@@ -120,23 +122,29 @@ namespace MiasHR.Api.Repositories
                 throw new Exception($"Update Password Failed with ID {empl_code}");
             }
 
-            /*
+        }
+
+        //Getting all employee below manager
+        public async Task<IEnumerable<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code)
+        {
             var parameters = new
             {
-                empl = empl_code,
-                pw = newPass
+                pEmplCode = empl_code
             };
-            var sql = @"UPDATE HR_WEB_USER SET pw = @pw, modified_date = GETDATE() WHERE empl_code = @empl ";
+
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
 
-                var result = await connection.ExecuteAsync(sql, parameters);
+                var result = await connection.QueryAsync<ManagerEmployeeListDTO>(
+                    "sp_HR_ManagerEmployeeList",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
                 return result;
-            }*/
+            }
+
 
         }
-
-
     }
 }

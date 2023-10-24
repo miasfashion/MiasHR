@@ -10,6 +10,6 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code);
         Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code);
         int UpdateUserPassword(string empl_code, string newPass);
-
+        Task<IEnumerable<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code);
     }
 }
