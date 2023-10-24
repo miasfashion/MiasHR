@@ -5,7 +5,6 @@ using MiasHR.Models.DTOs;
 
 namespace MiasHR.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DayTimeOffRequestController : ControllerBase
     {
@@ -16,7 +15,7 @@ namespace MiasHR.Api.Controllers
         }
 
         // Getting for specific Employee
-        [HttpGet("{empl_code}")]
+        [HttpGet("api/[controller]/[action]/{empl_code}")]
         public async Task<ActionResult<IEnumerable<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequests(string empl_code)
         {
             try
@@ -32,19 +31,19 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<int>> CreateDayTimeOffRequest()
-        { 
+        {
             throw new NotImplementedException();
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("api/[controller]/[action]/{Id}")]
         public async Task<ActionResult<int>> UpdateDayTimeOffRequest(int Id, DayTimeOffRequestDTO dayTimeOffRequestDTO)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("api/[controller]/[action]/{Id}")]
         public async Task<ActionResult<DayTimeOffRequestDTO>> GetDayTimeOffRequest(int Id)
         {
             try
@@ -61,13 +60,13 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPut]
-        [Route("DeleteDayTimeOffRequest/{Id}")]
+        [Route("api/[controller]/[action]/{Id}")]
         public async Task<ActionResult<int>> DeleteDayTimeOffRequest(int Id)
         {
-            try 
-            { 
+            try
+            {
                 var deleteResult = await _dayTimeOffRequestRepository.DeleteDayTimeOffRequest(Id);
-                
+
                 return deleteResult == 0 ? NotFound() : Ok(deleteResult);
 
             }
@@ -80,7 +79,7 @@ namespace MiasHR.Api.Controllers
 
         //GetDayTimeOffRemainingByEmployee
         [HttpGet]
-        [Route("GetDayTimeOffRemainingByEmployee/{empl_code}/{year}")]
+        [Route("api/[controller]/[action]/{empl_code}/{year}")]
         public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRemainingByEmployee(string empl_code, string year)
         {
             try
@@ -95,10 +94,10 @@ namespace MiasHR.Api.Controllers
                                                      "Error retrieving data from database");
             }
         }
-        
+
         //
         [HttpGet]
-        [Route("GetEmployeeDayTimeOffHistoryList/{empl_code}/{year}")]
+        [Route("api/[controller]/[action]/{empl_code}/{year}")]
         public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
         {
             try
@@ -116,7 +115,7 @@ namespace MiasHR.Api.Controllers
 
         //
         [HttpGet]
-        [Route("GetDayTimeOffRequestResultList/{empl_code}/{year}")]
+        [Route("api/[controller]/[action]/{empl_code}/{year}")]
         public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRequestResultList(string empl_code, string year)
         {
             try
@@ -134,7 +133,7 @@ namespace MiasHR.Api.Controllers
 
         //
         [HttpGet]
-        [Route("GetPendingDayTimeOffRequestList/{manager_empl_code}")]
+        [Route("api/Manager/[controller]/[action]/{manager_empl_code}")]
         public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string manager_empl_code)
         {
             try
@@ -152,7 +151,7 @@ namespace MiasHR.Api.Controllers
 
         //
         [HttpGet]
-        [Route("GetHrDayTimeOffApprovalHistories/{manager_empl_code}")]
+        [Route("api/Manager/[controller]/[action]/{manager_empl_code}")]
         public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code)
         {
             try
