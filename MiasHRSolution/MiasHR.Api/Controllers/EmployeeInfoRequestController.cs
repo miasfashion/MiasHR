@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
 using System.Linq.Expressions;
+using MiasHR.Api.Entities;
 
 namespace MiasHR.Api.Controllers
 {
@@ -17,8 +18,9 @@ namespace MiasHR.Api.Controllers
             this._employeeInfoRequestRepository = employeeInfoRequestRepository;
         }
 
+        //Get Employee's basic information
         [HttpGet("{emplCode}")]
-        public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetBasicEmployeeInfo(string emplCode)
+        public async Task<ActionResult<HrEmployee>> GetBasicEmployeeInfo(string emplCode)
         {
             try
             {
@@ -41,8 +43,9 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get all Active Employees' information
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeInfoRequestDTO>>> GetAllEmployeeInfo()
+        public async Task<ActionResult<IReadOnlyList<HrEmployee>>> GetAllEmployeeInfo()
         {
             try
             {
@@ -65,8 +68,9 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get Personal Information of Employee
         [HttpGet("{emplCode}")]
-        public async Task<ActionResult<IEnumerable<EmployeeDetailDTO>>> GetDetailEmployeeInfo(string emplCode)
+        public async Task<ActionResult<HrEmployeeDetail>> GetDetailEmployeeInfo(string emplCode)
         {
             try
             {
@@ -88,14 +92,15 @@ namespace MiasHR.Api.Controllers
 
         }
 
+        //Get Transfer History of Employee
         [HttpGet("{emplCode}")]
-        public async Task<ActionResult<IEnumerable<TransferHistoryDTO>>> GetEmployeeTransferHistory(string emplCode)
+        public async Task<ActionResult<IReadOnlyList<TransferHistoryDTO>>> GetEmployeeTransferHistory(string emplCode)
         {
             try
             {
                 var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(emplCode);
 
-                if(employeeTransfer == null)
+                if (employeeTransfer == null)
                 {
                     return NotFound();
                 }
@@ -111,8 +116,9 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        //Get Award And Disciplinary History of Employee 
         [HttpGet("{emplCode}")]
-        public async Task<ActionResult<IEnumerable<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string emplCode)
+        public async Task<ActionResult<IReadOnlyList<ADHistoryDTO>>> GetEmployeeAwardDiscHistory(string emplCode)
         {
             try
             {
@@ -134,12 +140,13 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        //Update User's Password
         [HttpPut("{emplCode}")]
         public ActionResult<int> UpdateUserPassword(string emplCode, string newPass)
         {
             try
             {
-                var employeePassword =  this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
+                var employeePassword = this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
                 if (employeePassword == null)
                 {
                     return BadRequest();
@@ -149,7 +156,29 @@ namespace MiasHR.Api.Controllers
                     return Ok(employeePassword);
                 }
             }
-            catch(Exception)
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from database");
+            }
+        }
+
+        //Get the List of Employee for Manager
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IReadOnlyList<ManagerEmployeeListDTO>>> GetManagerEmployeeList(string emplCode)
+        {
+            try
+            {
+                var managingEmployee = await this._employeeInfoRequestRepository.GetManagerEmployeeList(emplCode);
+                if (managingEmployee == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(managingEmployee);
+                }
+            }
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from database");
             }

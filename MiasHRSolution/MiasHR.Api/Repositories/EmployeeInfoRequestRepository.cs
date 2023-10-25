@@ -25,7 +25,11 @@ namespace MiasHR.Api.Repositories
             _configuration = configuration;
         }
 
-        // Retrieves basic employee information by employee code.
+        /// <summary>
+        /// Retrieves basic employee information by employee code.
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <returns>The simple information about employee.</returns>
         public async Task<HrEmployee> GetBasicEmployeeInfo(string empl_code)
         {
             return await _miasHRDbContext.HrEmployees
@@ -34,28 +38,40 @@ namespace MiasHR.Api.Repositories
                 .FirstAsync();
         }
 
-        // Retrieves information for all active employees in the "MIAS" organization.
+        /// <summary>
+        /// Retrieves information for all active employees in the "MIAS" organization.
+        /// </summary>
+        /// <returns> Company Contact information of all Active Employee</returns>
         public async Task<IReadOnlyList<HrEmployee>> GetAllEmployeeInfo()
         {
             return await _miasHRDbContext.HrEmployees
                 .Where(r => r.Status == 1
                         && r.OrgCode == "MIAS"
                         && r.ActiveYn == "Y")
+                .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
         }
 
-        // Retrieves detailed employee information by employee code.
+        /// <summary>
+        /// Retrieves detailed employee information by employee code.
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <returns>Personal Information about the employee</returns>
         public async Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code)
         {
             return await _miasHRDbContext.HrEmployeeDetails
                 .Where(r => r.EmplCode == empl_code)
+                .AsNoTrackingWithIdentityResolution()
                 .FirstAsync();
         }
 
-        // Retrieves employee transfer history by employee code.
-        public async Task<IEnumerable<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code)
+        /// <summary>
+        /// Retrieves employee transfer history by employee code.
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <returns>Transfer History about the employee</returns>
+        public async Task<IReadOnlyList<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code)
         {
-
 
             var parameters = new
             {
@@ -73,16 +89,18 @@ namespace MiasHR.Api.Repositories
                     parameters,
                     commandType: CommandType.StoredProcedure);
 
-                return result;
+                return result.ToList().AsReadOnly();
             }
 
         }
 
-        // Retrieves employee award and disciplinary history by employee code.
-        public async Task<IEnumerable<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code)
+        /// <summary>
+        /// Retrieves employee award and disciplinary history by employee code.
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <returns>Award And Disciplinary History about the employee</returns>
+        public async Task<IReadOnlyList<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code)
         {
-
-
             var parameters = new
             {
                 pOrgCode = "WEB",
@@ -99,10 +117,17 @@ namespace MiasHR.Api.Repositories
                     parameters,
                     commandType: CommandType.StoredProcedure);
 
-                return result;
+                return result.ToList().AsReadOnly();
             }
 
         }
+
+        /// <summary>
+        /// Retrieves employee award and disciplinary history by employee code.
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <param name="newPass">The employee code.</param>
+        /// <returns>Award And Disciplinary History about the employee</returns>
         public int UpdateUserPassword(string empl_code, string newPass)
         {
 
@@ -120,23 +145,33 @@ namespace MiasHR.Api.Repositories
                 throw new Exception($"Update Password Failed with ID {empl_code}");
             }
 
-            /*
+        }
+
+        /// <summary>
+        /// Retrieves employee list for given manager empl_code
+        /// </summary>
+        /// <param name="empl_code">The employee code.</param>
+        /// <returns>Get List of Employees for manager</returns>
+        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code)
+        {
             var parameters = new
             {
-                empl = empl_code,
-                pw = newPass
+                pEmplCode = empl_code
             };
-            var sql = @"UPDATE HR_WEB_USER SET pw = @pw, modified_date = GETDATE() WHERE empl_code = @empl ";
+
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
 
-                var result = await connection.ExecuteAsync(sql, parameters);
-                return result;
-            }*/
+                var result = await connection.QueryAsync<ManagerEmployeeListDTO>(
+                    "sp_HR_ManagerEmployeeList",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                return result.ToList().AsReadOnly();
+            }
+
 
         }
-
-
     }
 }
