@@ -2,6 +2,7 @@ using MiasHR.Api.Repositories.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
+using MiasHR.Api.Entities;
 
 namespace MiasHR.Api.Controllers
 {
@@ -17,7 +18,7 @@ namespace MiasHR.Api.Controllers
 
         // Getting for specific Employee
         [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IEnumerable<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequests(string empl_code)
+        public async Task<ActionResult<IReadOnlyList<HrWebRequest>>> GetAllEmployeeDayTimeOffRequestList(string empl_code)
         {
             try
             {
@@ -39,13 +40,13 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult<int>> UpdateDayTimeOffRequest(int Id, DayTimeOffRequestDTO dayTimeOffRequestDTO)
+        public async Task<ActionResult<int>> UpdateDayTimeOffRequest()
         {
             throw new NotImplementedException();
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<DayTimeOffRequestDTO>> GetDayTimeOffRequest(int Id)
+        public async Task<ActionResult<HrWebRequest>> GetDayTimeOffRequest(int Id)
         {
             try
             {
@@ -99,7 +100,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetEmployeeDayTimeOffHistoryList/{empl_code}/{year}")]
-        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
+        public async Task<ActionResult<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year)
         {
             try
             {
@@ -117,7 +118,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetDayTimeOffRequestResultList/{empl_code}/{year}")]
-        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRequestResultList(string empl_code, string year)
+        public async Task<ActionResult<IReadOnlyList<DayTimeOffRequestResultDTO>>>? GetDayTimeOffRequestResultList(string empl_code, string year)
         {
             try
             {
@@ -135,7 +136,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetPendingDayTimeOffRequestList/{manager_empl_code}")]
-        public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string manager_empl_code)
+        public async Task<ActionResult<IReadOnlyList<PendingDayTimeOffApprovalDTO>>>? GetPendingDayTimeOffRequestList(string manager_empl_code)
         {
             try
             {
@@ -153,7 +154,7 @@ namespace MiasHR.Api.Controllers
         //
         [HttpGet]
         [Route("GetHrDayTimeOffApprovalHistories/{manager_empl_code}")]
-        public async Task<ActionResult<PendingDayTimeOffApprovalDTO>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code)
+        public async Task<ActionResult<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code)
         {
             try
             {

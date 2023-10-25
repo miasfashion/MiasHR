@@ -48,6 +48,7 @@ namespace MiasHR.Api.Repositories
                 .Where(r => r.Status == 1
                         && r.OrgCode == "MIAS"
                         && r.ActiveYn == "Y")
+                .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
         }
 
@@ -60,6 +61,7 @@ namespace MiasHR.Api.Repositories
         {
             return await _miasHRDbContext.HrEmployeeDetails
                 .Where(r => r.EmplCode == empl_code)
+                .AsNoTrackingWithIdentityResolution()
                 .FirstAsync();
         }
 
