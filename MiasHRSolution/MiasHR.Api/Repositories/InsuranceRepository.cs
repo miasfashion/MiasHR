@@ -19,7 +19,7 @@ namespace MiasHR.Api.Repositories
             _configuration = configuration;
         }
 
-        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insurance_type, int empl_code, string selected_coverage)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insurance_type, string empl_code, string selected_coverage)
         {
             var param = new
             {
@@ -39,7 +39,7 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(int empl_code)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(string empl_code)
         {
             var param = new
             {
@@ -59,7 +59,7 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public string UpdateInsuranceOption(string insurance_type, int empl_code, string selected_coverage, int selected_surfing_id)
+        public string UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
         {
             var param = new
             {
