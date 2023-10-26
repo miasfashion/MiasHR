@@ -59,19 +59,20 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public string UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
+        public async Task<UpdateMessageDTO> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
         {
             var param = new
             {
                 pType = insurance_type,
                 pEmplCode = empl_code,
-                pCoverage = selected_coverage
+                pCoverage = selected_coverage,
+                pSurfingID = selected_surfing_id
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
-                var result = connection.QueryFirst<string>(
-                    "sp_HR_InsuranceSurfing",
+                var result = await connection.QueryFirstAsync<UpdateMessageDTO>(
+                    "sp_HR_InsuranceUpdate",
                     param,
                     commandType: CommandType.StoredProcedure
                 );
