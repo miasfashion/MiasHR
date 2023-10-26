@@ -60,7 +60,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="factor">Factor that employee is evaluating</param>
         /// <param name="grade">Grade employee gave for the factor</param>
         /// <returns>Whether self evaluation was successful or not</returns>
-        public async Task<UpdateMessageDTO> CreateSelfEvaluation(string empl_code, string year, string term, string comment, string factor, string grade)
+        public async Task<UpdateMessageDTO> CreateSelfEvaluation(string empl_code, string year, string term,string factor, string grade, string comment = "")
         {
             var param = new
             {
