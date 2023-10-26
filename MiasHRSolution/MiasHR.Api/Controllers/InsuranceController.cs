@@ -17,7 +17,7 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetSelectedInsurance(int empl_code)
+        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetSelectedInsurance(string empl_code)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpGet("{insurance_type}/{empl_code}/{selected_coverage}")]
-        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetInsuranceOptions(string insurance_type, int empl_code, string selected_coverage)
+        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetInsuranceOptions(string insurance_type, string empl_code, string selected_coverage)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPut("{insurance_type}/{empl_code}/{selected_coverage}/{selected_surfing_id}")]
-        public ActionResult<string> UpdateInsuranceOption(string insurance_type, int empl_code, string selected_coverage, int selected_surfing_id)
+        public ActionResult<string> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
         {
             try
             {
