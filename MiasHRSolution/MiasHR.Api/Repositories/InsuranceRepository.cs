@@ -65,13 +65,14 @@ namespace MiasHR.Api.Repositories
             {
                 pType = insurance_type,
                 pEmplCode = empl_code,
-                pCoverage = selected_coverage
+                pCoverage = selected_coverage,
+                pSurfingID = selected_surfing_id
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
                 var result = await connection.QueryFirstAsync<UpdateMessageDTO>(
-                    "sp_HR_InsuranceSurfing",
+                    "sp_HR_InsuranceUpdate",
                     param,
                     commandType: CommandType.StoredProcedure
                 );

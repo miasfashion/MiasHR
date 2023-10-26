@@ -49,13 +49,13 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPut("{insurance_type}/{empl_code}/{selected_coverage}/{selected_surfing_id}")]
-        public async Task<ActionResult<string>> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
+        public async Task<ActionResult<UpdateMessageDTO>> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
         {
             try
             {
                 var updateResult = await _insuranceRepository.UpdateInsuranceOption(insurance_type, empl_code, selected_coverage, selected_surfing_id);
 
-                return updateResult.msg == "Saved succesfully!" ? Ok() : BadRequest();
+                return updateResult.msg == "Saved succesfully!" ? Ok(updateResult) : BadRequest();
             }
             catch (Exception)
             {
