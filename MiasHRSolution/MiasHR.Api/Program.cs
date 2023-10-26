@@ -23,6 +23,7 @@ builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestReposi
 builder.Services.AddScoped<ITimeAttendanceRepository, TimeAttendanceRepository>();
 builder.Services.AddScoped<IEmployeeInfoRequestRepository, EmployeeInfoRequestRepository>();
 builder.Services.AddScoped<IInsuranceRepository, InsuranceRepository>();
+builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

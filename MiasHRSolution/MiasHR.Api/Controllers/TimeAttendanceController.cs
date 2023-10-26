@@ -24,7 +24,7 @@ namespace MiasHR.Api.Controllers
         /// <param name="dateTo">The end date of the date range.</param>
         /// <returns>A list of HrEmployeeTimeHistory objects.</returns>
         [HttpGet("{empl_code}/{dateFrom}/{dateTo}")]
-        public async Task<ActionResult<IReadOnlyCollection<EmployeeTimeHistoryDTO>>> GetHrEmployeeTimeHistory(string empl_code, DateOnly dateFrom, DateOnly dateTo)
+        public async Task<ActionResult<IReadOnlyList<EmployeeTimeHistoryDTO>>> GetHrEmployeeTimeHistory(string empl_code, DateOnly dateFrom, DateOnly dateTo)
         {
             try
             {
