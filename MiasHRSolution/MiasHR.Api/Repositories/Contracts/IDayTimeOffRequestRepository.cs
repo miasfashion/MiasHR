@@ -8,23 +8,23 @@ namespace MiasHR.Api.Repositories.Contracts
     {
         Task<int> CreateDayTimeOffRequest(HrWebRequest entity);
 
-        Task<HrWebRequest>? GetDayTimeOffRequest(int Id);
+        Task<HrWebRequest>? GetDayTimeOffRequest(int id);
 
-        Task<int> UpdateDayTimeOffRequest(int Id, HrWebRequest entity);
+        Task<int> UpdateDayTimeOffRequest(int id, HrWebRequest entity);
 
-        Task<int> DeleteDayTimeOffRequest(int Id);
+        Task<int> DeleteDayTimeOffRequest(int id);
 
-        Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string empl_code, string year);
+        Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year);
 
-        Task<EmployeeDayTimeOffRemainingDTO>? GetDayTimeOffRemainingByEmployee(string empl_code, string year);
+        Task<EmployeeDayTimeOffRemainingDTO>? GetDayTimeOffRemainingByEmployee(string emplCode, string year);
 
-        Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string empl_code, string year);
+        Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string emplCode, string year);
 
-        Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string manager_empl_code);
+        Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
 
-        Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string empl_code);
+        Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string emplCode);
 
-        Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistories(string manager_empl_code);
+        Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
 
     }
 }
