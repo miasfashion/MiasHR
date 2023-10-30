@@ -162,7 +162,7 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetHrDayTimeOffApprovalHistories(managerEmplCode);
+                var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetHrDayTimeOffApprovalHistory(managerEmplCode);
 
                 return pendingDayTimeOffRequests == null ? NotFound() : Ok(pendingDayTimeOffRequests);
             }
