@@ -19,18 +19,23 @@ namespace MiasHR.Api.Controllers
         /// <summary>
         /// Retrieves the time history of an employee within a specified date range.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <param name="dateFrom">The start date of the date range.</param>
         /// <param name="dateTo">The end date of the date range.</param>
         /// <returns>A list of HrEmployeeTimeHistory objects.</returns>
+<<<<<<< Updated upstream
         [HttpGet("{empl_code}/{dateFrom}/{dateTo}")]
         public async Task<ActionResult<IReadOnlyList<EmployeeTimeHistoryDTO>>> GetHrEmployeeTimeHistory(string empl_code, DateOnly dateFrom, DateOnly dateTo)
+=======
+        [HttpGet("{emplCode}/{dateFrom}/{dateTo}")]
+        public async Task<ActionResult<IReadOnlyCollection<EmployeeTimeHistoryDTO>>> GetHrEmployeeTimeHistory(string emplCode, DateOnly dateFrom, DateOnly dateTo)
+>>>>>>> Stashed changes
         {
             try
             {
                 string dateFromString = dateFrom.ToString("yyyyMMdd");
                 string dateToString = dateTo.ToString("yyyyMMdd");
-                var hrEmployeeTimeHistory = await _timeAttendanceRepository.GetHrEmployeeTimeHistory(empl_code, dateFromString, dateToString);
+                var hrEmployeeTimeHistory = await _timeAttendanceRepository.GetHrEmployeeTimeHistory(emplCode, dateFromString, dateToString);
 
                 return hrEmployeeTimeHistory == null ? NotFound() : Ok(hrEmployeeTimeHistory);
             }
@@ -41,21 +46,21 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpGet("{empl_code}/{dateFrom}/{dateTo}")]
+        [HttpGet("{emplCode}/{dateFrom}/{dateTo}")]
         /// <summary>
         /// Retrieves the time list of an employee within a specified date range.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <param name="dateFrom">The start date of the date range.</param>
         /// <param name="dateTo">The end date of the date range.</param>
         /// <returns>A list of HrEmployeeTimeList objects.</returns>
-        public async Task<ActionResult<EmployeeTimeListDTO>> GetEmployeeTimeList(string empl_code, DateOnly dateFrom, DateOnly dateTo)
+        public async Task<ActionResult<EmployeeTimeListDTO>> GetEmployeeTimeList(string emplCode, DateOnly dateFrom, DateOnly dateTo)
         {
             try
             {
                 string dateFromString = dateFrom.ToString("yyyyMMdd");
                 string dateToString = dateTo.ToString("yyyyMMdd");
-                var hrEmployeeTimeList = await _timeAttendanceRepository.GetEmployeeTimeList(empl_code, dateFromString, dateToString);
+                var hrEmployeeTimeList = await _timeAttendanceRepository.GetEmployeeTimeList(emplCode, dateFromString, dateToString);
 
                 return hrEmployeeTimeList == null ? NotFound() : Ok(hrEmployeeTimeList);
             }
