@@ -13,32 +13,33 @@
     - [Read full employee list request](#read-full-employee-list-request)
     - [Update password request](#update-password-request)
   - [Day/Time Off](#daytime-off)
-    - [Read vacation days by `empl_code` request](#read-vacation-days-by-empl_code-request)
-    - [Read vacation schedule by `empl_code` request](#read-vacation-schedule-by-empl_code-request)
+    - [Read vacation days by `emplCode` request](#read-vacation-days-by-emplCode-request)
+    - [Read vacation schedule by `emplCode` request](#read-vacation-schedule-by-emplCode-request)
     - [Create new day/time off request request](#create-new-daytime-off-request-request)
-    - [Read day/time off request list by `empl_code`, `year` request](#read-daytime-off-request-list-by-empl_code-year-request)
+    - [Read day/time off request list by `emplCode`, `year` request](#read-daytime-off-request-list-by-emplCode-year-request)
     - [Read list of day/time off approval requests for manager by  request`approver_id`](#read-list-of-daytime-off-approval-requests-for-manager-by--requestapprover_id)
-    - [Read day/time off approval history by `empl_code` request](#read-daytime-off-approval-history-by-empl_code-request)
+    - [Read day/time off approval history by `emplCode` request](#read-daytime-off-approval-history-by-emplCode-request)
   - [Time \& Attendance](#time--attendance)
-    - [Read time \& attendance history by `empl_code`, `time_period` request](#read-time--attendance-history-by-empl_code-time_period-request)
+    - [Read time \& attendance history by `emplCode`, `time_period` request](#read-time--attendance-history-by-emplCode-time_period-request)
   - [Org Chart](#org-chart)
     - [GET /org\_chart/data request](#get-org_chartdata-request)
   - [Insurance](#insurance)
-    - [Read selected insurance information by `empl_code` request](#read-selected-insurance-information-by-empl_code-request)
-    - [Read insurance surfing data by `empl_code`, `coverage_selection` request](#read-insurance-surfing-data-by-empl_code-coverage_selection-request)
+    - [Read selected insurance information by `emplCode` request](#read-selected-insurance-information-by-emplCode-request)
+    - [Read insurance surfing data by `emplCode`, `coverage_selection` request](#read-insurance-surfing-data-by-emplCode-coverage_selection-request)
+    - [Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request](#update-insurance-information-for-employee-by-insuranceType-emplCode-coverageSelection-selectedSurfingId-request)
   - [Evaluation](#evaluation)
     - [Get evaluation factors](#get-evaluation-factors)
     - [Create self evaluation record](#create-self-evaluation-record)
 
 ## Manager
 
-### Read managed employee `emplcode` list request
+### Read managed employee `emplCode` list request
 
 ```js
-GET /EmployeeInfoRequest/GetManagerEmployeeList/{emplcode}
+GET /EmployeeInfoRequest/GetManagerEmployeeList/{emplCode}
 ```
 
-Endpoint to retrieve employees under the supervisor (empl_code)
+Endpoint to retrieve employees under the supervisor (emplCode)
 
 **Sample Request:**
 
@@ -48,26 +49,29 @@ No request body for this endpoint.
 
 ```json
  {
-    "empl_code": "100041",
+    "emplCode": "100041",
     "last_name": "KIM",
-    "first_name": "HYEYOON",
+    "first_name": "MINSOO",
     "empl_name": "(UNI)"
   }
 ```
 
 ## Employee Info
 
-### Read basic employee info by `emplcode` request
+### Read basic employee info by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetBasicEmployeeinfo/{emplcode}
+GET /EmployeeInfoRequest/GetBasicEmployeeinfo/{emplCode}
 ```
 
 Endpoint to retrieve simple employee information based on their employee code.
 
-**Sample Request:**
-
-No request body for this endpoint.
+**Parameters**
+```json
+{
+  "emplCode": "string"
+}
+```
 
 **Sample Response:**
 
@@ -78,7 +82,7 @@ No request body for this endpoint.
   "emplType": "E",
   "status": 1,
   "activeYn": "Y",
-  "firstName": "BYUNGKWON",
+  "firstName": "MINSOO",
   "middleName": "",
   "lastName": "HAN",
   "nickName": "CHRIS",
@@ -115,10 +119,10 @@ No request body for this endpoint.
 }
 
 ```
-### Read Detailed employee info by `emplcode` request
+### Read Detailed employee info by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetDetailEmployeeInfo/{emplcode}
+GET /EmployeeInfoRequest/GetDetailEmployeeInfo/{emplCode}
 ```
 
 Endpoint to retrieve simple employee information based on their employee code.
@@ -163,7 +167,7 @@ No request body for this endpoint.
   "contact1Addr2": "",
   "contact1Tel": "",
   "contact1Cell": "",
-  "contact2Name": "BEN HAN",
+  "contact2Name": "MINSOO HAN",
   "contact2Relationship": "R05",
   "contact2Addr1": "",
   "contact2Addr2": "",
@@ -177,10 +181,10 @@ No request body for this endpoint.
 }
 ```
 
-### Read transfer history by `emplcode` request
+### Read transfer history by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetEmployeeTransferHistory/{emplcode}
+GET /EmployeeInfoRequest/GetEmployeeTransferHistory/{emplCode}
 ```
 
 Endpoint to retrieve the transfer history of an employee based on their employee code.
@@ -189,7 +193,7 @@ Endpoint to retrieve the transfer history of an employee based on their employee
 
 ```json
   {
-    "empl_code" : "string"
+    "emplCode" : "string"
   }
 ```
 
@@ -207,10 +211,10 @@ Endpoint to retrieve the transfer history of an employee based on their employee
   }
 ```
 
-### Read awards & disciplinary actions by `emplcode` request
+### Read awards & disciplinary actions by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplcode}
+GET /EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplCode}
 ```
 
 Endpoint to retrieve awards and disciplinary actions of an employee based on their employee code.
@@ -219,7 +223,7 @@ Endpoint to retrieve awards and disciplinary actions of an employee based on the
 
 ```json
   {
-    "empl_code" : "string"
+    "emplCode" : "string"
   }
 ```
 **Sample Response:**
@@ -256,7 +260,7 @@ No request body for this endpoint.
   "emplType": "E",
   "status": 1,
   "activeYn": "Y",
-  "firstName": "BYUNGKWON",
+  "firstName": "MINSOO",
   "middleName": "",
   "lastName": "HAN",
   "nickName": "CHRIS",
@@ -304,7 +308,7 @@ Endpoint to allow employees to change their login password.
 **Parameters**
 ```json
   {
-    "empl_code" : "string",
+    "emplCode" : "string",
     "newPass": "string"
   }
 ```
@@ -320,10 +324,10 @@ Endpoint to allow employees to change their login password.
 
 ## Day/Time Off
 
-### Read vacation days by `empl_code` request
+### Read vacation days by `emplCode` request
 
 ```js
-GET /vacation_days/{empl_code}
+GET /vacation_days/{emplCode}
 ```
 
 Endpoint to retrieve vacation days for an employee based on their employee code.
@@ -340,10 +344,10 @@ No request body for this endpoint.
 }
 ```
 
-### Read vacation schedule by `empl_code` request
+### Read vacation schedule by `emplCode` request
 
 ```js
-GET /vacation_schedule/{empl_code}
+GET /vacation_schedule/{emplCode}
 ```
 
 Endpoint to retrieve vacation schedule or history for an employee 
@@ -425,10 +429,10 @@ Endpoint to submit a new day/time off request.
 }
 ```
 
-### Read day/time off request list by `empl_code`, `year` request
+### Read day/time off request list by `emplCode`, `year` request
 
 ```js
-GET /day_time_off/request_list/{empl_code}/{year}
+GET /day_time_off/request_list/{emplCode}/{year}
 ```
 
 Endpoint to retrieve a list of day/time off requests for a specific employee and year.
@@ -456,7 +460,7 @@ No request body for this endpoint.
 }
 ```
 
-### Read list of day/time off approval requests for manager by  request`approver_id`
+### Read list of day/time off approval requests for manager by  request `approver_id`
 
 ```js
 GET /day_time_off/approval_list/{approver_id}
@@ -483,10 +487,10 @@ No request body for this endpoint.
 }
 ```
 
-### Read day/time off approval history by `empl_code` request
+### Read day/time off approval history by `emplCode` request
 
 ```js
-GET /day_time_off/approval_history/{empl_code}
+GET /day_time_off/approval_history/{emplCode}
 ```
 
 Endpoint to retrieve approval history for a specific employee (for managers).
@@ -518,10 +522,10 @@ No request body for this endpoint.
 
 ## Time & Attendance
 
-### Read time & attendance history by `empl_code`, `time_period` request
+### Read time & attendance history by `emplCode`, `time_period` request
 
 ```js
-GET /time_attendance/history/{empl_code}/{time_period}
+GET /time_attendance/history/{emplCode}/{time_period}
 ```
 
 Endpoint to retrieve time and attendance history for an employee based on their employee code and a specified time period.
@@ -579,10 +583,10 @@ No request body for this endpoint.
 
 ## Insurance
 
-### Read selected insurance information by `empl_code` request
+### Get selected insurance information by `emplCode` request
 
 ```js
-GET /insurance/current_selection/{empl_code}
+GET /Insurance/GetSelectedInsurance/{emplCode}
 ```
 
 Endpoint to retrieve the currently selected insurance information.
@@ -599,11 +603,31 @@ No request body for this endpoint.
 }
 ```
 
-### Read insurance surfing data by `empl_code`, `coverage_selection` request
+### Read insurance surfing data by `insuranceType`,`emplCode`, `coverageSelection` request
 
 ```js
-GET /insurance_surfing/{empl_code}{coverage_selection}
+GET /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}
 ```
+
+Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
+
+**Sample Request:**
+
+No request body for this endpoint.
+
+**Sample Response:**
+
+```json
+{
+  "insurance_plan": "Health Insurance Plan A",
+  "coverage": "Individual"
+}
+```
+
+### Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request
+
+```js
+PUT /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}/{selectedSurfingId}
 
 Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
 
@@ -622,17 +646,17 @@ No request body for this endpoint.
 
 ## Evaluation
 
-### Get evaluation factors
+### Get evaluation factors by `emplCode`, `year`, and `term` request
 
 ```js
-GET /Evaluation/GetEvaluationFactors/{empl_code}
+GET /Evaluation/GetEvaluationFactors/{emplCode}
 ```
 Endpoint to Get Evaluation Factors 
 **Parameters:**
 
 ```json
 {
-  "empl_code": "string",
+  "emplCode": "string",
   "year": "string",
   "term": "string"
 }
@@ -656,16 +680,16 @@ Endpoint to Get Evaluation Factors
   }
 ```
 
-### Create Self Evaluation Record
+### Create Self Evaluation Record by `emplCode`,`year`,`term`,`comment`,`factor`,`grade`
 
 ```js
-POST /Evaluation/CreateSelfEvaluation/{empl_code}
+POST /Evaluation/CreateSelfEvaluation/{emplCode}
 ```
 Endpoint to create self evaluation record for specific term
 **Parameters**
 ```json
 {
-  "empl_code": "string",
+  "emplCode": "string",
   "year": "string",
   "term": "string",
   "comment": "string",
