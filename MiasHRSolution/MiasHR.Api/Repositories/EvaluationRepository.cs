@@ -26,16 +26,16 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieve Evaluation Factors for specific Employee 
         /// </summary>
-        /// <param name="empl_code">The employee code</param>
+        /// <param name="emplCode">The employee code</param>
         /// <param name="year">Year of the Evaluation</param>
         /// <param name="term">Term of the Evaluation</param>
         /// <returns>All the Evaluation factors for the employee with grading scale</returns>
-        public async Task<IReadOnlyList<FactorEvalDTO>> GetEvaluationFactors(string empl_code, string year, string term)
+        public async Task<IReadOnlyList<FactorEvalDTO>> GetEvaluationFactors(string emplCode, string year, string term)
         {
             var param = new
             {
                 pMode = "FACTOREVAL",
-                pEmplCode = empl_code,
+                pEmplCode = emplCode,
                 pYear = year,
                 pTerm = term,
             };
@@ -53,19 +53,19 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Insert Self Evaluation content for specific Employee 
         /// </summary>
-        /// <param name="empl_code">The employee code</param>
+        /// <param name="emplCode">The employee code</param>
         /// <param name="year">Year of the Evaluation</param>
         /// <param name="term">Term of the Evaluation</param>
         /// <param name="comment">Comment left by employee</param>
         /// <param name="factor">Factor that employee is evaluating</param>
         /// <param name="grade">Grade employee gave for the factor</param>
         /// <returns>Whether self evaluation was successful or not</returns>
-        public async Task<UpdateMessageDTO> CreateSelfEvaluation(string empl_code, string year, string term,string factor, string grade, string comment = "")
+        public async Task<UpdateMessageDTO> CreateSelfEvaluation(string emplCode, string year, string term,string factor, string grade, string comment = "")
         {
             var param = new
             {
                 pMode = "SELFEVAL",
-                pEmplCode = empl_code,
+                pEmplCode = emplCode,
                 pYear = year,
                 pTerm = term,
                 pComment = comment,

@@ -6,47 +6,40 @@
   - [Manager](#manager)
     - [Read managed employee `emplCode` list request](#read-managed-employee-emplcode-list-request)
   - [Employee Info](#employee-info)
-    - [Read employee info by `emplCode` request](#read-employee-info-by-emplcode-request)
+    - [Read basic employee info by `emplCode` request](#read-basic-employee-info-by-emplcode-request)
+    - [Read detailed employee info by `emplCode` request](#read-detailed-employee-info-by-emplcode-request)
     - [Read transfer history by `emplCode` request](#read-transfer-history-by-emplcode-request)
     - [Read awards \& disciplinary actions by `emplCode` request](#read-awards--disciplinary-actions-by-emplcode-request)
     - [Read full employee list request](#read-full-employee-list-request)
     - [Update password request](#update-password-request)
   - [Day/Time Off](#daytime-off)
-    - [Get all day time off request for given employee by `emplCode`](#get-all-day-time-off-request-for-given-employee-by-emplcode)
-    - [Create new day time off request](#create-new-day-time-off-request)
-    - [Update day time off request](#update-day-time-off-request)
-    - [Get day time off request by `id`](#get-day-time-off-request-by-id)
-    - [Delete day time off request by `id`](#delete-day-time-off-request-by-id)
-    - [Get remaining vacation days by `emplCode` and `year`](#get-remaining-vacation-days-by-emplcode-and-year)
-    - [Read vacation history by `emplCode`](#read-vacation-history-by-emplcode)
-    - [Get list of current day time off request by `emplCode`, `year`](#get-list-of-current-day-time-off-request-by-emplcode-year)
-    - [Read list of pending day/time off approval requests for manager by `managerEmplCode`](#read-list-of-pending-daytime-off-approval-requests-for-manager-by-manageremplcode)
-    - [Read list of day/time off approval history for manager by `managerEmplCode`](#read-list-of-daytime-off-approval-history-for-manager-by-manageremplcode)
-    - [Read day/time off approval history by `emplCode` request](#read-daytime-off-approval-history-by-emplcode-request)
+    - [Read vacation days by `emplCode` request](#read-vacation-days-by-emplCode-request)
+    - [Read vacation schedule by `emplCode` request](#read-vacation-schedule-by-emplCode-request)
+    - [Create new day/time off request request](#create-new-daytime-off-request-request)
+    - [Read day/time off request list by `emplCode`, `year` request](#read-daytime-off-request-list-by-emplCode-year-request)
+    - [Read list of day/time off approval requests for manager by  request`approver_id`](#read-list-of-daytime-off-approval-requests-for-manager-by--requestapprover_id)
+    - [Read day/time off approval history by `emplCode` request](#read-daytime-off-approval-history-by-emplCode-request)
   - [Time \& Attendance](#time--attendance)
-    - [Read time \& attendance history by `emplCode`, `time_period` request](#read-time--attendance-history-by-emplcode-time_period-request)
-  - [HR Request](#hr-request)
-    - [Read list of HR requests by `emplCode`, `year` request](#read-list-of-hr-requests-by-emplcode-year-request)
-    - [Create new HR meeting request request](#create-new-hr-meeting-request-request)
-    - [Read list of pending HR meeting requests for manager by  request`approver_id`](#read-list-of-pending-hr-meeting-requests-for-manager-by--requestapprover_id)
-    - [Read HR meeting history by `emplCode`, `year` request](#read-hr-meeting-history-by-emplcode-year-request)
+    - [Read time \& attendance history by `emplCode`, `time_period` request](#read-time--attendance-history-by-emplCode-time_period-request)
   - [Org Chart](#org-chart)
     - [GET /org\_chart/data request](#get-org_chartdata-request)
   - [Insurance](#insurance)
-    - [Read selected insurance information by `emplCode` request](#read-selected-insurance-information-by-emplcode-request)
-    - [Read insurance surfing data by `emplCode`, `coverage_selection` request](#read-insurance-surfing-data-by-emplcode-coverage_selection-request)
+    - [Read selected insurance information by `emplCode` request](#read-selected-insurance-information-by-emplCode-request)
+    - [Read insurance surfing data by `emplCode`, `coverage_selection` request](#read-insurance-surfing-data-by-emplCode-coverage_selection-request)
+    - [Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request](#update-insurance-information-for-employee-by-insuranceType-emplCode-coverageSelection-selectedSurfingId-request)
   - [Evaluation](#evaluation)
-    - [Create new self evaluation request](#create-new-self-evaluation-request)
+    - [Get evaluation factors](#get-evaluation-factors)
+    - [Create self evaluation record](#create-self-evaluation-record)
 
 ## Manager
 
 ### Read managed employee `emplCode` list request
 
 ```js
-GET /manager/emplCode_list/{approver_id}
+GET /EmployeeInfoRequest/GetManagerEmployeeList/{emplCode}
 ```
 
-Endpoint to retrieve employee codes associated with a specific approver (for managers).
+Endpoint to retrieve employees under the supervisor (emplCode)
 
 **Sample Request:**
 
@@ -55,112 +48,201 @@ No request body for this endpoint.
 **Sample Response:**
 
 ```json
-{
-  "emplCodes": ["l000111", "l000112", "1000113"]
-}
+ {
+    "emplCode": "100041",
+    "last_name": "KIM",
+    "first_name": "MINSOO",
+    "empl_name": "(UNI)"
+  }
 ```
 
 ## Employee Info
 
-### Read employee info by `emplCode` request
+### Read basic employee info by `emplCode` request
 
 ```js
-GET /employee_info/info/{emplCode}
+GET /EmployeeInfoRequest/GetBasicEmployeeinfo/{emplCode}
 ```
 
-Endpoint to retrieve employee information based on their employee code.
+Endpoint to retrieve simple employee information based on their employee code.
+
+**Parameters**
+```json
+{
+  "emplCode": "string"
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "emplType": "E",
+  "status": 1,
+  "activeYn": "Y",
+  "firstName": "MINSOO",
+  "middleName": "",
+  "lastName": "HAN",
+  "nickName": "CHRIS",
+  "divCode": "COO",
+  "deptCode": "COO_20",
+  "upperEmplCode": "100048",
+  "comTel": "(112)112-1234",
+  "comTelExt": "112",
+  "comFax": "(452)232-1235",
+  "comEmail": "bk.h@miasfashion.com",
+  "position": "G6",
+  "positionYrs": "1",
+  "buildingLoc": "",
+  "hireDate": "21221112",
+  "ptoHireDate": null,
+  "resignDate": "99981231",
+  "resignReason": null,
+  "tnaStatus": "NORMAL",
+  "badgeCode": "2414",
+  "payrollCode": "3231",
+  "payrollOrgCode": "MIAS",
+  "hourlybaseYn": "Y",
+  "photo": "Photo Data",
+  "photoThumbnail": null,
+  "title": "SOFTWARE DEVELOPER",
+  "businessTitle": "",
+  "other": null,
+  "qbKey": "2232232323-11111111111",
+  "qbSendDate": "2022-11-25T09:55:36.273",
+  "createdDate": "2022-11-25T09:48:18",
+  "createdUser": "JAMESLEE",
+  "modifiedDate": "2022-11-25T09:51:26.18",
+  "modifiedUser": "JAMESLEE"
+}
+
+```
+### Read Detailed employee info by `emplCode` request
+
+```js
+GET /EmployeeInfoRequest/GetDetailEmployeeInfo/{emplCode}
+```
+
+Endpoint to retrieve simple employee information based on their employee code.
 
 **Sample Request:**
 
 No request body for this endpoint.
 
 **Sample Response:**
-
-```json
+```js
 {
-  "emplCode": "1000123",
-  "emplName": "John Doe",
-  "divName": "Division XYZ",
-  "dept1Name": "Department A",
-  "deptName": "Sub-Department X",
-  "comTel": "123-456-7890",
-  "comTelExt": "1234",
-  "comFax": "987-654-3210",
-  "comEmail": "john.doe@example.com",
-  "hireDate2": "2020-05-15",
-  "title": "Software Engineer",
-  "flsas": "Exempt",
-  "birthDate2": "1985-08-20",
-  "street": "1234 Elm St",
-  "cityStateZip": "Somewhere, CA 12345",
-  "tel": "555-555-5555",
-  "cell": "555-123-4567",
-  "contact1Name": "Mary Smith",
-  "contact1RelDesc": "Emergency Contact",
-  "contact1Addr1": "5678 Oak St",
-  "contact1Addr2": "Apt 101",
-  "contact1Tel": "555-987-6543",
-  "contact1Cell": "555-876-5432"
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "status": 1,
+  "activeYn": "Y",
+  "gender": "M",
+  "birthDate": "19001222",
+  "degree": "",
+  "marriedYn": "",
+  "street": "2134 NOLLA AVE.",
+  "city": "VOLA",
+  "state": "CA",
+  "zip": "90000",
+  "country": "US",
+  "street2": "",
+  "city2": "",
+  "state2": "CA",
+  "zip2": "",
+  "country2": "US",
+  "tel": "",
+  "cell": "(456)221-2314",
+  "residentStatus": "A",
+  "alienNo": "",
+  "i9Date": "19000101",
+  "ssn": "",
+  "w4Status": "S",
+  "exemptions": 0,
+  "memo": "",
+  "contact1Name": "",
+  "contact1Relationship": "",
+  "contact1Addr1": "",
+  "contact1Addr2": "",
+  "contact1Tel": "",
+  "contact1Cell": "",
+  "contact2Name": "MINSOO HAN",
+  "contact2Relationship": "R05",
+  "contact2Addr1": "",
+  "contact2Addr2": "",
+  "contact2Tel": "",
+  "contact2Cell": "(256)332-3123",
+  "other": null,
+  "createdDate": "2022-11-25T09:48:18.107",
+  "createdUser": "JASONLEE",
+  "modifiedDate": "2022-11-25T09:51:26.21",
+  "modifiedUser": "JASONLEE"
 }
-
 ```
 
 ### Read transfer history by `emplCode` request
 
 ```js
-GET /employee_info/transfer_history/{emplCode}
+GET /EmployeeInfoRequest/GetEmployeeTransferHistory/{emplCode}
 ```
 
 Endpoint to retrieve the transfer history of an employee based on their employee code.
 
-**Sample Request:**
+**Parameters:**
 
-No request body for this endpoint.
+```json
+  {
+    "emplCode" : "string"
+  }
+```
 
 **Sample Response:**
 
 ```json
-{
-  "transfer_history": [
-    {
-      "date": "2023-07-15",
-      "from_department": "Sales",
-      "to_department": "Marketing"
-    },
-    {
-      "date": "2022-12-10",
-      "from_department": "HR",
-      "to_department": "Sales"
-    }
-  ]
-}
+  {
+    "seq": 1,
+    "date": "01/04/2012",
+    "hist_Type": "DEPT",
+    "hist_Type_Desc": "Department Transfer",
+    "old_Desc": "PP - Aero  [ Div : MP00 ]",
+    "new_Desc": "Aeropostale  [ Div : MP00 ]",
+    "remark": ""
+  }
 ```
 
 ### Read awards & disciplinary actions by `emplCode` request
 
 ```js
-GET /award_disciplinary_action/{emplCode}
+GET /EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplCode}
 ```
 
 Endpoint to retrieve awards and disciplinary actions of an employee based on their employee code.
 
-**Sample Request:**
+**Parameters:**
 
-No request body for this endpoint.
-
+```json
+  {
+    "emplCode" : "string"
+  }
+```
 **Sample Response:**
 
 ```json
 {
-  "awards": ["Employee of the Month - Jan 2023"],
-  "disciplinary_actions": ["Written Warning - Mar 2022"]
-}
+    "seq": 4,
+    "date": "07/01/2010",
+    "rp_Type": "RP01",
+    "rp_Type_Desc": "Award",
+    "rp_Title": "HR OUTSTANDING ACHIEVEMENT & CONTRIBUTION",
+    "remark": ""
+  }
 ```
 
 ### Read full employee list request
 
 ```js
-GET /employee_list
+GET /EmployeeInfoRequest/GetAllEmployeeInfo
 ```
 
 Endpoint to retrieve a list of employees.
@@ -173,41 +255,70 @@ No request body for this endpoint.
 
 ```json
 {
-  "employees": [
-    {
-      "employee_id": "empl001",
-      "name": "John Doe"
-    },
-    {
-      "employee_id": "empl002",
-      "name": "Jane Smith"
-    }
-  ]
-}
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "emplType": "E",
+  "status": 1,
+  "activeYn": "Y",
+  "firstName": "MINSOO",
+  "middleName": "",
+  "lastName": "HAN",
+  "nickName": "CHRIS",
+  "divCode": "COO",
+  "deptCode": "COO_20",
+  "upperEmplCode": "100048",
+  "comTel": "(112)112-1234",
+  "comTelExt": "112",
+  "comFax": "(452)232-1235",
+  "comEmail": "bk.h@miasfashion.com",
+  "position": "G6",
+  "positionYrs": "1",
+  "buildingLoc": "",
+  "hireDate": "21221112",
+  "ptoHireDate": null,
+  "resignDate": "99981231",
+  "resignReason": null,
+  "tnaStatus": "NORMAL",
+  "badgeCode": "2414",
+  "payrollCode": "3231",
+  "payrollOrgCode": "MIAS",
+  "hourlybaseYn": "Y",
+  "photo": "Photo Data",
+  "photoThumbnail": null,
+  "title": "SOFTWARE DEVELOPER",
+  "businessTitle": "",
+  "other": null,
+  "qbKey": "2232232323-11111111111",
+  "qbSendDate": "2022-11-25T09:55:36.273",
+  "createdDate": "2022-11-25T09:48:18",
+  "createdUser": "JAMESLEE",
+  "modifiedDate": "2022-11-25T09:51:26.18",
+  "modifiedUser": "JAMESLEE"
+} .... all active employees
 ```
 
 ### Update password request
 
 ```js
-POST /login/password_change
+PUT /EmployeeInfoRequest/UpdateUserPassword/{emplCode}
 ```
 
 Endpoint to allow employees to change their login password.
 
-**Sample Request:**
-
+**Parameters**
 ```json
-{
-  "employee_id": "empl001",
-  "new_password": "newpassword123"
-}
+  {
+    "emplCode" : "string",
+    "newPass": "string"
+  }
 ```
+
 
 **Sample Response:**
 
 ```json
 {
-  "message": "Password changed successfully."
+  1
 }
 ```
 
@@ -825,158 +936,17 @@ No request body for this endpoint.
 }
 ```
 
-## HR Request
-
-### Read list of HR requests by `emplCode`, `year` request
-
-```js
-GET /hr_request/meeting_list/{emplCode}/{year}
-```
-
-Endpoint to retrieve a list of HR meeting requests for a specific employee and year.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "meeting_requests": [
-    {
-      "meeting_id": "meeting001",
-      "date": "2023-10-10",
-      "status": "Pending"
-    },
-    {
-      "meeting_id": "meeting002",
-      "date": "2023-11-05",
-      "status": "Approved"
-    }
-  ]
-}
-```
-
-### Create new HR meeting request request
-
-```js
-POST /hr_request/new_meeting_request
-```
-
-Endpoint to submit a new HR meeting request.
-
-**Sample Request:**
-
-```json
-{
-  "employee_id": "empl001",
-  "meeting_date": "2023-12-15",
-  "description": "Discuss annual performance"
-}
-```
-
-**Sample Response:**
-
-```json
-{
-  "message": "HR meeting request submitted successfully."
-}
-```
-
-### Read list of pending HR meeting requests for manager by  request`approver_id`
-
-```js
-GET /hr_request/waiting_list/{approver_id}
-```
-
-Endpoint to retrieve a list of HR meeting requests awaiting approval for a manager.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-
-**Sample Response:**
-
-```json
-{
-  "meeting_requests": [
-    {
-      "meeting_id": "meeting003",
-      "employee_id": "empl003",
-      "date": "2023-11-20",
-      "status": "Pending"
-    }
-  ]
-}
-```
-
-
-### Read HR meeting history by `emplCode`, `year` request
-
-```js
-GET /hr_request/meeting_history/{emplCode}/{year}
-```
-
-Endpoint to retrieve HR meeting history for a specific employee and year.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "attendance_history": [
-    {
-      "date": "2023-09-01",
-      "hours_worked": 8
-    },
-    {
-      "date": "2023-09-02",
-      "hours_worked": 7.5
-    }
-  ]
-}
-```
-
-
 ## Org Chart
-
+**==Not implemented yet==**
 ### GET /org_chart/data request
 
-Endpoint to retrieve organizational chart data.
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "meeting_requests": [
-    {
-      "meeting_id": "meeting001",
-      "date": "2023-10-10",
-      "status": "Pending"
-    },
-    {
-      "meeting_id": "meeting002",
-      "date": "2023-11-05",
-      "status": "Approved"
-    }
-  ]
-}
-```
 
 ## Insurance
 
-### Read selected insurance information by `emplCode` request
+### Get selected insurance information by `emplCode` request
 
 ```js
-GET /insurance/current_selection/{emplCode}
+GET /Insurance/GetSelectedInsurance/{emplCode}
 ```
 
 Endpoint to retrieve the currently selected insurance information.
@@ -993,11 +963,31 @@ No request body for this endpoint.
 }
 ```
 
-### Read insurance surfing data by `emplCode`, `coverage_selection` request
+### Read insurance surfing data by `insuranceType`,`emplCode`, `coverageSelection` request
 
 ```js
-GET /insurance_surfing/{emplCode}{coverage_selection}
+GET /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}
 ```
+
+Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
+
+**Sample Request:**
+
+No request body for this endpoint.
+
+**Sample Response:**
+
+```json
+{
+  "insurance_plan": "Health Insurance Plan A",
+  "coverage": "Individual"
+}
+```
+
+### Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request
+
+```js
+PUT /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}/{selectedSurfingId}
 
 Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
 
@@ -1016,21 +1006,19 @@ No request body for this endpoint.
 
 ## Evaluation
 
-### Create new self evaluation request
+### Get evaluation factors by `emplCode`, `year`, and `term` request
 
 ```js
-POST /self_evaluation/new_evaluation
+GET /Evaluation/GetEvaluationFactors/{emplCode}
 ```
-
-Endpoint to submit a self-evaluation.
-**Sample Request:**
+Endpoint to Get Evaluation Factors 
+**Parameters:**
 
 ```json
 {
-  "employee_id": "empl001",
-  "evaluation_date": "2023-09-28",
-  "performance_rating": 4.7,
-  "comments": "Consistently met and exceeded project goals."
+  "emplCode": "string",
+  "year": "string",
+  "term": "string"
 }
 ```
 
@@ -1038,6 +1026,42 @@ Endpoint to submit a self-evaluation.
 
 ```json
 {
-  "message": "Self-evaluation submitted successfully."
+    "factor": "F003",
+    "factor_desc": "Knowledge of Job",
+    "line_display": "false",
+    "factor_grade": "A",
+    "grade_desc": "Has a great wealth of knowledge about all job facets",
+    "f_checked": "true",
+    "comment": "sdasldajdjsadsalkdasldksl",
+    "group_desc": "MIAS / IT",
+    "appraiser1": "DAVE KIM",
+    "appraiser2": "JAE SONG",
+    "open_yn": "Y"
+  }
+```
+
+### Create Self Evaluation Record by `emplCode`,`year`,`term`,`comment`,`factor`,`grade`
+
+```js
+POST /Evaluation/CreateSelfEvaluation/{emplCode}
+```
+Endpoint to create self evaluation record for specific term
+**Parameters**
+```json
+{
+  "emplCode": "string",
+  "year": "string",
+  "term": "string",
+  "comment": "string",
+  "factor": "string",
+  "grade": "string"  
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "msg": "Saved Successfully!"
 }
 ```
