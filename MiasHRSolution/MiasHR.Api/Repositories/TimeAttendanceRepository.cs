@@ -25,18 +25,18 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves the time & attendance list for a given employee within a specified date range.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <param name="dateFrom">The start date in yyyyMMdd format.</param>
         /// <param name="dateTo">The end date in yyyyMMdd format.</param>
         /// <returns>The time list for the given employee.</returns>
-        public async Task<EmployeeTimeListDTO> GetEmployeeTimeList(string empl_code, string dateFrom, string dateTo)
+        public async Task<EmployeeTimeListDTO> GetEmployeeTimeList(string emplCode, string dateFrom, string dateTo)
         {
             var param = new
             {
                 pOrgCode = "WEB",
                 pStartDt = dateFrom,
                 pEndDt = dateTo,
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -53,18 +53,18 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves the time & attendance history for a given employee within a specified date range.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <param name="dateFrom">The start date in yyyyMMdd format.</param>
         /// <param name="dateTo">The end date in yyyyMMdd format.</param>
         /// <returns>The time history for the given employee.</returns>
-        public async Task<IReadOnlyList<EmployeeTimeHistoryDTO>> GetHrEmployeeTimeHistory(string empl_code, string dateFrom, string dateTo)
+        public async Task<IReadOnlyList<EmployeeTimeHistoryDTO>> GetHrEmployeeTimeHistory(string emplCode, string dateFrom, string dateTo)
         {
             var param = new
             {
                 pOrgCode = "WEB",
                 pStartDt = dateFrom,
                 pEndDt = dateTo,
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {

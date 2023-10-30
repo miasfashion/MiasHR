@@ -4,41 +4,46 @@
 - [API Endpoints](#api-endpoints)
   - [Contents](#contents)
   - [Manager](#manager)
-    - [Read managed employee `empl_code` list request](#read-managed-employee-empl_code-list-request)
+    - [Read managed employee `emplCode` list request](#read-managed-employee-emplcode-list-request)
   - [Employee Info](#employee-info)
-    - [Read employee info by `empl_code` request](#read-employee-info-by-empl_code-request)
-    - [Read transfer history by `empl_code` request](#read-transfer-history-by-empl_code-request)
-    - [Read awards \& disciplinary actions by `empl_code` request](#read-awards--disciplinary-actions-by-empl_code-request)
+    - [Read employee info by `emplCode` request](#read-employee-info-by-emplcode-request)
+    - [Read transfer history by `emplCode` request](#read-transfer-history-by-emplcode-request)
+    - [Read awards \& disciplinary actions by `emplCode` request](#read-awards--disciplinary-actions-by-emplcode-request)
     - [Read full employee list request](#read-full-employee-list-request)
     - [Update password request](#update-password-request)
   - [Day/Time Off](#daytime-off)
-    - [Read vacation days by `empl_code` request](#read-vacation-days-by-empl_code-request)
-    - [Read vacation schedule by `empl_code` request](#read-vacation-schedule-by-empl_code-request)
-    - [Create new day/time off request request](#create-new-daytime-off-request-request)
-    - [Read day/time off request list by `empl_code`, `year` request](#read-daytime-off-request-list-by-empl_code-year-request)
-    - [Read list of day/time off approval requests for manager by  request`approver_id`](#read-list-of-daytime-off-approval-requests-for-manager-by--requestapprover_id)
-    - [Read day/time off approval history by `empl_code` request](#read-daytime-off-approval-history-by-empl_code-request)
+    - [Get all day time off request for given employee by `emplCode`](#get-all-day-time-off-request-for-given-employee-by-emplcode)
+    - [Create new day time off request](#create-new-day-time-off-request)
+    - [Update day time off request](#update-day-time-off-request)
+    - [Get day time off request by `id`](#get-day-time-off-request-by-id)
+    - [Delete day time off request by `id`](#delete-day-time-off-request-by-id)
+    - [Get remaining vacation days by `emplCode` and `year`](#get-remaining-vacation-days-by-emplcode-and-year)
+    - [Read vacation history by `emplCode`](#read-vacation-history-by-emplcode)
+    - [Get list of current day time off request by `emplCode`, `year`](#get-list-of-current-day-time-off-request-by-emplcode-year)
+    - [Read list of pending day/time off approval requests for manager by `managerEmplCode`](#read-list-of-pending-daytime-off-approval-requests-for-manager-by-manageremplcode)
+    - [Read list of day/time off approval history for manager by `managerEmplCode`](#read-list-of-daytime-off-approval-history-for-manager-by-manageremplcode)
+    - [Read day/time off approval history by `emplCode` request](#read-daytime-off-approval-history-by-emplcode-request)
   - [Time \& Attendance](#time--attendance)
-    - [Read time \& attendance history by `empl_code`, `time_period` request](#read-time--attendance-history-by-empl_code-time_period-request)
+    - [Read time \& attendance history by `emplCode`, `time_period` request](#read-time--attendance-history-by-emplcode-time_period-request)
   - [HR Request](#hr-request)
-    - [Read list of HR requests by `empl_code`, `year` request](#read-list-of-hr-requests-by-empl_code-year-request)
+    - [Read list of HR requests by `emplCode`, `year` request](#read-list-of-hr-requests-by-emplcode-year-request)
     - [Create new HR meeting request request](#create-new-hr-meeting-request-request)
     - [Read list of pending HR meeting requests for manager by  request`approver_id`](#read-list-of-pending-hr-meeting-requests-for-manager-by--requestapprover_id)
-    - [Read HR meeting history by `empl_code`, `year` request](#read-hr-meeting-history-by-empl_code-year-request)
+    - [Read HR meeting history by `emplCode`, `year` request](#read-hr-meeting-history-by-emplcode-year-request)
   - [Org Chart](#org-chart)
     - [GET /org\_chart/data request](#get-org_chartdata-request)
   - [Insurance](#insurance)
-    - [Read selected insurance information by `empl_code` request](#read-selected-insurance-information-by-empl_code-request)
-    - [Read insurance surfing data by `empl_code`, `coverage_selection` request](#read-insurance-surfing-data-by-empl_code-coverage_selection-request)
+    - [Read selected insurance information by `emplCode` request](#read-selected-insurance-information-by-emplcode-request)
+    - [Read insurance surfing data by `emplCode`, `coverage_selection` request](#read-insurance-surfing-data-by-emplcode-coverage_selection-request)
   - [Evaluation](#evaluation)
     - [Create new self evaluation request](#create-new-self-evaluation-request)
 
 ## Manager
 
-### Read managed employee `empl_code` list request
+### Read managed employee `emplCode` list request
 
 ```js
-GET /manager/empl_code_list/{approver_id}
+GET /manager/emplCode_list/{approver_id}
 ```
 
 Endpoint to retrieve employee codes associated with a specific approver (for managers).
@@ -57,10 +62,10 @@ No request body for this endpoint.
 
 ## Employee Info
 
-### Read employee info by `empl_code` request
+### Read employee info by `emplCode` request
 
 ```js
-GET /employee_info/info/{empl_code}
+GET /employee_info/info/{emplCode}
 ```
 
 Endpoint to retrieve employee information based on their employee code.
@@ -100,10 +105,10 @@ No request body for this endpoint.
 
 ```
 
-### Read transfer history by `empl_code` request
+### Read transfer history by `emplCode` request
 
 ```js
-GET /employee_info/transfer_history/{empl_code}
+GET /employee_info/transfer_history/{emplCode}
 ```
 
 Endpoint to retrieve the transfer history of an employee based on their employee code.
@@ -131,10 +136,10 @@ No request body for this endpoint.
 }
 ```
 
-### Read awards & disciplinary actions by `empl_code` request
+### Read awards & disciplinary actions by `emplCode` request
 
 ```js
-GET /award_disciplinary_action/{empl_code}
+GET /award_disciplinary_action/{emplCode}
 ```
 
 Endpoint to retrieve awards and disciplinary actions of an employee based on their employee code.
@@ -208,71 +213,101 @@ Endpoint to allow employees to change their login password.
 
 ## Day/Time Off
 
-### Read vacation days by `empl_code` request
-
+### Get all day time off request for given employee by `emplCode`
 ```js
-GET /vacation_days/{empl_code}
+GET /api/DayTimeOffRequest/GetAllEmployeeDayTimeOffRequestList/{emplCode}
 ```
 
-Endpoint to retrieve vacation days for an employee based on their employee code.
+Endpoint to get list of day/time off requests for a given employee.
+
+**Parameters:**
+```js
+emplCode : String
+```
+
+**Sample Response**
+```json
+[
+  {
+    "seq": 1,
+    "status": 2,
+    "emplCode": "EMP001",
+    "reqDate": "20220101",
+    "reqType": "PTO",
+    "reqSubType": "PTO [ PM ] ",
+    "periodFrom": "20220102",
+    "periodTo": "20220102",
+    "daysCnt": 0.5,
+    "hoursCnt": 0,
+    "startTime": null,
+    "reqTitle": "",
+    "reqContent": "",
+    "reqIp": "192.168.1.1",
+    "approve1stYn": "Y",
+    "approve1stUser": "MGR001",
+    "approve1stDate": "2022-01-01T10:00:00.000",
+    "approve2ndYn": "Y",
+    "approve2ndUser": "HR001",
+    "approve2ndDate": "2022-01-01T11:00:00.000",
+    "mhrsUpdateYn": "Y",
+    "mhrsUpdateUser": "HR001",
+    "rejectReason": null,
+    "rejectUser": null,
+    "rejectDate": null,
+    "sickdayYn": "N",
+    "createdDate": "2022-01-01T09:00:00.000",
+    "createdUser": "EMP001",
+    "modifiedDate": "2022-01-01T11:30:00.000",
+    "modifiedUser": "HR001"
+  },
+  {
+    "seq": 2,
+    "status": 2,
+    "emplCode": "EMP002",
+    "reqDate": "20220103",
+    "reqType": "PTO",
+    "reqSubType": "PTO [ PM ] ",
+    "periodFrom": "20220104",
+    "periodTo": "20220104",
+    "daysCnt": 0.5,
+    "hoursCnt": 0,
+    "startTime": null,
+    "reqTitle": "",
+    "reqContent": "",
+    "reqIp": "192.168.1.2",
+    "approve1stYn": "Y",
+    "approve1stUser": "MGR002",
+    "approve1stDate": "2022-01-03T10:00:00.000",
+    "approve2ndYn": "Y",
+    "approve2ndUser": "HR002",
+    "approve2ndDate": "2022-01-03T11:00:00.000",
+    "mhrsUpdateYn": "Y",
+    "mhrsUpdateUser": "HR002",
+    "rejectReason": null,
+    "rejectUser": null,
+    "rejectDate": null,
+    "sickdayYn": "N",
+    "createdDate": "2022-01-03T09:00:00.000",
+    "createdUser": "EMP002",
+    "modifiedDate": "2022-01-03T11:30:00.000",
+    "modifiedUser": "HR002"
+  }
+]
+```
+
+### Create new day time off request
+
+```js
+POST /api/DayTimeOffRequest/CreateDayTimeOffRequest
+```
+
+TODO: Endpoint to submit a new day/time off request.
 
 **Sample Request:**
 
-No request body for this endpoint.
-
-**Sample Response:**
-
 ```json
 {
-  "vacation_days": 20
-}
-```
-
-### Read vacation schedule by `empl_code` request
-
-```js
-GET /vacation_schedule/{empl_code}
-```
-
-Endpoint to retrieve vacation schedule or history for an employee 
-based on their employee code.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "vacation_schedule": [
-    {
-      "start_date": "2023-10-15",
-      "end_date": "2023-10-20",
-      "status": "Approved"
-    },
-    {
-      "start_date": "2023-11-05",
-      "end_date": "2023-11-10",
-      "status": "Pending"
-    }
-  ]
-}
-```
-
-### Create new day/time off request request
-
-```js
-POST /day_time_off/new_request
-```
-
-Endpoint to submit a new day/time off request.
-
-**Sample Request:**
-
-```json
-{
-  "emplCode": "1000123",
+  "emplCode": "EMPL001",
   "type": "Vacation",
   "subType": "Paid",
   "fromDate": "2023-10-15",
@@ -288,7 +323,70 @@ Endpoint to submit a new day/time off request.
   "time": "08:00:00",
   "sickDayYnN": "N"
 }
+```
 
+**Sample Response:**
+
+```json
+{
+  "id" : 123456000
+}
+```
+
+### Update day time off request
+
+```js
+POST /api/DayTimeOffRequest/UpdateDayTimeOffRequest/{id}
+```
+
+TODO: Endpoint to update an existing day/time off request.
+
+**Parameters:**
+```js
+id : int
+```
+
+**Sample Request:**
+
+```json
+{
+  "emplCode": "EMPL001",
+  "type": "Vacation",
+  "subType": "Paid",
+  "fromDate": "2023-10-15",
+  "toDate": "2023-10-17",
+  "daysCnt": 3.0,
+  "title": "Vacation Request",
+  "content": "Taking a short vacation to relax.",
+  "ip": "192.168.1.100",
+  "user": "john.doe",
+  "newType": "Vacation",
+  "seq": 1,
+  "hours": 24,
+  "time": "08:00:00",
+  "sickDayYnN": "N"
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "id" : 123456000
+}
+```
+
+### Get day time off request by `id`
+
+```js
+POST /api/DayTimeOffRequest/GetDayTimeOffRequest/{id}
+```
+
+Endpoint to get an existing day/time off request.
+
+**Parameters:**
+```js
+id : int
 ```
 
 **Sample Response:**
@@ -313,41 +411,211 @@ Endpoint to submit a new day/time off request.
 }
 ```
 
-### Read day/time off request list by `empl_code`, `year` request
+### Delete day time off request by `id`
 
 ```js
-GET /day_time_off/request_list/{empl_code}/{year}
+POST /api/DayTimeOffRequest/DeleteDayTimeOffRequest/{id}
 ```
 
-Endpoint to retrieve a list of day/time off requests for a specific employee and year.
+TODO: Endpoint to delete an existing day/time off request.
 
-**Sample Request:**
-
-No request body for this endpoint.
+**Parameters:**
+```js
+id : int
+```
 
 **Sample Response:**
 
 ```json
 {
-  "requests": [
-    {
-      "start_date": "2023-10-15",
-      "end_date": "2023-10-20",
-      "status": "Approved"
-    },
-    {
-      "start_date": "2023-11-05",
-      "end_date": "2023-11-10",
-      "status": "Pending"
-    }
-  ]
+  1
 }
 ```
 
-### Read list of day/time off approval requests for manager by  request`approver_id`
+### Get remaining vacation days by `emplCode` and `year`
 
 ```js
-GET /day_time_off/approval_list/{approver_id}
+GET /api/DayTimeOffRequest/GetDayTimeOffRemainingByEmployee/{emplCode}/{year}
+```
+
+Endpoint to retrieve vacation days for a given employee based on their employee code and given year.
+
+**Parameters:**
+
+```
+emplCode : string
+year : string
+```
+
+**Sample Response:**
+
+```json
+{
+  "div_name": "COO",
+  "dept_name": "IT",
+  "emplCode": 1234000,
+  "name": "Doe, John",
+  "hire_date": "11/11/2011 00:00:00",
+  "s_carry_over_days": 0,
+  "s_year_basic_days": 0.0,
+  "prev_month_day": 0.0,
+  "accu_days": 0.0,
+  "s_curr_basic_days": 0.0,
+  "s_adjust_days": 0,
+  "s_used_days": 0.0,
+  "s_available_days": 0.0,
+  "s_available_curr_days": 0.0,
+  "s_available_curr_hrs": 0,
+  "yyyy": "2023",
+  "s_left_days": 0.0,
+  "s_hold_days": 0,
+  "s_available_days_span": "<span style=\"color:#0000ff;\">",
+  "s_available_curr_days_span": "<span style=\"color:#0000ff;\">",
+  "payroll_org_code": "MIAS",
+  "s_available_asof_date": 0,
+  "s_uto_days": 0.0,
+  "s_uto_applied_days": 0.0,
+  "resign_date": "12/31/9998 00:00:00",
+  "s_sick_days": 0,
+  "s_used_sick_days": 0,
+  "org_available_days": 0.0
+}
+```
+
+### Read vacation history by `emplCode`
+
+```js
+GET /api/DayTimeOffRequest/GetEmployeeDayTimeOffHistoryList/{emplCode}/{year}
+```
+
+Endpoint to retrieve vacation history for an employee based on their employee code.
+
+**Parameters:**
+
+```
+emplCode : string
+year : string
+```
+
+**Sample Response:**
+
+```json
+[
+  {
+    "seq": 0,
+    "yyyy": "2023",
+    "v_type_desc": "ABSENCE",
+    "carry_over_days": 0,
+    "basic_days": 0,
+    "hold_days": 0,
+    "adjust_days": 0,
+    "used_days": 0,
+    "remark": "sick call",
+    "v_type": "USED"
+  },
+  {
+    "seq": 0,
+    "yyyy": "2023",
+    "v_type_desc": "ABSENCE - 2Hrs",
+    "carry_over_days": 0,
+    "basic_days": 0,
+    "hold_days": 0,
+    "adjust_days": 0,
+    "used_days": 0,
+    "remark": "",
+    "v_type": "USED"
+  },
+]
+```
+
+### Get list of current day time off request by `emplCode`, `year`
+
+```js
+GET /api/DayTimeOffRequest/GetDayTimeOffRequestResultList{emplCode}/{year}
+```
+
+Endpoint to retrieve a list of day/time off requests for a specific employee and year.
+
+**Parameters:**
+
+```
+emplCode : string
+year : string
+```
+
+**Sample Response:**
+
+```json
+[
+  {
+    "seq": 12345,
+    "req_date": "20230201",
+    "req_type": "VAC",
+    "req_sub_type": "VAC - 6 Hrs, @ 8:00 AM (by HR)",
+    "period_from": "20230201",
+    "period_to": "20230201",
+    "days_cnt": 1.0,
+    "hours_cnt": 8,
+    "start_time": "08:00:00",
+    "req_title": "",
+    "req_content": "sick call",
+    "req_ip": "",
+    "approve_1st_yn": "Y",
+    "approve_1st_user": "100123",
+    "approve_1st_date": "2023-02-02T10:17:51.693",
+    "approve_2nd_yn": "Y",
+    "approve_2nd_user": "100001",
+    "approve_2nd_date": "2023-02-02T10:17:51.703",
+    "mhrs_update_yn": "Y",
+    "mhrs_update_user": "JANE BROWN",
+    "reject_reason": null,
+    "reject_user": null,
+    "reject_date": null,
+    "sickday_yn": "Y",
+    "req_date2": "02/02/2023",
+    "period": "02/02/2023 - 02/02/2023",
+    "req_status": "[ APPROVED ]",
+    "req_content2": "sick call",
+    "req_content3": "sick call"
+  },
+  {
+    "seq": 12345,
+    "req_date": "20230905",
+    "req_type": "VAC",
+    "req_sub_type": "VAC - 6 Hrs, @ 8:00 AM (by HR)",
+    "period_from": "20230905",
+    "period_to": "20230905",
+    "days_cnt": 1.0,
+    "hours_cnt": 8,
+    "start_time": "08:00:00",
+    "req_title": "",
+    "req_content": "sick call",
+    "req_ip": "",
+    "approve_1st_yn": "Y",
+    "approve_1st_user": "100123",
+    "approve_1st_date": "2023-09-05T10:17:51.693",
+    "approve_2nd_yn": "Y",
+    "approve_2nd_user": "100001",
+    "approve_2nd_date": "2023-09-05T10:17:51.703",
+    "mhrs_update_yn": "Y",
+    "mhrs_update_user": "JANE BROWN",
+    "reject_reason": null,
+    "reject_user": null,
+    "reject_date": null,
+    "sickday_yn": "Y",
+    "req_date2": "09/05/2023",
+    "period": "09/05/2023 - 09/05/2023",
+    "req_status": "[ APPROVED ]",
+    "req_content2": "sick call",
+    "req_content3": "sick call"
+  }
+]
+```
+
+### Read list of pending day/time off approval requests for manager by `managerEmplCode`
+
+```js
+GET /api/manager/DayTimeOffRequest/GetPendingDayTimeOffRequestList{managerEmplCode}
 ```
 
 Endpoint to retrieve a list of day/time off approval requests for a manager.
@@ -360,56 +628,178 @@ No request body for this endpoint.
 
 ```json
 {
-  "approval_requests": [
+  [
     {
-      "request_id": "request001",
-      "employee_id": "empl002",
-      "start_date": "2023-11-05",
-      "end_date": "2023-11-10"
+      "seq": 0,
+      "status": 0,
+      "emplCode": "1230000",
+      "req_date": "2023-10-15",
+      "req_type": "Vacation",
+      "req_sub_type": "Paid",
+      "period_from": "2023-11-15",
+      "period_to": "2023-11-20",
+      "days_cnt": 5,
+      "hours_cnt": 40,
+      "start_time": {
+        "ticks": 0,
+        "days": 0,
+        "hours": 0,
+        "milliseconds": 0,
+        "microseconds": 0,
+        "nanoseconds": 0,
+        "minutes": 0,
+        "seconds": 0,
+        "totalDays": 0,
+        "totalHours": 0,
+        "totalMilliseconds": 0,
+        "totalMicroseconds": 0,
+        "totalNanoseconds": 0,
+        "totalMinutes": 0,
+        "totalSeconds": 0
+      },
+      "req_title": "",
+      "req_content": "",
+      "req_ip": "",
+      "approve_1st_yn": "Y",
+      "approve_1st_user": "100012",
+      "approve_1st_date": "2023-10-30T16:18:20.398Z",
+      "approve_2nd_yn": "Y",
+      "approve_2nd_user": "100012",
+      "approve_2nd_date": "2023-10-30T16:18:20.398Z",
+      "mhrs_update_yn": "Y",
+      "mhrs_update_user": "string",
+      "reject_reason": null,
+      "reject_user": null,
+      "reject_date": null,
+      "sickday_yn": "N",
+      "created_date": "2023-10-30T16:18:20.398Z",
+      "created_user": "Doe, John",
+      "modified_date": "2023-10-30T16:18:20.398Z",
+      "modified_user": "Doe, John",
+      "approve_type": "string",
+      "req_date2": "string",
+      "period": "string",
+      "pto_left_days": 0,
+      "pto_curr_days": 0,
+      "sick_left_days": 0,
+      "sick_curr_days": 0,
+      "empl_name": "Doe, John"
     }
   ]
 }
 ```
 
-### Read day/time off approval history by `empl_code` request
+
+### Read list of day/time off approval history for manager by `managerEmplCode`
 
 ```js
-GET /day_time_off/approval_history/{empl_code}
+GET /api/manager/DayTimeOffRequest/GetDayTimeOffApprovalHistory{managerEmplCode}
 ```
 
 Endpoint to retrieve approval history for a specific employee (for managers).
 
-**Sample Request:**
+**Parameters:**
 
-No request body for this endpoint.
+```
+managerEmplCode : string
+```
 
 **Sample Response:**
 
 ```json
-{
-  "approval_history": [
-    {
-      "request_id": "request001",
-      "start_date": "2023-11-05",
-      "end_date": "2023-11-10",
-      "status": "Approved"
-    },
-    {
-      "request_id": "request002",
-      "start_date": "2023-10-15",
-      "end_date": "2023-10-20",
-      "status": "Denied"
-    }
-  ]
-}
+[
+  {
+    "seq": 13371,
+    "req_date": "20230913",
+    "req_trpe": null,
+    "req_sub_type": "VAC - 6 Hrs, @ 8:00 AM (by HR)",
+    "period_from": "20230913",
+    "period_to": "20230913",
+    "days_cnt": 0.75,
+    "hours_cnt": 6,
+    "start_time": "08:00:00",
+    "req_title": "",
+    "req_content": "sick call",
+    "req_ip": "",
+    "approve_1st_yn": "Y",
+    "approve_1st_user": "100048",
+    "approve_1st_date": "2023-09-13T10:17:51.693",
+    "approve_2nd_yn": "Y",
+    "approve_2nd_user": "100048",
+    "approve_2nd_date": "2023-09-13T10:17:51.703",
+    "mhrs_update_yn": "Y",
+    "mhrs_update_user": "PAULCHEONG",
+    "reject_reason": null,
+    "reject_user": null,
+    "reject_date": null,
+    "sickday_yn": "N",
+    "empl_name": "JOHN DOE",
+    "req_date2": "09/13/2023",
+    "period": "09/13/2023 - 09/13/2023 (0.75)",
+    "req_status": "[ APPROVED ]",
+    "req_content2": "sick call",
+    "req_content3": "sick call"
+  },
+  {
+    "seq": 13367,
+    "req_date": "20230911",
+    "req_trpe": null,
+    "req_sub_type": "Business Related (by HR)",
+    "period_from": "20230911",
+    "period_to": "20230911",
+    "days_cnt": 1,
+    "hours_cnt": 0,
+    "start_time": null,
+    "req_title": "",
+    "req_content": "remote work",
+    "req_ip": "",
+    "approve_1st_yn": "Y",
+    "approve_1st_user": "100048",
+    "approve_1st_date": "2023-09-11T10:14:33.777",
+    "approve_2nd_yn": "Y",
+    "approve_2nd_user": "100048",
+    "approve_2nd_date": "2023-09-11T10:14:33.787",
+    "mhrs_update_yn": "Y",
+    "mhrs_update_user": "PAULCHEONG",
+    "reject_reason": null,
+    "reject_user": null,
+    "reject_date": null,
+    "sickday_yn": "N",
+    "empl_name": "JANE DOE",
+    "req_date2": "09/11/2023",
+    "period": "09/11/2023 - 09/11/2023 (1.00)",
+    "req_status": "[ APPROVED ]",
+    "req_content2": "remote work",
+    "req_content3": "remote work"
+  }
+]
+```
+
+### Read day/time off approval history by `emplCode` request
+
+```js
+GET /day_time_off/approval_history/{emplCode}
+```
+
+Endpoint to retrieve approval history for a specific employee (for managers).
+
+**Parameters:**
+
+```
+managerEmplCode : string
+```
+
+**Sample Response:**
+
+```json
 ```
 
 ## Time & Attendance
 
-### Read time & attendance history by `empl_code`, `time_period` request
+### Read time & attendance history by `emplCode`, `time_period` request
 
 ```js
-GET /time_attendance/history/{empl_code}/{time_period}
+GET /time_attendance/history/{emplCode}/{time_period}
 ```
 
 Endpoint to retrieve time and attendance history for an employee based on their employee code and a specified time period.
@@ -437,10 +827,10 @@ No request body for this endpoint.
 
 ## HR Request
 
-### Read list of HR requests by `empl_code`, `year` request
+### Read list of HR requests by `emplCode`, `year` request
 
 ```js
-GET /hr_request/meeting_list/{empl_code}/{year}
+GET /hr_request/meeting_list/{emplCode}/{year}
 ```
 
 Endpoint to retrieve a list of HR meeting requests for a specific employee and year.
@@ -523,10 +913,10 @@ No request body for this endpoint.
 ```
 
 
-### Read HR meeting history by `empl_code`, `year` request
+### Read HR meeting history by `emplCode`, `year` request
 
 ```js
-GET /hr_request/meeting_history/{empl_code}/{year}
+GET /hr_request/meeting_history/{emplCode}/{year}
 ```
 
 Endpoint to retrieve HR meeting history for a specific employee and year.
@@ -583,10 +973,10 @@ No request body for this endpoint.
 
 ## Insurance
 
-### Read selected insurance information by `empl_code` request
+### Read selected insurance information by `emplCode` request
 
 ```js
-GET /insurance/current_selection/{empl_code}
+GET /insurance/current_selection/{emplCode}
 ```
 
 Endpoint to retrieve the currently selected insurance information.
@@ -603,10 +993,10 @@ No request body for this endpoint.
 }
 ```
 
-### Read insurance surfing data by `empl_code`, `coverage_selection` request
+### Read insurance surfing data by `emplCode`, `coverage_selection` request
 
 ```js
-GET /insurance_surfing/{empl_code}{coverage_selection}
+GET /insurance_surfing/{emplCode}{coverage_selection}
 ```
 
 Endpoint to retrieve insurance surfing data based on employee code and coverage selection.

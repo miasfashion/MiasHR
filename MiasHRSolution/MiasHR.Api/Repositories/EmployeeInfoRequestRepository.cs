@@ -28,12 +28,12 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves basic employee information by employee code.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <returns>The simple information about employee.</returns>
-        public async Task<HrEmployee> GetBasicEmployeeInfo(string empl_code)
+        public async Task<HrEmployee> GetBasicEmployeeInfo(string emplCode)
         {
             return await _miasHRDbContext.HrEmployees
-                .Where(r => r.EmplCode == empl_code
+                .Where(r => r.EmplCode == emplCode
                         && r.Status != 3)
                 .FirstAsync();
         }
@@ -55,12 +55,12 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves detailed employee information by employee code.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <returns>Personal Information about the employee</returns>
-        public async Task<HrEmployeeDetail> GetDetailEmployeeInfo(string empl_code)
+        public async Task<HrEmployeeDetail> GetDetailEmployeeInfo(string emplCode)
         {
             return await _miasHRDbContext.HrEmployeeDetails
-                .Where(r => r.EmplCode == empl_code)
+                .Where(r => r.EmplCode == emplCode)
                 .AsNoTrackingWithIdentityResolution()
                 .FirstAsync();
         }
@@ -68,16 +68,16 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves employee transfer history by employee code.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <returns>Transfer History about the employee</returns>
-        public async Task<IReadOnlyList<TransferHistoryDTO>> GetEmployeeTransferHistory(string empl_code)
+        public async Task<IReadOnlyList<TransferHistoryDTO>> GetEmployeeTransferHistory(string emplCode)
         {
 
             var parameters = new
             {
                 pOrgCode = "WEB",
                 pCategory = "HISTORY",
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
@@ -97,15 +97,15 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves employee award and disciplinary history by employee code.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <returns>Award And Disciplinary History about the employee</returns>
-        public async Task<IReadOnlyList<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string empl_code)
+        public async Task<IReadOnlyList<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string emplCode)
         {
             var parameters = new
             {
                 pOrgCode = "WEB",
                 pCategory = "RP",
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
@@ -125,14 +125,14 @@ namespace MiasHR.Api.Repositories
         /// <summary>
         /// Retrieves employee award and disciplinary history by employee code.
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <param name="newPass">The employee code.</param>
         /// <returns>Award And Disciplinary History about the employee</returns>
-        public int UpdateUserPassword(string empl_code, string newPass)
+        public int UpdateUserPassword(string emplCode, string newPass)
         {
 
             var updatePassword = _miasHRDbContext.HrWebUsers
-                .First(r => r.EmplCode == empl_code);
+                .First(r => r.EmplCode == emplCode);
             if (updatePassword != null)
             {
                 updatePassword.Pw = newPass;
@@ -142,21 +142,21 @@ namespace MiasHR.Api.Repositories
             }
             else
             {
-                throw new Exception($"Update Password Failed with ID {empl_code}");
+                throw new Exception($"Update Password Failed with ID {emplCode}");
             }
 
         }
 
         /// <summary>
-        /// Retrieves employee list for given manager empl_code
+        /// Retrieves employee list for given manager emplCode
         /// </summary>
-        /// <param name="empl_code">The employee code.</param>
+        /// <param name="emplCode">The employee code.</param>
         /// <returns>Get List of Employees for manager</returns>
-        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string empl_code)
+        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string emplCode)
         {
             var parameters = new
             {
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))

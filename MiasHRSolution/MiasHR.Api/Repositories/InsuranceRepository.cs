@@ -19,13 +19,13 @@ namespace MiasHR.Api.Repositories
             _configuration = configuration;
         }
 
-        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insurance_type, string empl_code, string selected_coverage)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insuranceType, string emplCode, string selectedCoverage)
         {
             var param = new
             {
-                pType = insurance_type,
-                pEmplCode = empl_code,
-                pCoverage = selected_coverage
+                pType = insuranceType,
+                pEmplCode = emplCode,
+                pCoverage = selectedCoverage
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -39,13 +39,13 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(string empl_code)
+        public async Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(string emplCode)
         {
             var param = new
             {
                 pType = "CURRENT",
                 pCoverage = '*',
-                pEmplCode = empl_code
+                pEmplCode = emplCode
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -59,14 +59,14 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<UpdateMessageDTO> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
+        public async Task<UpdateMessageDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId)
         {
             var param = new
             {
-                pType = insurance_type,
-                pEmplCode = empl_code,
-                pCoverage = selected_coverage,
-                pSurfingID = selected_surfing_id
+                pType = insuranceType,
+                pEmplCode = emplCode,
+                pCoverage = selectedCoverage,
+                pSurfingID = selectedSurfingId
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
