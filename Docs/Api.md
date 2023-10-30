@@ -7,36 +7,41 @@
     - [Read managed employee `emplCode` list request](#read-managed-employee-emplcode-list-request)
   - [Employee Info](#employee-info)
     - [Read basic employee info by `emplCode` request](#read-basic-employee-info-by-emplcode-request)
-    - [Read detailed employee info by `emplCode` request](#read-detailed-employee-info-by-emplcode-request)
+    - [Read Detailed employee info by `emplCode` request](#read-detailed-employee-info-by-emplcode-request)
     - [Read transfer history by `emplCode` request](#read-transfer-history-by-emplcode-request)
     - [Read awards \& disciplinary actions by `emplCode` request](#read-awards--disciplinary-actions-by-emplcode-request)
     - [Read full employee list request](#read-full-employee-list-request)
     - [Update password request](#update-password-request)
   - [Day/Time Off](#daytime-off)
-    - [Read vacation days by `emplCode` request](#read-vacation-days-by-emplCode-request)
-    - [Read vacation schedule by `emplCode` request](#read-vacation-schedule-by-emplCode-request)
-    - [Create new day/time off request request](#create-new-daytime-off-request-request)
-    - [Read day/time off request list by `emplCode`, `year` request](#read-daytime-off-request-list-by-emplCode-year-request)
-    - [Read list of day/time off approval requests for manager by  request`approver_id`](#read-list-of-daytime-off-approval-requests-for-manager-by--requestapprover_id)
-    - [Read day/time off approval history by `emplCode` request](#read-daytime-off-approval-history-by-emplCode-request)
+    - [Get all day time off request for given employee by `emplCode`](#get-all-day-time-off-request-for-given-employee-by-emplcode)
+    - [Create new day time off request](#create-new-day-time-off-request)
+    - [Update day time off request](#update-day-time-off-request)
+    - [Get day time off request by `id`](#get-day-time-off-request-by-id)
+    - [Delete day time off request by `id`](#delete-day-time-off-request-by-id)
+    - [Get remaining vacation days by `emplCode` and `year`](#get-remaining-vacation-days-by-emplcode-and-year)
+    - [Read vacation history by `emplCode`](#read-vacation-history-by-emplcode)
+    - [Get list of current day time off request by `emplCode`, `year`](#get-list-of-current-day-time-off-request-by-emplcode-year)
+    - [Read list of pending day/time off approval requests for manager by `managerEmplCode`](#read-list-of-pending-daytime-off-approval-requests-for-manager-by-manageremplcode)
+    - [Read list of day/time off approval history for manager by `managerEmplCode`](#read-list-of-daytime-off-approval-history-for-manager-by-manageremplcode)
   - [Time \& Attendance](#time--attendance)
-    - [Read time \& attendance history by `emplCode`, `time_period` request](#read-time--attendance-history-by-emplCode-time_period-request)
+    - [Read time \& attendance history by `emplCode`, `dateFrom`, `dateTo`](#read-time--attendance-history-by-emplcode-datefrom-dateto)
+    - [Read time \& attendance history by `emplCode`, `dateFrom`, `dateTo`](#read-time--attendance-history-by-emplcode-datefrom-dateto-1)
   - [Org Chart](#org-chart)
     - [GET /org\_chart/data request](#get-org_chartdata-request)
   - [Insurance](#insurance)
-    - [Read selected insurance information by `emplCode` request](#read-selected-insurance-information-by-emplCode-request)
-    - [Read insurance surfing data by `emplCode`, `coverage_selection` request](#read-insurance-surfing-data-by-emplCode-coverage_selection-request)
-    - [Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request](#update-insurance-information-for-employee-by-insuranceType-emplCode-coverageSelection-selectedSurfingId-request)
+    - [Get selected insurance information by `emplCode` request](#get-selected-insurance-information-by-emplcode-request)
+    - [Read insurance surfing data by `insuranceType`,`emplCode`, `coverageSelection` request](#read-insurance-surfing-data-by-insurancetypeemplcode-coverageselection-request)
+    - [Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request](#update-insurance-information-for-employee-by-insurancetypeemplcode-coverageselection-selectedsurfingid-request)
   - [Evaluation](#evaluation)
-    - [Get evaluation factors](#get-evaluation-factors)
-    - [Create self evaluation record](#create-self-evaluation-record)
+    - [Get evaluation factors by `emplCode`, `year`, and `term` request](#get-evaluation-factors-by-emplcode-year-and-term-request)
+    - [Create Self Evaluation Record by `emplCode`,`year`,`term`,`comment`,`factor`,`grade`](#create-self-evaluation-record-by-emplcodeyeartermcommentfactorgrade)
 
 ## Manager
 
 ### Read managed employee `emplCode` list request
 
 ```js
-GET /EmployeeInfoRequest/GetManagerEmployeeList/{emplCode}
+GET /api/EmployeeInfoRequest/GetManagerEmployeeList/{emplCode}
 ```
 
 Endpoint to retrieve employees under the supervisor (emplCode)
@@ -61,16 +66,14 @@ No request body for this endpoint.
 ### Read basic employee info by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetBasicEmployeeinfo/{emplCode}
+GET /api/EmployeeInfoRequest/GetBasicEmployeeinfo/{emplCode}
 ```
 
 Endpoint to retrieve simple employee information based on their employee code.
 
 **Parameters**
-```json
-{
-  "emplCode": "string"
-}
+```js
+emplCode: string
 ```
 
 **Sample Response:**
@@ -122,7 +125,7 @@ Endpoint to retrieve simple employee information based on their employee code.
 ### Read Detailed employee info by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetDetailEmployeeInfo/{emplCode}
+GET /api/EmployeeInfoRequest/GetDetailEmployeeInfo/{emplCode}
 ```
 
 Endpoint to retrieve simple employee information based on their employee code.
@@ -184,17 +187,15 @@ No request body for this endpoint.
 ### Read transfer history by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetEmployeeTransferHistory/{emplCode}
+GET /api/EmployeeInfoRequest/GetEmployeeTransferHistory/{emplCode}
 ```
 
 Endpoint to retrieve the transfer history of an employee based on their employee code.
 
 **Parameters:**
 
-```json
-  {
-    "emplCode" : "string"
-  }
+```js
+emplCode: string
 ```
 
 **Sample Response:**
@@ -214,18 +215,17 @@ Endpoint to retrieve the transfer history of an employee based on their employee
 ### Read awards & disciplinary actions by `emplCode` request
 
 ```js
-GET /EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplCode}
+GET /api/EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplCode}
 ```
 
 Endpoint to retrieve awards and disciplinary actions of an employee based on their employee code.
 
 **Parameters:**
 
-```json
-  {
-    "emplCode" : "string"
-  }
+```js
+emplCode: string
 ```
+
 **Sample Response:**
 
 ```json
@@ -242,7 +242,7 @@ Endpoint to retrieve awards and disciplinary actions of an employee based on the
 ### Read full employee list request
 
 ```js
-GET /EmployeeInfoRequest/GetAllEmployeeInfo
+GET /api/EmployeeInfoRequest/GetAllEmployeeInfo
 ```
 
 Endpoint to retrieve a list of employees.
@@ -300,17 +300,15 @@ No request body for this endpoint.
 ### Update password request
 
 ```js
-PUT /EmployeeInfoRequest/UpdateUserPassword/{emplCode}
+PUT /api/EmployeeInfoRequest/UpdateUserPassword/{emplCode}
 ```
 
 Endpoint to allow employees to change their login password.
 
 **Parameters**
-```json
-  {
-    "emplCode" : "string",
-    "newPass": "string"
-  }
+```js
+emplCode: string
+newPass: string
 ```
 
 
@@ -318,7 +316,11 @@ Endpoint to allow employees to change their login password.
 
 ```json
 {
-  1
+  "status" : "success",
+  "data" : {
+    "emplCode" : "100123",
+    "newPass" : "pass1234"
+  }
 }
 ```
 
@@ -440,7 +442,10 @@ TODO: Endpoint to submit a new day/time off request.
 
 ```json
 {
-  "id" : 123456000
+  "status" : "success",
+  "data" : {
+    "id" : 123451
+  }
 }
 ```
 
@@ -483,7 +488,10 @@ id : int
 
 ```json
 {
-  "id" : 123456000
+  "status" : "success",
+  "data" : {
+    "id" : 123451
+  }
 }
 ```
 
@@ -539,7 +547,10 @@ id : int
 
 ```json
 {
-  1
+  "status" : "success",
+  "data" : {
+    "id" : 123451
+  }
 }
 ```
 
@@ -726,7 +737,7 @@ year : string
 ### Read list of pending day/time off approval requests for manager by `managerEmplCode`
 
 ```js
-GET /api/manager/DayTimeOffRequest/GetPendingDayTimeOffRequestList{managerEmplCode}
+GET /api/Manager/DayTimeOffRequest/GetPendingDayTimeOffRequestList{managerEmplCode}
 ```
 
 Endpoint to retrieve a list of day/time off approval requests for a manager.
@@ -800,11 +811,10 @@ No request body for this endpoint.
 }
 ```
 
-
 ### Read list of day/time off approval history for manager by `managerEmplCode`
 
 ```js
-GET /api/manager/DayTimeOffRequest/GetDayTimeOffApprovalHistory{managerEmplCode}
+GET /api/Manager/DayTimeOffRequest/GetDayTimeOffApprovalHistory{managerEmplCode}
 ```
 
 Endpoint to retrieve approval history for a specific employee (for managers).
@@ -886,53 +896,89 @@ managerEmplCode : string
 ]
 ```
 
-### Read day/time off approval history by `emplCode` request
+## Time & Attendance
+
+### Read time & attendance history by `emplCode`, `dateFrom`, `dateTo`
 
 ```js
-GET /day_time_off/approval_history/{emplCode}
+GET /api/TimeAttendance/GetHrEmployeeTimeHistory/{emplCode}/{dateFrom}/{dateTo}
 ```
 
-Endpoint to retrieve approval history for a specific employee (for managers).
+Endpoint to retrieve time and attendance history for an employee based on their employee code and a specified time period.
 
 **Parameters:**
-
-```
-managerEmplCode : string
+```js
+emplCode : string
+dateFrom : string (yyyyMMdd)
+dateTo : string (yyyyMMdd)
 ```
 
 **Sample Response:**
 
 ```json
+[
+  {
+    "dept_name": "IT",
+    "empl_name": "John Doe",
+    "tdate": "09/18/2023 00:00:00",
+    "date": "09/18/2023",
+    "inout": "IN",
+    "day_type_desc": "",
+    "work_start_time": "07:57:34",
+    "late_level": "0",
+    "update_type": "AUTOMATIC",
+    "reason_desc": null,
+    "remark": null,
+    "period_desc": "( Date : 09/16/2023 - 09/20/2023 )",
+    "flsa": "Non-Exempt",
+    "empl_code": "000001"
+  },
+  {
+    "dept_name": "IT",
+    "empl_name": "John Doe",
+    "tdate": "09/18/2023 00:00:00",
+    "date": "09/18/2023",
+    "inout": "OUT",
+    "day_type_desc": "",
+    "work_start_time": "17:02:22",
+    "late_level": "0",
+    "update_type": "AUTOMATIC",
+    "reason_desc": null,
+    "remark": null,
+    "period_desc": "( Date : 09/16/2023 - 09/20/2023 )",
+    "flsa": "Non-Exempt",
+    "empl_code": "000001"
+  }
+]
 ```
 
-## Time & Attendance
-
-### Read time & attendance history by `emplCode`, `time_period` request
+### Read time & attendance history by `emplCode`, `dateFrom`, `dateTo`
 
 ```js
-GET /time_attendance/history/{emplCode}/{time_period}
+GET /api/TimeAttendance/GetEmployeeTimeList/{emplCode}/{dateFrom}/{dateTo}
 ```
 
-Endpoint to retrieve time and attendance history for an employee based on their employee code and a specified time period.
+Endpoint to retrieves the time & attendance summary for a given employee within a specified date range
 
-**Sample Request:**
-
-No request body for this endpoint.
+**Parameters:**
+```js
+emplCode : string
+dateFrom : string (yyyyMMdd)
+dateTo : string (yyyyMMdd)
+```
 
 **Sample Response:**
 
 ```json
 {
-  "attendance_history": [
-    {
-      "date": "2023-09-01",
-      "hours_worked": 8
-    },
-    {
-      "date": "2023-09-02",
-      "hours_worked": 7.5
-    }
-  ]
+  "empl_name": "DOE, JOHN",
+  "day_cnt": 3,
+  "level_0_cnt": 3,****
+  "level_1_cnt": 0,
+  "level_1_minutesum": 0,
+  "level_2_cnt": 0,
+  "manual_cnt": 0,
+  "lack_days": 0
 }
 ```
 
@@ -946,80 +992,206 @@ No request body for this endpoint.
 ### Get selected insurance information by `emplCode` request
 
 ```js
-GET /Insurance/GetSelectedInsurance/{emplCode}
+GET /api/Insurance/GetSelectedInsurance/{emplCode}
 ```
 
 Endpoint to retrieve the currently selected insurance information.
-**Sample Request:**
-
-No request body for this endpoint.
+**Parameter:**
+```js
+emplCode: string
+```
 
 **Sample Response:**
 
 ```json
-{
-  "insurance_plan": "Health Insurance Plan A",
-  "coverage": "Family"
-}
+[
+  {
+    "plan_id": 203,
+    "contract_code": "8NAG",
+    "file_path": "/InsFiles/8NAG.pdf",
+    "plan_name": "Anthem Gold PPO 25/30% (Broad Network)",
+    "plan_type": "PPO",
+    "surfing_id": 8328,
+    "bundle_yn": "N",
+    "ins_amt": 1607.76,
+    "empl_pay": 1045.04,
+    "company_pay": 562.72,
+    "coverage_desc": "Employee and Spouse"
+  },
+  {
+    "plan_id": 204,
+    "contract_code": "3RGY",
+    "file_path": "/InsFiles/3RGY.pdf",
+    "plan_name": "Anthem Gold PPO 100/90/60 Active 50/1500 90th E&P Basic",
+    "plan_type": "DENTAL",
+    "surfing_id": 8373,
+    "bundle_yn": "N",
+    "ins_amt": 81.89,
+    "empl_pay": 53.79,
+    "company_pay": 28.10,
+    "coverage_desc": "Employee and Spouse"
+  },
+  {
+    "plan_id": 205,
+    "contract_code": "4BFU",
+    "file_path": "/InsFiles/4BFU.pdf",
+    "plan_name": "Anthem Blue View Vision FS.B.10.25.130.130",
+    "plan_type": "VISION",
+    "surfing_id": 8374,
+    "bundle_yn": "N",
+    "ins_amt": 13.07,
+    "empl_pay": 8.49,
+    "company_pay": 4.58,
+    "coverage_desc": "Employee and Spouse"
+  },
+  {
+    "plan_id": 0,
+    "contract_code": "",
+    "file_path": "/InsFiles/.pdf",
+    "plan_name": "",
+    "plan_type": "",
+    "surfing_id": 0,
+    "bundle_yn": "",
+    "ins_amt": 1702.72,
+    "empl_pay": 1107.32,
+    "company_pay": 595.40,
+    "coverage_desc": "* Total"
+  },
+  {
+    "plan_id": 0,
+    "contract_code": "",
+    "file_path": "/InsFiles/.pdf",
+    "plan_name": "* Effective Date : 2023-11-01",
+    "plan_type": "",
+    "surfing_id": 0,
+    "bundle_yn": "",
+    "ins_amt": null,
+    "empl_pay": null,
+    "company_pay": null,
+    "coverage_desc": null
+  }
+]
 ```
 
 ### Read insurance surfing data by `insuranceType`,`emplCode`, `coverageSelection` request
 
 ```js
-GET /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}
+GET /api/Insurance/GetInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}
 ```
 
 Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
 
-**Sample Request:**
+**Parameter:**
 
-No request body for this endpoint.
+```js
+insuranceType: string {'MEDICAL', 'DENTAL', 'VISION'}
+emplCode: string
+coverageSelection: string {'EMP', 'ESP', 'ECH', 'FAM'}
+```
 
 **Sample Response:**
 
 ```json
-{
-  "insurance_plan": "Health Insurance Plan A",
-  "coverage": "Individual"
-}
+[
+  {
+    "plan_id": 201,
+    "contract_code": null,
+    "file_path": null,
+    "plan_name": "<a href=\"/InsFiles/6RHZ.pdf\" target=\"_blank\">Anthem Gold HMO 35 (Broad Network)( 6RHZ )</a>",
+    "plan_type": "HMO",
+    "surfing_id": 8224,
+    "bundle_yn": null,
+    "ins_amt": null,
+    "empl_pay": 202.22,
+    "company_pay": 471.83,
+    "coverage_desc": null
+  },
+  {
+    "plan_id": 202,
+    "contract_code": null,
+    "file_path": null,
+    "plan_name": "<a href=\"/InsFiles/6RHB.pdf\" target=\"_blank\">Anthem Silver Select HMO 60/2500/45% (Narrow Network)( 6RHB )</a>",
+    "plan_type": "HMO",
+    "surfing_id": 8276,
+    "bundle_yn": null,
+    "ins_amt": null,
+    "empl_pay": 149.1,
+    "company_pay": 347.89,
+    "coverage_desc": null
+  },
+  {
+    "plan_id": 203,
+    "contract_code": null,
+    "file_path": null,
+    "plan_name": "<a href=\"/InsFiles/8NAG.pdf\" target=\"_blank\">Anthem Gold PPO 25/30% (Broad Network)( 8NAG )</a>",
+    "plan_type": "PPO",
+    "surfing_id": 8328,
+    "bundle_yn": null,
+    "ins_amt": null,
+    "empl_pay": 241.16,
+    "company_pay": 562.72,
+    "coverage_desc": null
+  },
+  {
+    "plan_id": 0,
+    "contract_code": null,
+    "file_path": null,
+    "plan_name": "No Insurance",
+    "plan_type": "MEDICAL",
+    "surfing_id": -1,
+    "bundle_yn": null,
+    "ins_amt": null,
+    "empl_pay": 0,
+    "company_pay": 0,
+    "coverage_desc": null
+  }
+]
 ```
 
 ### Update insurance information for employee by `insuranceType`,`emplCode`, `coverageSelection`, `selectedSurfingId` request
 
 ```js
-PUT /Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}/{selectedSurfingId}
+PUT /api/Insurance/UpdateInsuranceOption/{insuranceType}/{emplCode}/{selectedCoverage}/{selectedSurfingId}
+```
 
 Endpoint to retrieve insurance surfing data based on employee code and coverage selection.
 
-**Sample Request:**
-
-No request body for this endpoint.
+**Parameters:**
+```js
+insuranceType: string {'MEDICAL', 'DENTAL', 'VISION'}
+emplCode: string
+coverageSelection: string {'EMP', 'ESP', 'ECH', 'FAM'}
+selectedSurfingId : int
+```
 
 **Sample Response:**
 
 ```json
 {
-  "insurance_plan": "Health Insurance Plan A",
-  "coverage": "Individual"
+  "status" : "success",
+  "data" : {
+    "insuranceType" : "MEDICAL",
+    "emplCode" : "100123",
+    "coverageSelection" : "EMP",
+    "selectedSurfingId" : 8849
+  }
 }
 ```
 
 ## Evaluation
 
 ### Get evaluation factors by `emplCode`, `year`, and `term` request
-
+****
 ```js
 GET /Evaluation/GetEvaluationFactors/{emplCode}
 ```
 Endpoint to Get Evaluation Factors 
 **Parameters:**
 
-```json
-{
-  "emplCode": "string",
-  "year": "string",
-  "term": "string"
-}
+```js
+emplCode : string
+year : string
+term : string {'T1', 'T2'}
 ```
 
 **Sample Response:**
@@ -1047,21 +1219,24 @@ POST /Evaluation/CreateSelfEvaluation/{emplCode}
 ```
 Endpoint to create self evaluation record for specific term
 **Parameters**
-```json
-{
-  "emplCode": "string",
-  "year": "string",
-  "term": "string",
-  "comment": "string",
-  "factor": "string",
-  "grade": "string"  
-}
+```js
+  emplCode : string 
+  year : string 
+  term : string {'T1', 'T2'}
+  comment : string 
+  factor : string {'F001' ... 'F018'}
+  grade : string {'A', 'B', 'C', 'D', 'F'}
 ```
 
 **Sample Response:**
 
 ```json
 {
-  "msg": "Saved Successfully!"
+  "status" : "success",
+  "data" : {
+    "emplCode" : "100123",
+    "year" : 2023,
+    "term" : "T1"
+  }
 }
 ```

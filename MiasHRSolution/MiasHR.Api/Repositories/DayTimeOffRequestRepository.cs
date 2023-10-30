@@ -34,7 +34,7 @@ namespace MiasHR.Api.Repositories
                 .Where(r => r.EmplCode == emplCode
                             && r.ReqType != "CHANGE"
                             && r.Status != 3)
-                .AsNoTrackingWithidentityResolution()
+                .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
             return results;
         }
@@ -60,7 +60,7 @@ namespace MiasHR.Api.Repositories
         public async Task<HrWebRequest>? GetDayTimeOffRequest(int id)
         {
             return await _miasHRDbContext.HrWebRequests
-                .AsNoTrackingWithidentityResolution()
+                .AsNoTrackingWithIdentityResolution()
                 .FirstAsync(r => r.Seq == id);
         }
 
