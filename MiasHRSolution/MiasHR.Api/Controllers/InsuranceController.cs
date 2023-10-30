@@ -16,12 +16,12 @@ namespace MiasHR.Api.Controllers
             _insuranceRepository = insuranceRepository;
         }
 
-        [HttpGet("{empl_code}")]
-        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetSelectedInsurance(string empl_code)
+        [HttpGet("{emplCode}")]
+        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetSelectedInsurance(string emplCode)
         {
             try
             {
-                var selectedInsurance = await _insuranceRepository.GetSelectedInsurance(empl_code);
+                var selectedInsurance = await _insuranceRepository.GetSelectedInsurance(emplCode);
 
                 return selectedInsurance == null ? NotFound() : Ok(selectedInsurance);
             }
@@ -32,12 +32,12 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpGet("{insurance_type}/{empl_code}/{selected_coverage}")]
-        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetInsuranceOptions(string insurance_type, string empl_code, string selected_coverage)
+        [HttpGet("{insuranceType}/{emplCode}/{selectedCoverage}")]
+        public async Task<ActionResult<IReadOnlyList<InsuranceSurfingDTO>>> GetInsuranceOptions(string insuranceType, string emplCode, string selectedCoverage)
         {
             try
             {
-                var insuranceOptions = await _insuranceRepository.GetInsuranceOptions(insurance_type, empl_code, selected_coverage);
+                var insuranceOptions = await _insuranceRepository.GetInsuranceOptions(insuranceType, emplCode, selectedCoverage);
 
                 return insuranceOptions == null ? NotFound() : Ok(insuranceOptions);
             }
@@ -48,12 +48,12 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        [HttpPut("{insurance_type}/{empl_code}/{selected_coverage}/{selected_surfing_id}")]
-        public async Task<ActionResult<UpdateMessageDTO>> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id)
+        [HttpPut("{insuranceType}/{emplCode}/{selectedCoverage}/{selectedSurfingId}")]
+        public async Task<ActionResult<UpdateMessageDTO>> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId)
         {
             try
             {
-                var updateResult = await _insuranceRepository.UpdateInsuranceOption(insurance_type, empl_code, selected_coverage, selected_surfing_id);
+                var updateResult = await _insuranceRepository.UpdateInsuranceOption(insuranceType, emplCode, selectedCoverage, selectedSurfingId);
 
                 return updateResult.msg == "Saved succesfully!" ? Ok(updateResult) : BadRequest();
             }

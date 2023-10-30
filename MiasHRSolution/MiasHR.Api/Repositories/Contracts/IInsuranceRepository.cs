@@ -4,10 +4,10 @@ namespace MiasHR.Api.Repositories.Contracts
 {
     public interface IInsuranceRepository
     {
-        Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(string empl_code);
+        Task<IReadOnlyList<InsuranceSurfingDTO>> GetSelectedInsurance(string emplCode);
 
-        Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insurance_type, string empl_code, string selected_coverage);
+        Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insuranceType, string emplCode, string selectedCoverage);
 
-        Task<UpdateMessageDTO> UpdateInsuranceOption(string insurance_type, string empl_code, string selected_coverage, int selected_surfing_id);
+        Task<UpdateMessageDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId);
     }
 }

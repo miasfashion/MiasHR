@@ -4,11 +4,12 @@
 - [API Endpoints](#api-endpoints)
   - [Contents](#contents)
   - [Manager](#manager)
-    - [Read managed employee `empl_code` list request](#read-managed-employee-empl_code-list-request)
+    - [Read managed employee `emplcode` list request](#read-managed-employee-emplcode-list-request)
   - [Employee Info](#employee-info)
-    - [Read employee info by `empl_code` request](#read-employee-info-by-empl_code-request)
-    - [Read transfer history by `empl_code` request](#read-transfer-history-by-empl_code-request)
-    - [Read awards \& disciplinary actions by `empl_code` request](#read-awards--disciplinary-actions-by-empl_code-request)
+    - [Read basic employee info by `emplcode` request](#read-basic-employee-info-by-emplcode-request)
+    - [Read detailed employee info by `emplcode` request](#read-detailed-employee-info-by-emplcode-request)
+    - [Read transfer history by `emplcode` request](#read-transfer-history-by-emplcode-request)
+    - [Read awards \& disciplinary actions by `emplcode` request](#read-awards--disciplinary-actions-by-emplcode-request)
     - [Read full employee list request](#read-full-employee-list-request)
     - [Update password request](#update-password-request)
   - [Day/Time Off](#daytime-off)
@@ -20,28 +21,24 @@
     - [Read day/time off approval history by `empl_code` request](#read-daytime-off-approval-history-by-empl_code-request)
   - [Time \& Attendance](#time--attendance)
     - [Read time \& attendance history by `empl_code`, `time_period` request](#read-time--attendance-history-by-empl_code-time_period-request)
-  - [HR Request](#hr-request)
-    - [Read list of HR requests by `empl_code`, `year` request](#read-list-of-hr-requests-by-empl_code-year-request)
-    - [Create new HR meeting request request](#create-new-hr-meeting-request-request)
-    - [Read list of pending HR meeting requests for manager by  request`approver_id`](#read-list-of-pending-hr-meeting-requests-for-manager-by--requestapprover_id)
-    - [Read HR meeting history by `empl_code`, `year` request](#read-hr-meeting-history-by-empl_code-year-request)
   - [Org Chart](#org-chart)
     - [GET /org\_chart/data request](#get-org_chartdata-request)
   - [Insurance](#insurance)
     - [Read selected insurance information by `empl_code` request](#read-selected-insurance-information-by-empl_code-request)
     - [Read insurance surfing data by `empl_code`, `coverage_selection` request](#read-insurance-surfing-data-by-empl_code-coverage_selection-request)
   - [Evaluation](#evaluation)
-    - [Create new self evaluation request](#create-new-self-evaluation-request)
+    - [Get evaluation factors](#get-evaluation-factors)
+    - [Create self evaluation record](#create-self-evaluation-record)
 
 ## Manager
 
-### Read managed employee `empl_code` list request
+### Read managed employee `emplcode` list request
 
 ```js
-GET /manager/empl_code_list/{approver_id}
+GET /EmployeeInfoRequest/GetManagerEmployeeList/{emplcode}
 ```
 
-Endpoint to retrieve employee codes associated with a specific approver (for managers).
+Endpoint to retrieve employees under the supervisor (empl_code)
 
 **Sample Request:**
 
@@ -50,20 +47,23 @@ No request body for this endpoint.
 **Sample Response:**
 
 ```json
-{
-  "emplCodes": ["l000111", "l000112", "1000113"]
-}
+ {
+    "empl_code": "100041",
+    "last_name": "KIM",
+    "first_name": "HYEYOON",
+    "empl_name": "(UNI)"
+  }
 ```
 
 ## Employee Info
 
-### Read employee info by `empl_code` request
+### Read basic employee info by `emplcode` request
 
 ```js
-GET /employee_info/info/{empl_code}
+GET /EmployeeInfoRequest/GetBasicEmployeeinfo/{emplcode}
 ```
 
-Endpoint to retrieve employee information based on their employee code.
+Endpoint to retrieve simple employee information based on their employee code.
 
 **Sample Request:**
 
@@ -73,89 +73,172 @@ No request body for this endpoint.
 
 ```json
 {
-  "emplCode": "1000123",
-  "emplName": "John Doe",
-  "divName": "Division XYZ",
-  "dept1Name": "Department A",
-  "deptName": "Sub-Department X",
-  "comTel": "123-456-7890",
-  "comTelExt": "1234",
-  "comFax": "987-654-3210",
-  "comEmail": "john.doe@example.com",
-  "hireDate2": "2020-05-15",
-  "title": "Software Engineer",
-  "flsas": "Exempt",
-  "birthDate2": "1985-08-20",
-  "street": "1234 Elm St",
-  "cityStateZip": "Somewhere, CA 12345",
-  "tel": "555-555-5555",
-  "cell": "555-123-4567",
-  "contact1Name": "Mary Smith",
-  "contact1RelDesc": "Emergency Contact",
-  "contact1Addr1": "5678 Oak St",
-  "contact1Addr2": "Apt 101",
-  "contact1Tel": "555-987-6543",
-  "contact1Cell": "555-876-5432"
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "emplType": "E",
+  "status": 1,
+  "activeYn": "Y",
+  "firstName": "BYUNGKWON",
+  "middleName": "",
+  "lastName": "HAN",
+  "nickName": "CHRIS",
+  "divCode": "COO",
+  "deptCode": "COO_20",
+  "upperEmplCode": "100048",
+  "comTel": "(112)112-1234",
+  "comTelExt": "112",
+  "comFax": "(452)232-1235",
+  "comEmail": "bk.h@miasfashion.com",
+  "position": "G6",
+  "positionYrs": "1",
+  "buildingLoc": "",
+  "hireDate": "21221112",
+  "ptoHireDate": null,
+  "resignDate": "99981231",
+  "resignReason": null,
+  "tnaStatus": "NORMAL",
+  "badgeCode": "2414",
+  "payrollCode": "3231",
+  "payrollOrgCode": "MIAS",
+  "hourlybaseYn": "Y",
+  "photo": "Photo Data",
+  "photoThumbnail": null,
+  "title": "SOFTWARE DEVELOPER",
+  "businessTitle": "",
+  "other": null,
+  "qbKey": "2232232323-11111111111",
+  "qbSendDate": "2022-11-25T09:55:36.273",
+  "createdDate": "2022-11-25T09:48:18",
+  "createdUser": "JAMESLEE",
+  "modifiedDate": "2022-11-25T09:51:26.18",
+  "modifiedUser": "JAMESLEE"
 }
 
 ```
-
-### Read transfer history by `empl_code` request
+### Read Detailed employee info by `emplcode` request
 
 ```js
-GET /employee_info/transfer_history/{empl_code}
+GET /EmployeeInfoRequest/GetDetailEmployeeInfo/{emplcode}
+```
+
+Endpoint to retrieve simple employee information based on their employee code.
+
+**Sample Request:**
+
+No request body for this endpoint.
+
+**Sample Response:**
+```js
+{
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "status": 1,
+  "activeYn": "Y",
+  "gender": "M",
+  "birthDate": "19001222",
+  "degree": "",
+  "marriedYn": "",
+  "street": "2134 NOLLA AVE.",
+  "city": "VOLA",
+  "state": "CA",
+  "zip": "90000",
+  "country": "US",
+  "street2": "",
+  "city2": "",
+  "state2": "CA",
+  "zip2": "",
+  "country2": "US",
+  "tel": "",
+  "cell": "(456)221-2314",
+  "residentStatus": "A",
+  "alienNo": "",
+  "i9Date": "19000101",
+  "ssn": "",
+  "w4Status": "S",
+  "exemptions": 0,
+  "memo": "",
+  "contact1Name": "",
+  "contact1Relationship": "",
+  "contact1Addr1": "",
+  "contact1Addr2": "",
+  "contact1Tel": "",
+  "contact1Cell": "",
+  "contact2Name": "BEN HAN",
+  "contact2Relationship": "R05",
+  "contact2Addr1": "",
+  "contact2Addr2": "",
+  "contact2Tel": "",
+  "contact2Cell": "(256)332-3123",
+  "other": null,
+  "createdDate": "2022-11-25T09:48:18.107",
+  "createdUser": "JASONLEE",
+  "modifiedDate": "2022-11-25T09:51:26.21",
+  "modifiedUser": "JASONLEE"
+}
+```
+
+### Read transfer history by `emplcode` request
+
+```js
+GET /EmployeeInfoRequest/GetEmployeeTransferHistory/{emplcode}
 ```
 
 Endpoint to retrieve the transfer history of an employee based on their employee code.
 
-**Sample Request:**
+**Parameters:**
 
-No request body for this endpoint.
+```json
+  {
+    "empl_code" : "string"
+  }
+```
 
 **Sample Response:**
 
 ```json
-{
-  "transfer_history": [
-    {
-      "date": "2023-07-15",
-      "from_department": "Sales",
-      "to_department": "Marketing"
-    },
-    {
-      "date": "2022-12-10",
-      "from_department": "HR",
-      "to_department": "Sales"
-    }
-  ]
-}
+  {
+    "seq": 1,
+    "date": "01/04/2012",
+    "hist_Type": "DEPT",
+    "hist_Type_Desc": "Department Transfer",
+    "old_Desc": "PP - Aero  [ Div : MP00 ]",
+    "new_Desc": "Aeropostale  [ Div : MP00 ]",
+    "remark": ""
+  }
 ```
 
-### Read awards & disciplinary actions by `empl_code` request
+### Read awards & disciplinary actions by `emplcode` request
 
 ```js
-GET /award_disciplinary_action/{empl_code}
+GET /EmployeeInfoRequest/GetEmployeeAwardDiscHistory/{emplcode}
 ```
 
 Endpoint to retrieve awards and disciplinary actions of an employee based on their employee code.
 
-**Sample Request:**
+**Parameters:**
 
-No request body for this endpoint.
-
+```json
+  {
+    "empl_code" : "string"
+  }
+```
 **Sample Response:**
 
 ```json
 {
-  "awards": ["Employee of the Month - Jan 2023"],
-  "disciplinary_actions": ["Written Warning - Mar 2022"]
-}
+    "seq": 4,
+    "date": "07/01/2010",
+    "rp_Type": "RP01",
+    "rp_Type_Desc": "Award",
+    "rp_Title": "HR OUTSTANDING ACHIEVEMENT & CONTRIBUTION",
+    "remark": ""
+  }
 ```
 
 ### Read full employee list request
 
 ```js
-GET /employee_list
+GET /EmployeeInfoRequest/GetAllEmployeeInfo
 ```
 
 Endpoint to retrieve a list of employees.
@@ -168,41 +251,70 @@ No request body for this endpoint.
 
 ```json
 {
-  "employees": [
-    {
-      "employee_id": "empl001",
-      "name": "John Doe"
-    },
-    {
-      "employee_id": "empl002",
-      "name": "Jane Smith"
-    }
-  ]
-}
+  "emplCode": "100834",
+  "orgCode": "MIAS",
+  "emplType": "E",
+  "status": 1,
+  "activeYn": "Y",
+  "firstName": "BYUNGKWON",
+  "middleName": "",
+  "lastName": "HAN",
+  "nickName": "CHRIS",
+  "divCode": "COO",
+  "deptCode": "COO_20",
+  "upperEmplCode": "100048",
+  "comTel": "(112)112-1234",
+  "comTelExt": "112",
+  "comFax": "(452)232-1235",
+  "comEmail": "bk.h@miasfashion.com",
+  "position": "G6",
+  "positionYrs": "1",
+  "buildingLoc": "",
+  "hireDate": "21221112",
+  "ptoHireDate": null,
+  "resignDate": "99981231",
+  "resignReason": null,
+  "tnaStatus": "NORMAL",
+  "badgeCode": "2414",
+  "payrollCode": "3231",
+  "payrollOrgCode": "MIAS",
+  "hourlybaseYn": "Y",
+  "photo": "Photo Data",
+  "photoThumbnail": null,
+  "title": "SOFTWARE DEVELOPER",
+  "businessTitle": "",
+  "other": null,
+  "qbKey": "2232232323-11111111111",
+  "qbSendDate": "2022-11-25T09:55:36.273",
+  "createdDate": "2022-11-25T09:48:18",
+  "createdUser": "JAMESLEE",
+  "modifiedDate": "2022-11-25T09:51:26.18",
+  "modifiedUser": "JAMESLEE"
+} .... all active employees
 ```
 
 ### Update password request
 
 ```js
-POST /login/password_change
+PUT /EmployeeInfoRequest/UpdateUserPassword/{emplCode}
 ```
 
 Endpoint to allow employees to change their login password.
 
-**Sample Request:**
-
+**Parameters**
 ```json
-{
-  "employee_id": "empl001",
-  "new_password": "newpassword123"
-}
+  {
+    "empl_code" : "string",
+    "newPass": "string"
+  }
 ```
+
 
 **Sample Response:**
 
 ```json
 {
-  "message": "Password changed successfully."
+  1
 }
 ```
 
@@ -435,126 +547,10 @@ No request body for this endpoint.
 }
 ```
 
-## HR Request
-
-### Read list of HR requests by `empl_code`, `year` request
-
-```js
-GET /hr_request/meeting_list/{empl_code}/{year}
-```
-
-Endpoint to retrieve a list of HR meeting requests for a specific employee and year.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "meeting_requests": [
-    {
-      "meeting_id": "meeting001",
-      "date": "2023-10-10",
-      "status": "Pending"
-    },
-    {
-      "meeting_id": "meeting002",
-      "date": "2023-11-05",
-      "status": "Approved"
-    }
-  ]
-}
-```
-
-### Create new HR meeting request request
-
-```js
-POST /hr_request/new_meeting_request
-```
-
-Endpoint to submit a new HR meeting request.
-
-**Sample Request:**
-
-```json
-{
-  "employee_id": "empl001",
-  "meeting_date": "2023-12-15",
-  "description": "Discuss annual performance"
-}
-```
-
-**Sample Response:**
-
-```json
-{
-  "message": "HR meeting request submitted successfully."
-}
-```
-
-### Read list of pending HR meeting requests for manager by  request`approver_id`
-
-```js
-GET /hr_request/waiting_list/{approver_id}
-```
-
-Endpoint to retrieve a list of HR meeting requests awaiting approval for a manager.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-
-**Sample Response:**
-
-```json
-{
-  "meeting_requests": [
-    {
-      "meeting_id": "meeting003",
-      "employee_id": "empl003",
-      "date": "2023-11-20",
-      "status": "Pending"
-    }
-  ]
-}
-```
-
-
-### Read HR meeting history by `empl_code`, `year` request
-
-```js
-GET /hr_request/meeting_history/{empl_code}/{year}
-```
-
-Endpoint to retrieve HR meeting history for a specific employee and year.
-
-**Sample Request:**
-
-No request body for this endpoint.
-
-**Sample Response:**
-
-```json
-{
-  "attendance_history": [
-    {
-      "date": "2023-09-01",
-      "hours_worked": 8
-    },
-    {
-      "date": "2023-09-02",
-      "hours_worked": 7.5
-    }
-  ]
-}
-```
 
 
 ## Org Chart
-
+**==Not implemented yet==**
 ### GET /org_chart/data request
 
 Endpoint to retrieve organizational chart data.
@@ -626,21 +622,19 @@ No request body for this endpoint.
 
 ## Evaluation
 
-### Create new self evaluation request
+### Get evaluation factors
 
 ```js
-POST /self_evaluation/new_evaluation
+GET /Evaluation/GetEvaluationFactors/{empl_code}
 ```
-
-Endpoint to submit a self-evaluation.
-**Sample Request:**
+Endpoint to Get Evaluation Factors 
+**Parameters:**
 
 ```json
 {
-  "employee_id": "empl001",
-  "evaluation_date": "2023-09-28",
-  "performance_rating": 4.7,
-  "comments": "Consistently met and exceeded project goals."
+  "empl_code": "string",
+  "year": "string",
+  "term": "string"
 }
 ```
 
@@ -648,6 +642,42 @@ Endpoint to submit a self-evaluation.
 
 ```json
 {
-  "message": "Self-evaluation submitted successfully."
+    "factor": "F003",
+    "factor_desc": "Knowledge of Job",
+    "line_display": "false",
+    "factor_grade": "A",
+    "grade_desc": "Has a great wealth of knowledge about all job facets",
+    "f_checked": "true",
+    "comment": "sdasldajdjsadsalkdasldksl",
+    "group_desc": "MIAS / IT",
+    "appraiser1": "DAVE KIM",
+    "appraiser2": "JAE SONG",
+    "open_yn": "Y"
+  }
+```
+
+### Create Self Evaluation Record
+
+```js
+POST /Evaluation/CreateSelfEvaluation/{empl_code}
+```
+Endpoint to create self evaluation record for specific term
+**Parameters**
+```json
+{
+  "empl_code": "string",
+  "year": "string",
+  "term": "string",
+  "comment": "string",
+  "factor": "string",
+  "grade": "string"  
+}
+```
+
+**Sample Response:**
+
+```json
+{
+  "msg": "Saved Successfully!"
 }
 ```

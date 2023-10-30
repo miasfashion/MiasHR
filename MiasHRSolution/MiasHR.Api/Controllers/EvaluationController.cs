@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MiasHR.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
     public class EvaluationController : ControllerBase
     {
@@ -16,12 +15,12 @@ namespace MiasHR.Api.Controllers
         }
 
         //Get Evaluation Factor Information for employee
-        [HttpGet("api/[controller]/[action]/{empl_code}")]
-        public async Task<ActionResult<IReadOnlyList<FactorEvalDTO>>> GetEvaluationFactors(string empl_code, string year, string term)
+        [HttpGet("api/[controller]/[action]/{emplCode}")]
+        public async Task<ActionResult<IReadOnlyList<FactorEvalDTO>>> GetEvaluationFactors(string emplCode, string year, string term)
         {
             try
             {
-                var evaluationFactor = await _evaluationRepository.GetEvaluationFactors(empl_code, year, term);
+                var evaluationFactor = await _evaluationRepository.GetEvaluationFactors(emplCode, year, term);
                 if (evaluationFactor == null)
                 {
                     return NotFound();
@@ -39,12 +38,12 @@ namespace MiasHR.Api.Controllers
         }
 
         //Insert Self Evaluation Record to the DB
-        [HttpPost("api/[controller]/[action]/{empl_code}")]
-        public async Task<ActionResult<UpdateMessageDTO>> CreateSelfEvaluation (string empl_code, string year, string term, string comment, string factor, string grade)
+        [HttpPost("api/[controller]/[action]/{emplCode}")]
+        public async Task<ActionResult<UpdateMessageDTO>> CreateSelfEvaluation (string emplCode, string year, string term, string comment, string factor, string grade)
         {
             try
             {
-                var selfEval = await _evaluationRepository.CreateSelfEvaluation(empl_code, year, term,comment,factor,grade);
+                var selfEval = await _evaluationRepository.CreateSelfEvaluation(emplCode, year, term,comment,factor,grade);
                 if (selfEval is not null && selfEval.msg == "Saved Successfully!")
                 {
                     return Ok(selfEval);
