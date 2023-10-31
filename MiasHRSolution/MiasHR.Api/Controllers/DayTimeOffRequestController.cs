@@ -45,81 +45,24 @@ namespace MiasHR.Api.Controllers
                                                                                   string content,
                                                                                   string ip,
                                                                                   string user,
-                                                                                  string newType,
                                                                                   int hours,
                                                                                   decimal daysCnt,
                                                                                   TimeOnly time,
                                                                                   string sickDayYn)
         {
-            var dayTimeOffRequest = await _dayTimeOffRequestRepository.CreateDayTimeOffRequest(emplCode,
-                                                                                               type,
-                                                                                               subType,
-                                                                                               fromDate,
-                                                                                               toDate,
-                                                                                               title,
-                                                                                               content,
-                                                                                               ip,
-                                                                                               user,
-                                                                                               newType,
-                                                                                               hours,
-                                                                                               daysCnt,
-                                                                                               time,
-                                                                                               sickDayYn);
-            // request will return approver email as msg if successful
-            var email = dayTimeOffRequest.com_email;
-            if (!string.IsNullOrWhiteSpace(email))
-                try
-                {
-                    if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                        RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
-                        return Ok(new RequestResultDTO("success", new Dictionary<string, dynamic> { { "email", email } }));
-                    else
-                        return BadRequest();
-                }
-                catch (RegexMatchTimeoutException)
-                {
-                    return BadRequest();
-                }
-            else
-                return BadRequest();
-        }
-
-
-        [HttpPut("api/[controller]/[action]/{id}")]
-        public async Task<ActionResult<RequestResultDTO>> UpdateDayTimeOffRequest(int id,
-                                                                                  string emplCode = "",
-                                                                                  string type = "",
-                                                                                  string subType = "",
-                                                                                  DateOnly? fromDate = null,
-                                                                                  DateOnly? toDate = null,
-                                                                                  string title = "",
-                                                                                  string content = "",
-                                                                                  string ip = "",
-                                                                                  string user = "",
-                                                                                  string newType = "",
-                                                                                  int hours = -1,
-                                                                                  decimal daysCnt = -1,
-                                                                                  TimeOnly? time = null,
-                                                                                  string sickDayYn = "")
-        {
-            var dayTimeOffRequest = await _dayTimeOffRequestRepository.UpdateDayTimeOffRequest(id,
-                                                                                               emplCode,
-                                                                                               type,
-                                                                                               subType,
-                                                                                               fromDate,
-                                                                                               toDate,
-                                                                                               title,
-                                                                                               content,
-                                                                                               ip,
-                                                                                               user,
-                                                                                               hours,
-                                                                                               daysCnt,
-                                                                                               time,
-                                                                                               sickDayYn);
-            if (dayTimeOffRequest == 0)
-                return NotFound();
-            else
-                return Ok(new RequestResultDTO("success", new Dictionary<string, dynamic> { { "id", id } }));
+            try
+            {
+                var requestResult = await _dayTimeOffRequestRepository.CreateDayTimeOffRequest(emplCode, type, subType, fromDate,
+                                                                                               toDate, title, content, ip, user,
+                                                                                               hours, daysCnt, time, sickDayYn);
+                
+                return (requestResult is null || requestResult.status == "FAILURE") ? NotFound() : Ok(requestResult);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                                     "Error retrieving data from database");
+            }
         }
 
         [HttpGet("api/[controller]/[action]/{id}")]
@@ -141,13 +84,13 @@ namespace MiasHR.Api.Controllers
 
         [HttpPut]
         [Route("api/[controller]/[action]/{id}")]
-        public async Task<ActionResult<int>> DeleteDayTimeOffRequest(int id)
+        public async Task<ActionResult<RequestResultDTO>> DeleteDayTimeOffRequest(int id)
         {
             try
             {
                 var deleteResult = await _dayTimeOffRequestRepository.DeleteDayTimeOffRequest(id);
 
-                return deleteResult == 0 ? NotFound() : Ok(deleteResult);
+                return (deleteResult is null || deleteResult.status == "FAILURE") ? NotFound() : Ok(deleteResult);
 
             }
             catch (Exception)

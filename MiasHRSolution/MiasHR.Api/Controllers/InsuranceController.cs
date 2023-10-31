@@ -55,7 +55,7 @@ namespace MiasHR.Api.Controllers
             {
                 var updateResult = await _insuranceRepository.UpdateInsuranceOption(insuranceType, emplCode, selectedCoverage, selectedSurfingId);
 
-                return updateResult.status == "SUCCESSFUL" ? Ok(updateResult) : BadRequest();
+                return (updateResult is null || updateResult.status == "FAILURE") ? BadRequest() : Ok(updateResult);
             }
             catch (Exception)
             {
