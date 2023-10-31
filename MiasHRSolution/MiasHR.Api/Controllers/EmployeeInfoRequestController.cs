@@ -142,11 +142,11 @@ namespace MiasHR.Api.Controllers
 
         //Update User's Password
         [HttpPut("{emplCode}")]
-        public ActionResult<int> UpdateUserPassword(string emplCode, string newPass)
+        public async Task<ActionResult<RequestResultDTO>> UpdateUserPassword(string emplCode, string newPass)
         {
             try
             {
-                var employeePassword = this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
+                var employeePassword = await this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
                 if (employeePassword == null)
                 {
                     return BadRequest();

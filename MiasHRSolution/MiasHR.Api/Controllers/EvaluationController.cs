@@ -39,12 +39,12 @@ namespace MiasHR.Api.Controllers
 
         //Insert Self Evaluation Record to the DB
         [HttpPost("api/[controller]/[action]/{emplCode}")]
-        public async Task<ActionResult<UpdateMessageDTO>> CreateSelfEvaluation (string emplCode, string year, string term, string comment, string factor, string grade)
+        public async Task<ActionResult<RequestResultDTO>> CreateSelfEvaluation (string emplCode, string year, string term, string comment, string factor, string grade)
         {
             try
             {
                 var selfEval = await _evaluationRepository.CreateSelfEvaluation(emplCode, year, term,comment,factor,grade);
-                if (selfEval is not null && selfEval.msg == "Saved Successfully!")
+                if (selfEval is not null && selfEval.status == "SUCCESSFUL")
                 {
                     return Ok(selfEval);
                 }
