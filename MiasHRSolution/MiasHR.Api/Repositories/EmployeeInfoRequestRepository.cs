@@ -133,8 +133,8 @@ namespace MiasHR.Api.Repositories
             //default
             RequestResultDTO requestResultDTO = new RequestResultDTO("FAILURE",null);
 
-            var updatePassword = _miasHRDbContext.HrWebUsers
-                .First(r => r.EmplCode == emplCode);
+            var updatePassword = await _miasHRDbContext.HrWebUsers
+                .FirstAsync(r => r.EmplCode == emplCode);
             if (updatePassword != null)
             {
                 updatePassword.Pw = newPass;

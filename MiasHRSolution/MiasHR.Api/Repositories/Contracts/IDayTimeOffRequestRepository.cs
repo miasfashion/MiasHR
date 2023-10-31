@@ -6,7 +6,7 @@ namespace MiasHR.Api.Repositories.Contracts
 {
     public interface IDayTimeOffRequestRepository
     {
-        Task<UpdateMessageDTO> CreateDayTimeOffRequest(string emplCode,
+        Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                        string type,
                                                        string subType,
                                                        DateOnly fromDate,
@@ -15,7 +15,6 @@ namespace MiasHR.Api.Repositories.Contracts
                                                        string content,
                                                        string ip,
                                                        string user,
-                                                       string newType,
                                                        int hours,
                                                        decimal daysCnt,
                                                        TimeOnly time,
@@ -23,22 +22,7 @@ namespace MiasHR.Api.Repositories.Contracts
 
         Task<HrWebRequest>? GetDayTimeOffRequest(int id);
 
-        Task<int> UpdateDayTimeOffRequest(int id,
-                                          string emplCode = "",
-                                          string type = "",
-                                          string subType = "",
-                                          DateOnly? fromDate = null,
-                                          DateOnly? toDate = null,
-                                          string title = "",
-                                          string content = "",
-                                          string ip = "",
-                                          string user = "",
-                                          int hours = -1,
-                                          decimal daysCnt = -1,
-                                          TimeOnly? time = null,
-                                          string sickDayYn = "");
-
-        Task<int> DeleteDayTimeOffRequest(int id);
+        Task<RequestResultDTO> DeleteDayTimeOffRequest(int id);
 
         Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year);
 

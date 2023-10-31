@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System;
+using System.Text.RegularExpressions;
 
 namespace MiasHR.Api.Repositories
 {
@@ -37,7 +38,7 @@ namespace MiasHR.Api.Repositories
             return results;
         }
 
-        public async Task<UpdateMessageDTO> CreateDayTimeOffRequest(string emplCode,
+        public async Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                                     string type,
                                                                     string subType,
                                                                     DateOnly fromDate,
@@ -46,7 +47,6 @@ namespace MiasHR.Api.Repositories
                                                                     string content,
                                                                     string ip,
                                                                     string user,
-                                                                    string newType,
                                                                     int hours,
                                                                     decimal daysCnt,
                                                                     TimeOnly time,
@@ -68,6 +68,7 @@ namespace MiasHR.Api.Repositories
                 pUser = user,
                 pNewType = "NEW",
                 pDaysCnt = daysCnt,
+                pTime = timeString,
                 @pSickDayYn = sickDayYn
             };
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
@@ -78,100 +79,24 @@ namespace MiasHR.Api.Repositories
                     param,
                     commandType: CommandType.StoredProcedure
                 );
-                return result;
+                // request will return approver email as msg if successful
+                var email = result.com_email;
+                if (!string.IsNullOrWhiteSpace(email))
+                    try
+                    {
+                        if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                            RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
+                            return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "email", email } });
+                        else
+                            return new RequestResultDTO("FAILURE", null);
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        return new RequestResultDTO("FAILURE", null);
+                    }
+                else
+                    return new RequestResultDTO("FAILURE", null);
             }
-        }
-
-        public async Task<int> UpdateDayTimeOffRequest(int id,
-                                                       string emplCode = "",
-                                                       string type = "",
-                                                       string subType = "",
-                                                       DateOnly? fromDate = null,
-                                                       DateOnly? toDate = null,
-                                                       string title = "",
-                                                       string content = "",
-                                                       string ip = "",
-                                                       string user = "",
-                                                       int hours = -1,
-                                                       decimal daysCnt = -1,
-                                                       TimeOnly? time = null,
-                                                       string sickDayYn = "")
-        {
-            var dayTimeOffRequest = await _miasHRDbContext.HrWebRequests
-                .FirstAsync(r => r.Seq == id);
-            if (dayTimeOffRequest != null)
-            {
-                if (!string.IsNullOrEmpty(emplCode))
-                {
-                    dayTimeOffRequest.EmplCode = emplCode;
-                }
-                if (!string.IsNullOrEmpty(type))
-                {
-                    dayTimeOffRequest.ReqType = type;
-                }
-                if (!string.IsNullOrEmpty(subType))
-                {
-                    dayTimeOffRequest.ReqSubType = subType;
-                }
-                if (fromDate.HasValue)
-                {
-                    dayTimeOffRequest.PeriodFrom = fromDate.Value.ToString();
-                }
-                if (toDate.HasValue)
-                {
-                    dayTimeOffRequest.PeriodTo = toDate.Value.ToString();
-                }
-                if (!string.IsNullOrEmpty(title))
-                {
-                    dayTimeOffRequest.ReqTitle = title;
-                }
-                if (!string.IsNullOrEmpty(content))
-                {
-                    dayTimeOffRequest.ReqContent = content;
-                }
-                if (!string.IsNullOrEmpty(ip))
-                {
-                    dayTimeOffRequest.ReqIp = ip;
-                }
-                if (!string.IsNullOrEmpty(user))
-                {
-                    dayTimeOffRequest.ModifiedUser = user;
-                }
-                if (hours != -1)
-                {
-                    dayTimeOffRequest.HoursCnt = hours;
-                }
-                if (daysCnt != -1)
-                {
-                    dayTimeOffRequest.DaysCnt = daysCnt;
-                }
-                if (time.HasValue)
-                {
-                    dayTimeOffRequest.StartTime = TimeSpan.Parse(time.ToString());
-                }
-                if (!string.IsNullOrEmpty(sickDayYn))
-                {
-                    dayTimeOffRequest.SickDayYn = sickDayYn;
-                }
-                return await _miasHRDbContext.SaveChangesAsync();
-            }
-            else
-            {
-                throw new Exception($"DayTimeOffRequest with ID {id} not found.");
-            }
-        }
-
-        /// <summary>
-        /// Creates a new day time off request.
-        /// </summary>
-        /// <param name="entity">The day time off request entity.</param>
-        /// <returns>The number of state entries written to the database.</returns>
-        public async Task<int> CreateDayTimeOffRequest(HrWebRequest entity)
-        {
-            await _miasHRDbContext.AddAsync<HrWebRequest>(entity);
-            var result = await _miasHRDbContext
-                .SaveChangesAsync();
-            return result;
         }
 
         /// <summary>
@@ -206,18 +131,22 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="id">The ID of the day time off request.</param>
         /// <returns>The number of state entries written to the database.</returns>
-        public async Task<int> DeleteDayTimeOffRequest(int id)
+        public async Task<RequestResultDTO> DeleteDayTimeOffRequest(int id)
         {
             var dayTimeOffRequest =  await _miasHRDbContext.HrWebRequests
                 .FirstAsync(r => r.Seq == id);
             if (dayTimeOffRequest != null)
             {
                 dayTimeOffRequest.Status = 3;
-                return await _miasHRDbContext.SaveChangesAsync();
+                var result = await _miasHRDbContext.SaveChangesAsync();
+                if (result > 0)
+                    return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "id", id } });
+                else
+                    return new RequestResultDTO("FAILURE", null);
             }
             else
             {
-                throw new Exception($"DayTimeOffRequest with ID {id} not found.");
+                return new RequestResultDTO("FAILURE", null);
             }
         }
 
