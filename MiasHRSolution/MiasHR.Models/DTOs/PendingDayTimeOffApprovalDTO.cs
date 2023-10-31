@@ -86,9 +86,9 @@ namespace MiasHR.Models.DTOs
 
         public string? div_dept { get; }
 
-        public decimal? left_days { get; }
+        public string? left_days { get; }
 
-        public decimal? curr_days { get; }
+        public string? curr_days { get; }
 
         public string? req_content3 { get; }
     }
