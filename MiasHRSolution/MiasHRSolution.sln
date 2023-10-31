@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiasHR.Web", "MiasHR.Web\Mi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiasHR.Api", "MiasHR.Api\MiasHR.Api.csproj", "{84D3CA48-9F93-4592-9990-F4A0A5F480F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiasHR.Models", "MiasHR.Models\MiasHR.Models.csproj", "{3F132130-7D0A-47C9-8DB0-7F917C4BBB2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiasHR.Models", "MiasHR.Models\MiasHR.Models.csproj", "{3F132130-7D0A-47C9-8DB0-7F917C4BBB2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

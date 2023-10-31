@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
 using MiasHR.Api.Entities;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MiasHR.Api.Controllers
 {
@@ -34,16 +36,90 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPost("api/[controller]/[action]")]
-        public async Task<ActionResult<int>> CreateDayTimeOffRequest()
+        public async Task<ActionResult<RequestResultDTO>> CreateDayTimeOffRequest(string emplCode,
+                                                                                  string type,
+                                                                                  string subType,
+                                                                                  DateOnly fromDate,
+                                                                                  DateOnly toDate,
+                                                                                  string title,
+                                                                                  string content,
+                                                                                  string ip,
+                                                                                  string user,
+                                                                                  string newType,
+                                                                                  int hours,
+                                                                                  decimal daysCnt,
+                                                                                  TimeOnly time,
+                                                                                  string sickDayYn)
         {
-            throw new NotImplementedException();
+            var dayTimeOffRequest = await _dayTimeOffRequestRepository.CreateDayTimeOffRequest(emplCode,
+                                                                                               type,
+                                                                                               subType,
+                                                                                               fromDate,
+                                                                                               toDate,
+                                                                                               title,
+                                                                                               content,
+                                                                                               ip,
+                                                                                               user,
+                                                                                               newType,
+                                                                                               hours,
+                                                                                               daysCnt,
+                                                                                               time,
+                                                                                               sickDayYn);
+            // request will return approver email as msg if successful
+            var email = dayTimeOffRequest.com_email;
+            if (!string.IsNullOrWhiteSpace(email))
+                try
+                {
+                    if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                        RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
+                        return Ok(new RequestResultDTO("success", new Dictionary<string, dynamic> { { "email", email } }));
+                    else
+                        return BadRequest();
+                }
+                catch (RegexMatchTimeoutException)
+                {
+                    return BadRequest();
+                }
+            else
+                return BadRequest();
         }
 
 
         [HttpPut("api/[controller]/[action]/{id}")]
-        public async Task<ActionResult<int>> UpdateDayTimeOffRequest()
+        public async Task<ActionResult<RequestResultDTO>> UpdateDayTimeOffRequest(int id,
+                                                                                  string emplCode = "",
+                                                                                  string type = "",
+                                                                                  string subType = "",
+                                                                                  DateOnly? fromDate = null,
+                                                                                  DateOnly? toDate = null,
+                                                                                  string title = "",
+                                                                                  string content = "",
+                                                                                  string ip = "",
+                                                                                  string user = "",
+                                                                                  string newType = "",
+                                                                                  int hours = -1,
+                                                                                  decimal daysCnt = -1,
+                                                                                  TimeOnly? time = null,
+                                                                                  string sickDayYn = "")
         {
-            throw new NotImplementedException();
+            var dayTimeOffRequest = await _dayTimeOffRequestRepository.UpdateDayTimeOffRequest(id,
+                                                                                               emplCode,
+                                                                                               type,
+                                                                                               subType,
+                                                                                               fromDate,
+                                                                                               toDate,
+                                                                                               title,
+                                                                                               content,
+                                                                                               ip,
+                                                                                               user,
+                                                                                               hours,
+                                                                                               daysCnt,
+                                                                                               time,
+                                                                                               sickDayYn);
+            if (dayTimeOffRequest == 0)
+                return NotFound();
+            else
+                return Ok(new RequestResultDTO("success", new Dictionary<string, dynamic> { { "id", id } }));
         }
 
         [HttpGet("api/[controller]/[action]/{id}")]

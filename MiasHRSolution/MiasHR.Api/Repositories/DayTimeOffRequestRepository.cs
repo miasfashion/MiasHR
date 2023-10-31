@@ -3,12 +3,10 @@ using MiasHR.Api.Data;
 using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
 using System.Data;
+using System;
 
 namespace MiasHR.Api.Repositories
 {
@@ -37,6 +35,130 @@ namespace MiasHR.Api.Repositories
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
             return results;
+        }
+
+        public async Task<UpdateMessageDTO> CreateDayTimeOffRequest(string emplCode,
+                                                                    string type,
+                                                                    string subType,
+                                                                    DateOnly fromDate,
+                                                                    DateOnly toDate,
+                                                                    string title,
+                                                                    string content,
+                                                                    string ip,
+                                                                    string user,
+                                                                    string newType,
+                                                                    int hours,
+                                                                    decimal daysCnt,
+                                                                    TimeOnly time,
+                                                                    string sickDayYn)
+        {
+            string fromDateString = fromDate.ToString("yyyyMMdd");
+            string toDateString = toDate.ToString("yyyyMMdd");
+            string timeString = time.ToString("hh:mm:ss");
+            var param = new
+            {
+                pEmplCode = emplCode,
+                pType = type,
+                pSubType = subType,
+                pFrom = fromDateString,
+                pTo = toDateString,
+                pTitle = "",
+                pContent = content,
+                pIP = ip,
+                pUser = user,
+                pNewType = "NEW",
+                pDaysCnt = daysCnt,
+                @pSickDayYn = sickDayYn
+            };
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryFirstAsync<UpdateMessageDTO>(
+                    "sp_HR_WebRequest",
+                    param,
+                    commandType: CommandType.StoredProcedure
+                );
+                return result;
+            }
+        }
+
+        public async Task<int> UpdateDayTimeOffRequest(int id,
+                                                       string emplCode = "",
+                                                       string type = "",
+                                                       string subType = "",
+                                                       DateOnly? fromDate = null,
+                                                       DateOnly? toDate = null,
+                                                       string title = "",
+                                                       string content = "",
+                                                       string ip = "",
+                                                       string user = "",
+                                                       int hours = -1,
+                                                       decimal daysCnt = -1,
+                                                       TimeOnly? time = null,
+                                                       string sickDayYn = "")
+        {
+            var dayTimeOffRequest = await _miasHRDbContext.HrWebRequests
+                .FirstAsync(r => r.Seq == id);
+            if (dayTimeOffRequest != null)
+            {
+                if (!string.IsNullOrEmpty(emplCode))
+                {
+                    dayTimeOffRequest.EmplCode = emplCode;
+                }
+                if (!string.IsNullOrEmpty(type))
+                {
+                    dayTimeOffRequest.ReqType = type;
+                }
+                if (!string.IsNullOrEmpty(subType))
+                {
+                    dayTimeOffRequest.ReqSubType = subType;
+                }
+                if (fromDate.HasValue)
+                {
+                    dayTimeOffRequest.PeriodFrom = fromDate.Value.ToString();
+                }
+                if (toDate.HasValue)
+                {
+                    dayTimeOffRequest.PeriodTo = toDate.Value.ToString();
+                }
+                if (!string.IsNullOrEmpty(title))
+                {
+                    dayTimeOffRequest.ReqTitle = title;
+                }
+                if (!string.IsNullOrEmpty(content))
+                {
+                    dayTimeOffRequest.ReqContent = content;
+                }
+                if (!string.IsNullOrEmpty(ip))
+                {
+                    dayTimeOffRequest.ReqIp = ip;
+                }
+                if (!string.IsNullOrEmpty(user))
+                {
+                    dayTimeOffRequest.ModifiedUser = user;
+                }
+                if (hours != -1)
+                {
+                    dayTimeOffRequest.HoursCnt = hours;
+                }
+                if (daysCnt != -1)
+                {
+                    dayTimeOffRequest.DaysCnt = daysCnt;
+                }
+                if (time.HasValue)
+                {
+                    dayTimeOffRequest.StartTime = TimeSpan.Parse(time.ToString());
+                }
+                if (!string.IsNullOrEmpty(sickDayYn))
+                {
+                    dayTimeOffRequest.SickDayYn = sickDayYn;
+                }
+                return await _miasHRDbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception($"DayTimeOffRequest with ID {id} not found.");
+            }
         }
 
         /// <summary>
