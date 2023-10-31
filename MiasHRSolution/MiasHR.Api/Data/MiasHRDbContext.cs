@@ -4971,7 +4971,7 @@ public partial class MiasHRDbContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("req_type");
-            entity.Property(e => e.SickdayYn)
+            entity.Property(e => e.SickDayYn)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasDefaultValueSql("('N')")

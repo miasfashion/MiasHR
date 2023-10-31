@@ -55,7 +55,7 @@ public partial class HrWebRequest
 
     public DateTime? RejectDate { get; set; }
 
-    public string? SickdayYn { get; set; }
+    public string? SickDayYn { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 
