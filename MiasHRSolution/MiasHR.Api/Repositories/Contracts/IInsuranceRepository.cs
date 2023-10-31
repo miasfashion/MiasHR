@@ -8,6 +8,6 @@ namespace MiasHR.Api.Repositories.Contracts
 
         Task<IReadOnlyList<InsuranceSurfingDTO>> GetInsuranceOptions(string insuranceType, string emplCode, string selectedCoverage);
 
-        Task<UpdateMessageDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId);
+        Task<RequestResultDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId);
     }
 }

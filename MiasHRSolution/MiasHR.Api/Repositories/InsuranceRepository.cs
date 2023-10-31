@@ -5,6 +5,8 @@ using System.Data;
 using MiasHR.Api.Entities;
 using System.Data.SqlClient;
 using Dapper;
+using System.Diagnostics;
+using System.Numerics;
 
 namespace MiasHR.Api.Repositories
 {
@@ -59,8 +61,11 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<UpdateMessageDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId)
+        public async Task<RequestResultDTO> UpdateInsuranceOption(string insuranceType, string emplCode, string selectedCoverage, int selectedSurfingId)
         {
+            //default
+            RequestResultDTO requestResultDTO = new RequestResultDTO("FAILURE", null);
+
             var param = new
             {
                 pType = insuranceType,
@@ -76,7 +81,16 @@ namespace MiasHR.Api.Repositories
                     param,
                     commandType: CommandType.StoredProcedure
                 );
-                return result;
+                if (result is not null && result.msg == "Saved Successfully!")
+                {
+                    requestResultDTO.status = "SUCCESS";
+                    requestResultDTO.data = new Dictionary<string, dynamic>();
+                    requestResultDTO.data.Add("emplCode", emplCode);
+                    requestResultDTO.data.Add("type", insuranceType);
+                    requestResultDTO.data.Add("coverage", selectedCoverage);
+                    requestResultDTO.data.Add("surfingId", selectedSurfingId);
+                }
+                return requestResultDTO;
             }
         }
     }
