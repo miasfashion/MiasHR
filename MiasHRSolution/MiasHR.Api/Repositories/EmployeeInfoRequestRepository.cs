@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿ using Dapper;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -128,8 +128,10 @@ namespace MiasHR.Api.Repositories
         /// <param name="emplCode">The employee code.</param>
         /// <param name="newPass">The employee code.</param>
         /// <returns>Award And Disciplinary History about the employee</returns>
-        public int UpdateUserPassword(string emplCode, string newPass)
+        public async Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPass)
         {
+            //default
+            RequestResultDTO requestResultDTO = new RequestResultDTO("FAILURE",null);
 
             var updatePassword = _miasHRDbContext.HrWebUsers
                 .First(r => r.EmplCode == emplCode);
@@ -138,12 +140,19 @@ namespace MiasHR.Api.Repositories
                 updatePassword.Pw = newPass;
                 updatePassword.ModifiedDate = DateTime.Now;
                 //TODO: modified user
-                return _miasHRDbContext.SaveChanges();
+                _miasHRDbContext.SaveChanges();
+                requestResultDTO.status = "SUCCESS";
+                requestResultDTO.data = new Dictionary<string, dynamic>();
+                requestResultDTO.data.Add("emplCode", emplCode);
+                requestResultDTO.data.Add("newPass", newPass);
+
             }
             else
             {
                 throw new Exception($"Update Password Failed with ID {emplCode}");
             }
+
+            return requestResultDTO;
 
         }
 

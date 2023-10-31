@@ -60,8 +60,9 @@ namespace MiasHR.Api.Repositories
         /// <param name="factor">Factor that employee is evaluating</param>
         /// <param name="grade">Grade employee gave for the factor</param>
         /// <returns>Whether self evaluation was successful or not</returns>
-        public async Task<UpdateMessageDTO> CreateSelfEvaluation(string emplCode, string year, string term,string factor, string grade, string comment = "")
+        public async Task<RequestResultDTO> CreateSelfEvaluation(string emplCode, string year, string term, string factor, string grade, string comment = "")
         {
+            RequestResultDTO requestResultDTO = new RequestResultDTO("FAILURE", null);
             var param = new
             {
                 pMode = "SELFEVAL",
@@ -81,7 +82,18 @@ namespace MiasHR.Api.Repositories
                     param,
                     commandType: CommandType.StoredProcedure
                 );
-                return result;
+                if (result is not null && result.msg == "Saved Successfully!")
+                {
+                    requestResultDTO.status = "SUCCESS";
+                    requestResultDTO.data = new Dictionary<string, dynamic>();
+                    requestResultDTO.data.Add("emplCode", emplCode);
+                    requestResultDTO.data.Add("year", year);
+                    requestResultDTO.data.Add("term", term);
+                    requestResultDTO.data.Add("factor", factor);
+                    requestResultDTO.data.Add("grade", grade);
+                    requestResultDTO.data.Add("comment", comment);
+                }
+                return requestResultDTO;
             }
         }
 
