@@ -33,3 +33,13 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 .vscode/
+
+# ASP.NET specific files and folders
+# Add these lines to ignore ASP.NET build and temporary files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+
