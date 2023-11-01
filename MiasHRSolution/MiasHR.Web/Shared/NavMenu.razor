@@ -1,9 +1,16 @@
 ﻿<MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavLink Href="/servers" Match="NavLinkMatch.Prefix">Servers</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true">
-        <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
-        <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+    <MudNavGroup Title="Manage Team" Icon="@Icons.Material.Filled.Groups" Expanded="true">
+        <MudNavLink Href="/managerdayoff" Icon="@Icons.Material.Filled.EventNote" Match="NavLinkMatch.Prefix">Day Time Off Managing</MudNavLink>
+        <MudNavLink Href="/managertimeattend" Icon="@Icons.Material.Filled.ManageHistory" Match="NavLinkMatch.Prefix">Time & Attendance Managing</MudNavLink>
+        <MudNavLink Href="/managerevaluation" Icon="@Icons.Material.Filled.ManageAccounts" Match="NavLinkMatch.Prefix">Evaluation Managing</MudNavLink>
     </MudNavGroup>
-    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
+    <MudNavLink Href="/dayoff" Icon="@Icons.Material.Filled.Event" Match="NavLinkMatch.Prefix">Day Time Off</MudNavLink>
+    <MudNavLink Href="/timeattend" Icon="@Icons.Material.Filled.AccessTime" Match="NavLinkMatch.Prefix">Time & Attendance</MudNavLink>
+    <MudNavLink Href="/insurance" Icon="@Icons.Material.Filled.MedicalInformation" Match="NavLinkMatch.Prefix">Insurance</MudNavLink>
+    <MudNavLink Href="/organization" Icon="@Icons.Material.Filled.AccountTree" Match="NavLinkMatch.Prefix">Organization</MudNavLink>
+    <MudNavLink Href="/evaluation" Icon="@Icons.Material.Filled.Task" Match="NavLinkMatch.Prefix">Evaluation</MudNavLink>
+    <MudNavLink Href="/policies" Icon="@Icons.Material.Filled.TextSnippet" Match="NavLinkMatch.Prefix">Policies</MudNavLink>
+    <MudNavLink Href="/counter" Icon="@Icons.Material.Filled.HeartBroken" Match="NavLinkMatch.Prefix">Counter</MudNavLink>
+    <MudNavLink Href="/fetchdata" Icon="@Icons.Material.Filled.GolfCourse" Match="NavLinkMatch.Prefix">Fetch Data</MudNavLink>
 </MudNavMenu>
