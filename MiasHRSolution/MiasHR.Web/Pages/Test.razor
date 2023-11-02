@@ -1,0 +1,17 @@
+﻿@page "/test"
+
+<PageTitle>Test</PageTitle>
+
+<MudStack Row="true">
+    <UserAvatar />
+    <UserNameCard />
+</MudStack>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

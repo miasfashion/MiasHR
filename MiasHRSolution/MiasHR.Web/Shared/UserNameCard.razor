@@ -1,0 +1,14 @@
+﻿<MudPaper Class="pa-4" Elevation="1">
+    <MudStack Justify="Justify.Center" Spacing="0">
+        <MudText Typo="Typo.h4"> @name </MudText>
+        <MudText Typo="Typo.body2"> @role </MudText>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public string name { get; set; } = "Jaehoon Choi";
+    
+    [Parameter]
+    public string role { get; set; } = "Administrator";
+}
