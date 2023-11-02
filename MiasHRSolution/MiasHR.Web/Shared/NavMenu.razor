@@ -1,39 +1,17 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">MiasHR.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<MudNavMenu>
+    @*TODO: Click 'Manage Team' to open Manager dashboard, Hover Manage Team to open dropdown menu
+            Each categories have their dropdown menu with their own pages
+    *@
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+    <MudNavGroup Title="Manage Team" Icon="@Icons.Material.Filled.Groups" Expanded="false">
+        <MudNavLink Href="/manager/dayoff" Icon="@Icons.Material.Filled.EventAvailable" Match="NavLinkMatch.Prefix">Day Time Off Managing</MudNavLink>
+        <MudNavLink Href="/manager/timeattend" Icon="@Icons.Material.Filled.ManageHistory" Match="NavLinkMatch.Prefix">Time & Attendance Managing</MudNavLink>
+        <MudNavLink Href="/manager/evaluation" Icon="@Icons.Material.Filled.ManageAccounts" Match="NavLinkMatch.Prefix">Evaluation Managing</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/dayoff" Icon="@Icons.Material.Filled.Event" Match="NavLinkMatch.Prefix">Day Time Off</MudNavLink>
+    <MudNavLink Href="/timeattend" Icon="@Icons.Material.Filled.AccessTime" Match="NavLinkMatch.Prefix">Time & Attendance</MudNavLink>
+    <MudNavLink Href="/insurance" Icon="@Icons.Material.Filled.MedicalInformation" Match="NavLinkMatch.Prefix">Insurance</MudNavLink>
+    <MudNavLink Href="/organization" Icon="@Icons.Material.Filled.AccountTree" Match="NavLinkMatch.Prefix">Organization</MudNavLink>
+    <MudNavLink Href="/evaluation" Icon="@Icons.Material.Filled.Task" Match="NavLinkMatch.Prefix">Evaluation</MudNavLink>
+    <MudNavLink Href="/policies" Icon="@Icons.Material.Filled.TextSnippet" Match="NavLinkMatch.Prefix">Policies</MudNavLink>
+</MudNavMenu>
