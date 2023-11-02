@@ -1,0 +1,25 @@
+﻿﻿<div class="demo-wrap p-sm">
+    <div style="margin-right:5em;">
+        <h4>Month View</h4>
+        <TelerikCalendar Date="@StartDate"
+                         Min="@Min"
+                         Max="@Max"
+                         View="CalendarView.Month"
+                         SelectionMode="@CalendarSelectionMode.Multiple"
+                         ShowWeekNumbers="true">
+        </TelerikCalendar>
+    </div>
+</div>
+
+@code {
+    private DateTime StartDate = new DateTime(2019, 5, 2);
+    private DateTime Min = new DateTime(2015, 1, 1);
+    private DateTime Max = new DateTime(2025, 12, 31);
+}
+
+<style>
+    .demo-wrap {
+        display: inline-flex;
+        flex-wrap: wrap;
+    }
+</style>
