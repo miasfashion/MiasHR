@@ -7,7 +7,7 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Href="/" Typo="Typo.h5" Class="ml-3" Underline="Underline.None">Mias HR</MudText>
+        <MudLink Href="/" Typo="Typo.h5" Class="ml-3" Underline="MudBlazor.Underline.None" Color="Color.Warning">Mias HR</MudLink>
         <MudSpacer />
         <ProfileMenu />
     </MudAppBar>
@@ -19,7 +19,6 @@
     </MudMainContent>
 </MudLayout>
 @code {
-
     protected override void OnInitialized()
     {
         StateHasChanged();
