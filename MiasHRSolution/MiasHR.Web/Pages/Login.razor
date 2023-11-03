@@ -1,13 +1,17 @@
 ﻿@page "/login"
+@page "/images"
+@layout LoginLayout
 
 <PageTitle>Login</PageTitle>
-<MudContainer MaxWidth="MudBlazor.MaxWidth.Small" Style="align-items:">
-    <MudPaper Class="pa-4 ma-4">
+<MudPaper Class="d-flex pa-4 ma-4" MaxWidth="40%">
+    <MudStack AlignItems="AlignItems.Start">
         <MudTextField @bind-Value="UserID" Label="User ID" Variant="Variant.Outlined" />
-    </MudPaper>
-</MudContainer>
-<MudContainer MaxWidth="MudBlazor.MaxWidth.Small">
-    <MudPaper Class="pa-4 ma-4">
+
+    </MudStack>
+</MudPaper>
+<MudPaper Class="d-flex pa-4 ma-4 " MaxWidth="40%">
+    <MudStack AlignItems="AlignItems.Start">
+
         <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
         <MudButton Disabled="@_loggingin" OnClick="Loggingin" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Primary">
             @if (_loggingin)
@@ -20,8 +24,9 @@
                 <MudText>Submit</MudText>
             }
         </MudButton>
-    </MudPaper>
-</MudContainer>
+    </MudStack>
+
+</MudPaper>
 
 
 @code {
