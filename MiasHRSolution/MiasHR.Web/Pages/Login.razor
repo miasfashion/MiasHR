@@ -1,24 +1,27 @@
 ﻿@page "/login"
 
 <PageTitle>Login</PageTitle>
-<div class="d-flex p-4">
-    <MudTextField @bind-Value="UserID" Label="User ID" Variant="Variant.Outlined" />
-</div>
-<div class="d-flex p-4">
-    <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
-    <MudButton Disabled="@_loggingin" OnClick="Loggingin" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Primary">
-    @if (_loggingin)
-        {
-            <MudProgressCircular Class="ms-1" Size="Size.Small" Indeterminate="true"/>
-            <MudText Class="ms-2">Logging In</MudText>
-        }
-        else
-        {
-            <MudText>Submit</MudText>
-        }
-    </MudButton>
-
-</div>
+<MudContainer MaxWidth="MudBlazor.MaxWidth.Small" Style="align-items:">
+    <MudPaper Class="pa-4 ma-4">
+        <MudTextField @bind-Value="UserID" Label="User ID" Variant="Variant.Outlined" />
+    </MudPaper>
+</MudContainer>
+<MudContainer MaxWidth="MudBlazor.MaxWidth.Small">
+    <MudPaper Class="pa-4 ma-4">
+        <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+        <MudButton Disabled="@_loggingin" OnClick="Loggingin" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Primary">
+            @if (_loggingin)
+            {
+                <MudProgressCircular Class="ms-1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Logging In</MudText>
+            }
+            else
+            {
+                <MudText>Submit</MudText>
+            }
+        </MudButton>
+    </MudPaper>
+</MudContainer>
 
 
 @code {
