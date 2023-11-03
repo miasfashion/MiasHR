@@ -1,18 +1,13 @@
 ﻿@page "/profile/history"
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<PageTitle>My history</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        currentCount++;
-    }
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("My Profile", href: "/profile"),
+        new BreadcrumbItem("My History", href: null, disabled: true)
+    };
 }

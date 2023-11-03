@@ -1,18 +1,13 @@
 ﻿@page "/profile/changepw"
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<PageTitle>Change Password</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        currentCount++;
-    }
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("My Profile", href: "/profile"),
+        new BreadcrumbItem("Change Password", href: null, disabled: true)
+    };
 }
