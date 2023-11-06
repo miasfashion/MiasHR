@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/home"
 <MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
     <MudGrid>
@@ -42,6 +42,6 @@
 @code {
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        new BreadcrumbItem("Home", "/")
+        new BreadcrumbItem("Home", "/home")
     };
 }

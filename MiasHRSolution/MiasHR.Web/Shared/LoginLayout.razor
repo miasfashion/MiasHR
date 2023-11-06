@@ -5,13 +5,17 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudPaper Class="d-flex justify-content-center">
-        <MudPaper>
-            <MudImage Src="images/login_swf.jpg"/>
-        </MudPaper>
+    <MudPaper Class="d-flex justify-content-center" Elevation="0">
+
+        <MudImage Src="images/login_swf.jpg" />
+
     </MudPaper>
     <MudMainContent>
-        @Body
+        <MudPaper Class="d-flex justify-content-center" Elevation="0">
+            <MudStack >
+                @Body
+            </MudStack >
+        </MudPaper>
     </MudMainContent>
 </MudLayout>
 @code {
