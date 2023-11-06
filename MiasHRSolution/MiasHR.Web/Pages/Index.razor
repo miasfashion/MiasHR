@@ -1,5 +1,19 @@
 ﻿@page "/"
 <MudBreadcrumbs Items="_breadcrumbs" />
+<MudPaper Class="ma-4 pa-4">
+    <AuthorizeView>
+        <Authorized>
+            <MudText>
+                You are logged in as @context.User.Identity.Name.
+            </MudText>
+        </Authorized>
+        <NotAuthorized>
+            <MudText>
+                You are NOT logged in.
+            </MudText>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudPaper>
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
