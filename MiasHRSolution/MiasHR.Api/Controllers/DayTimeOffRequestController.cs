@@ -26,7 +26,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode);
 
-                return dayTimeOffRequests == null ? NotFound() : Ok(dayTimeOffRequests);
+                return dayTimeOffRequests is null ? NotFound() : Ok(dayTimeOffRequests);
             }
             catch (Exception)
             {
@@ -73,7 +73,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRequest = await _dayTimeOffRequestRepository.GetDayTimeOffRequest(id);
 
-                return dayTimeOffRequest == null ? NotFound() : Ok(dayTimeOffRequest);
+                return dayTimeOffRequest is null ? NotFound() : Ok(dayTimeOffRequest);
             }
             catch (Exception)
             {
@@ -109,7 +109,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRemaining = await _dayTimeOffRequestRepository.GetDayTimeOffRemainingByEmployee(emplCode, year);
 
-                return dayTimeOffRemaining == null ? NotFound() : Ok(dayTimeOffRemaining);
+                return dayTimeOffRemaining is null ? NotFound() : Ok(dayTimeOffRemaining);
             }
             catch (Exception)
             {
@@ -127,7 +127,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffHistory = await _dayTimeOffRequestRepository.GetEmployeeDayTimeOffHistoryList(emplCode, year);
 
-                return dayTimeOffHistory == null ? NotFound() : Ok(dayTimeOffHistory);
+                return dayTimeOffHistory is null ? NotFound() : Ok(dayTimeOffHistory);
             }
             catch (Exception)
             {
@@ -146,7 +146,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRemaining = await _dayTimeOffRequestRepository.GetDayTimeOffRequestResultList(emplCode, year);
 
-                return dayTimeOffRemaining == null ? NotFound() : Ok(dayTimeOffRemaining);
+                return dayTimeOffRemaining is null ? NotFound() : Ok(dayTimeOffRemaining);
             }
             catch (Exception)
             {
@@ -164,7 +164,7 @@ namespace MiasHR.Api.Controllers
             {
                 var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetPendingDayTimeOffRequestList(managerEmplCode);
 
-                return pendingDayTimeOffRequests == null ? NotFound() : Ok(pendingDayTimeOffRequests);
+                return pendingDayTimeOffRequests is null ? NotFound() : Ok(pendingDayTimeOffRequests);
             }
             catch (Exception)
             {
@@ -183,7 +183,7 @@ namespace MiasHR.Api.Controllers
             {
                 var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetHrDayTimeOffApprovalHistory(managerEmplCode);
 
-                return pendingDayTimeOffRequests == null ? NotFound() : Ok(pendingDayTimeOffRequests);
+                return pendingDayTimeOffRequests is null ? NotFound() : Ok(pendingDayTimeOffRequests);
             }
             catch (Exception)
             {

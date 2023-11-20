@@ -7,7 +7,8 @@ namespace MiasHR.Web
     {
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.sbCCa9ggL0VYU05g-lyA6baWZMOPUgiX4xLY9_6Rp0I";
+            string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmsiLCJleHAiOjE2OTkzOTU4MjR9.WwwXOeHsca955MLWbEetVHeLqxHQOYyYWzpdigA9hYJQ3CQzwMaKPiknnjyMdN7Y_mccjJYdLCtChLh2cXL8jQ";
+            //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.sbCCa9ggL0VYU05g-lyA6baWZMOPUgiX4xLY9_6Rp0I";
 
             var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
             //var identity = new ClaimsIdentity();

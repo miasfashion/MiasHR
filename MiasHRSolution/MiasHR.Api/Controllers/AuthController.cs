@@ -1,6 +1,6 @@
-﻿using MiasHR.Models;
+﻿using MiasHR.Api.Entities;
+using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,48 +12,63 @@ namespace MiasHR.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
-       
-        public AuthController(IConfiguration configuration)
+
+        public AuthController(IAuthRepository authRepository, IConfiguration configuration)
         {
+            _authRepository = authRepository;
             _configuration = configuration;
         }
 
         [HttpPost("api/[controller]/[action]")]
-        public ActionResult<User> Register(UserDTO request)
+        public async Task<ActionResult<string>> Login(UserDTO request)
         {
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            try
+            {
+                var employee = await _authRepository.Login(request.Username, request.PasswordHash);
 
-            user.Username = request.Username;
-            user.PasswordHash = passwordHash;
+                return employee is null ? Unauthorized() : CreateToken(employee);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "Error retrieving data from database");
+            }
 
-            return Ok(user);
+            
         }
 
         [HttpPost("api/[controller]/[action]")]
-        public ActionResult<User> Login(UserDTO request)
+        public async Task<ActionResult<RequestResultDTO>> Register(UserDTO request, DateOnly birthDate)
         {
-            if(user.Username != request.Username)
+            // temporarily take plain text password and hash it here.
+            // TODO: move hashing to frontend
+            var pw = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
+
+            try
             {
-                return BadRequest("Username or password is incorrect");
-            }
+                //var result = await _authRepository.Register(request.Username, request.PasswordHash, birthDate);
+                var result = await _authRepository.Register(request.Username, pw, birthDate);
 
-            if(!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                return result.status != "SUCCESS" ? BadRequest(result) : Ok(result);
+            }
+            catch (Exception)
             {
-                return BadRequest("Username or password is incorrect");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "Error retrieving data from database");
             }
-
-            string token = CreateToken(user);
-
-            return Ok(token);
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(HrEmployee employee)
         {
+            var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
+            string role = employee.Title is null ? "Employee" : employee.Title;
+                
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));

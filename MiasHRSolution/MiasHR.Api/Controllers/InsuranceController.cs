@@ -23,7 +23,7 @@ namespace MiasHR.Api.Controllers
             {
                 var selectedInsurance = await _insuranceRepository.GetSelectedInsurance(emplCode);
 
-                return selectedInsurance == null ? NotFound() : Ok(selectedInsurance);
+                return selectedInsurance is null ? NotFound() : Ok(selectedInsurance);
             }
             catch (Exception)
             {
@@ -39,7 +39,7 @@ namespace MiasHR.Api.Controllers
             {
                 var insuranceOptions = await _insuranceRepository.GetInsuranceOptions(insuranceType, emplCode, selectedCoverage);
 
-                return insuranceOptions == null ? NotFound() : Ok(insuranceOptions);
+                return insuranceOptions is null ? NotFound() : Ok(insuranceOptions);
             }
             catch (Exception)
             {
