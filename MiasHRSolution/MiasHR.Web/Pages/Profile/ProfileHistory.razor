@@ -1,13 +1,87 @@
 ﻿@page "/profile/history"
+@*inject ISnackbar Snackbar*@
 
 <PageTitle>My history</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
+<UserAvatar />
+<MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTable Items="@transferHist"
+              Class="d-flex w-50"
+              Striped="@true" Dense="@dense" Hover="@hover">
+        <HeaderContent>
+            <MudTHeadRow>
+                <MudTh>Transfer History</MudTh>
+            </MudTHeadRow>
+        </HeaderContent>
 
-@code {
+        <RowTemplate>
+            <MudTd DataLabel="Date" Class="w-50">@context.Date</MudTd>
+                <MudTd DataLabel="Type">@context.Type</MudTd>
+                <MudTd DataLabel="From">@context.From</MudTd>
+                <MudTd DataLabel="To">@context.To</MudTd>
+        </RowTemplate>
+    </MudTable>    
+</MudPaper>
+
+<MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTable Items="@awardHist"
+              Class="d-flex w-50"
+              Striped="@true" Dense="@dense" Hover="@hover">
+        <HeaderContent>
+            <MudTHeadRow>
+                <MudTh>Award & Disciplinary History</MudTh>
+            </MudTHeadRow>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Date" Class="w-50">@context.Date</MudTd>
+                <MudTd DataLabel="Type">@context.Type</MudTd>
+                <MudTd DataLabel="Content">@context.Content</MudTd>
+        </RowTemplate>
+    </MudTable>    
+</MudPaper>
+    @code {
+    private bool dense = true;
+    private bool hover = true;
+
+
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", href: "/home"),
         new BreadcrumbItem("My Profile", href: "/profile"),
         new BreadcrumbItem("My History", href: null, disabled: true)
+    };
+
+    //Transfer History
+    public class TransferHistory
+    {
+        public string Date { get; set; }
+        public string Type { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+    }
+
+    //TODO: Implement function to use values from entity
+    List<TransferHistory> transferHist = new List<TransferHistory>()
+    {
+        new TransferHistory { Date = "2023-12-25", Type = "GRADE", From = "G1", To = "E5" },
+        new TransferHistory { Date = "2023-12-15", Type = "DEPT", From = "Production  [ Div : CMO ]", To = "Domestic Production  [ Div : CMO ]" },
+        new TransferHistory { Date = "2023-11-11", Type = "COM", From = "Shipping  [ Div : C000 ( CECICO ) ]", To = "LOGISTICS  [ Div : CLO ( MIAS ) ]" }
+    };
+
+    //Award & Disciplinary History
+    public class AwardHistory
+    {
+        public string Date { get; set; }
+        public string Type { get; set; }
+        public string Content { get; set; }
+    }
+
+    //TODO: Implement function to use values from entity
+    List<AwardHistory> awardHist = new List<AwardHistory>()
+    {
+        new AwardHistory { Date = "2023-12-25", Type = "RP01", Content = "VERBAL WARNING"},
+        new AwardHistory { Date = "2023-12-15", Type = "RP02", Content = "DISCREPANCY REPORT" },
+        new AwardHistory { Date = "2023-11-11", Type = "RP01", Content = "PERFORMANCE ISSUE" }
     };
 }
