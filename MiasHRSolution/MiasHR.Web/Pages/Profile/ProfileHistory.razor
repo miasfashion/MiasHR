@@ -15,7 +15,7 @@
         </HeaderContent>
 
         <RowTemplate>
-            <MudTd DataLabel="Date" Class="w-50">@context.Date</MudTd>
+            <MudTd DataLabel="Date" Class="w-25">@context.Date</MudTd>
                 <MudTd DataLabel="Type">@context.Type</MudTd>
                 <MudTd DataLabel="From">@context.From</MudTd>
                 <MudTd DataLabel="To">@context.To</MudTd>
@@ -25,7 +25,7 @@
 
 <MudPaper Class="d-flex justify-content-center" Elevation="0">
     <MudTable Items="@awardHist"
-              Class="d-flex w-50"
+              Class="d-flex m-5 w-50"
               Striped="@true" Dense="@dense" Hover="@hover">
         <HeaderContent>
             <MudTHeadRow>
@@ -34,7 +34,7 @@
         </HeaderContent>
 
         <RowTemplate>
-            <MudTd DataLabel="Date" Class="w-50">@context.Date</MudTd>
+            <MudTd DataLabel="Date">@context.Date</MudTd>
                 <MudTd DataLabel="Type">@context.Type</MudTd>
                 <MudTd DataLabel="Content">@context.Content</MudTd>
         </RowTemplate>

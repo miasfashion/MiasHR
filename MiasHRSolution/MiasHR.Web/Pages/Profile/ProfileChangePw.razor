@@ -3,11 +3,11 @@
 <PageTitle>Change Password</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <UserAvatar />
-<MudPaper Class="d-flex justify-content-center" Elevation="0">
+<MudPaper Class="d-flex m-5 justify-content-center" Elevation="0">
     @using System.Text.RegularExpressions
     @using System.ComponentModel.DataAnnotations
 
-    <MudGrid >
+    <MudGrid>
         <MudItem xs="6" sm="6">
             <MudPaper Class="pa-5 m-5">
 
@@ -15,12 +15,12 @@
                 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
                     <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
                                   InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
-                                  OnAdornmentClick="VisibilityClick" AdornmentAriaLabel="Show Password"
+                                  OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                                   RequiredError="Type New Password!" />
                     <MudTextField T="string" Label="Password" HelperText="Repeat the password"
-                                  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-                                  OnAdornmentClick="VisibilityClick" AdornmentAriaLabel="Show Password"
+                                  InputType="@PasswordCheckInput" Adornment="Adornment.End" AdornmentIcon="@PasswordCheckIcon"
+                                  OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
                                   Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
                                   RequiredError="Type your New Password Again"/>
                     <div class="d-flex align-center justify-space-between">
@@ -31,8 +31,13 @@
             </MudPaper>
         </MudItem>
         <MudItem xs="6" sm="6">
-            <MudPaper>
-
+            <MudPaper Class="pa-5 m-5">
+                <MudList>
+                    <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
+                    <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
+                    <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
+                    <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
+                </MudList>
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -79,8 +84,10 @@
     bool isShow;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    InputType PasswordCheckInput = InputType.Password;
+    string PasswordCheckIcon = Icons.Material.Filled.VisibilityOff;
 
-    void VisibilityClick()
+    void PWVisibilityClick()
     {
         @if (isShow)
         {
@@ -96,5 +103,20 @@
         }
     }
 
+    void PWCheckVisibilityClick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordCheckIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordCheckInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordCheckIcon = Icons.Material.Filled.Visibility;
+            PasswordCheckInput = InputType.Text;
+        }
+    }
 
 }
