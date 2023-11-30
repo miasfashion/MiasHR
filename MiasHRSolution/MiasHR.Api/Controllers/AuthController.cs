@@ -63,12 +63,14 @@ namespace MiasHR.Api.Controllers
         private string CreateToken(HrEmployee employee)
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
+            var emplCode = employee.EmplCode;
             string role = employee.Title is null ? "Employee" : employee.Title;
                 
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, name),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.SerialNumber, emplCode)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
