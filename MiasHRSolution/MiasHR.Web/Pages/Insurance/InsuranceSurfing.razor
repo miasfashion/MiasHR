@@ -1,18 +1,72 @@
 ﻿@page "/insurance/surfing"
+@inject NavigationManager NavigationManager
 
-<PageTitle>insurance</PageTitle>
+<PageTitle>Insurance Surfing</PageTitle>
+<UserNameCard />
 
-<h1>Counter</h1>
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-8" PanelClass="pa-6">
+    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+</MudTabs>
+<MudPaper>
+    <MudText Typo="Typo.h5" GutterBottom="true">Insurance Plan Surfing</MudText>
+    <MudText>Choose Insurance Coverage (* If you need other coverage, please contact HR directly.)</MudText>
+    <MudSelect T="string" Label="Medical" AnchorOrigin="Origin.BottomCenter">
+        <MudSelectItem Value="@("Employee Only")" />
+        <MudSelectItem Value="@("Employee And Spouse")" />
+        <MudSelectItem Value="@("Employee And Children")" />
+        <MudSelectItem Value="@("Family")" />
+    </MudSelect>
+    <MudText>MEDICAL</MudText>
+    <MudSelect T="string" Label="Dental" AnchorOrigin="Origin.BottomCenter">
+        <MudSelectItem Value="@("Employee Only")" />
+        <MudSelectItem Value="@("Employee And Spouse")" />
+        <MudSelectItem Value="@("Employee And Children")" />
+        <MudSelectItem Value="@("Family")" />
+    </MudSelect>
+    <MudText>DENTAL</MudText>
+    <MudSelect T="string" Label="Vision" AnchorOrigin="Origin.BottomCenter">
+        <MudSelectItem Value="@("Employee Only")" />
+        <MudSelectItem Value="@("Employee And Spouse")" />
+        <MudSelectItem Value="@("Employee And Children")" />
+        <MudSelectItem Value="@("Family")" />
+    </MudSelect>
+    <MudText>VISION</MudText>
+    <MudSelect T="string" Label="Life" AnchorOrigin="Origin.BottomCenter">
+        <MudSelectItem Value="@("Employee Only")" />
+    </MudSelect>
+    <MudText>LIFE</MudText>
+    <MudButton OnClick="doSomething" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Size="Size.Large">Inquiry</MudButton>
+    <MudAlert Severity="Severity.Warning">This page is not an enrollment application form. You have to submit a hard copy of the health insurance enrollement application paper.</MudAlert>
+    <MudAlert Severity="Severity.Warning">You can download a plan summary information when you click each plan name.</MudAlert>
 
-<p role="status">Current count: @currentCount</p>
+</MudPaper>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
+    //Navigation Tab
+    int activeIndex = 1;
+
+    private void navPage()
     {
-        currentCount++;
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/insurance/current");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/insurance/surfing");
+        }
     }
+
+    @*TODO: When button is clicked, it will use the values stored from the select
+            and search price info*@
+    private void doSomething()
+    {
+        
+    }
+
 }

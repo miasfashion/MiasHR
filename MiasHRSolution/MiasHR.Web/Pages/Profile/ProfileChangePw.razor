@@ -1,9 +1,17 @@
 ﻿@page "/profile/changepw"
+@inject NavigationManager NavigationManager
+
 
 <PageTitle>Change Password</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <UserAvatar />
 <MudPaper Class="d-flex m-5 justify-content-center" Elevation="0">
+    <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+             @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+        <MudTabPanel OnClick="navPage" Text="Employee Information" />
+        <MudTabPanel OnClick="navPage" Text="Change Password" />
+        <MudTabPanel OnClick="navPage" Text="Employee History" />
+    </MudTabs>
     @using System.Text.RegularExpressions
     @using System.ComponentModel.DataAnnotations
 
@@ -54,7 +62,7 @@
     bool success;
     string[] errors = { };
     MudTextField<string> pwField1;
-    MudForm form;
+    MudForm? form;
 
     private IEnumerable<string> PasswordStrength(string pw)
     {
@@ -75,9 +83,9 @@
 
     private string PasswordMatch(string arg)
     {
-        if (pwField1.Value != arg)
+        if ( pwField1.Value != arg)
             return "Passwords don't match";
-        return null;
+        return "";
     }
 
     // Password Visibility Section
@@ -116,6 +124,25 @@
             isShow = true;
             PasswordCheckIcon = Icons.Material.Filled.Visibility;
             PasswordCheckInput = InputType.Text;
+        }
+    }
+
+    //Navigation Tab
+    int activeIndex = 1;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/profile/changepw");
+        }
+        else if (activeIndex == 2)
+        {
+            NavigationManager.NavigateTo("/profile/history");
         }
     }
 

@@ -1,10 +1,17 @@
 ﻿@page "/profile"
+@inject NavigationManager NavigationManager
 @*inject ISnackbar Snackbar*@
 
 <PageTitle>My Profile</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <UserAvatar />
 <MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+             @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+        <MudTabPanel OnClick="navPage" Text="Employee Information" />
+        <MudTabPanel OnClick="navPage" Text="Change Password" />
+        <MudTabPanel OnClick="navPage" Text="Employee History" />
+    </MudTabs>
     <MudTable Items="@infor"
               Class="d-flex m-5 w-50"
               Striped="@true" Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit" 
@@ -114,14 +121,14 @@
     </MudTable>
 </MudPaper>
 
- @code {
+    @code {
     private bool dense = true;
     private bool hover = true;
     private bool canCancelEdit = true;
     private TableApplyButtonPosition applyButtonPosition = TableApplyButtonPosition.End;
     private TableEditButtonPosition editButtonPosition = TableEditButtonPosition.End;
     private TableEditTrigger editTrigger = TableEditTrigger.EditButton;
-    private EmergencyInformation itemBeforeEdit;
+    private EmergencyInformation? itemBeforeEdit;
 
 
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -134,8 +141,8 @@
     //Simple Information
     public class MyInformation
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string? Name { get; set; }
+        public string? Value { get; set; }
     }
 
     //TODO: Implement function to use values from entity
@@ -155,8 +162,8 @@
     //Detailed Information
     public class PersonalInformation
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string? Name { get; set; }
+        public string? Value { get; set; }
     }
 
     //TODO: Implement function to use values from entity
@@ -172,8 +179,8 @@
     //Emergency Contact Information
     public class EmergencyInformation
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string? Name { get; set; }
+        public string? Value { get; set; }
     }
 
     //TODO: Implement function to use values from entity
@@ -186,6 +193,23 @@
         new EmergencyInformation { Name = "Cell", Value = "(212)401-9663" },             //contact1_cell
         };
 
+    //Navigation Tab
+    int activeIndex = 0;
 
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/profile/changepw");
+        }
+        else if (activeIndex == 2)
+        {
+            NavigationManager.NavigateTo("/profile/history");
+        }
+    }
 
 }

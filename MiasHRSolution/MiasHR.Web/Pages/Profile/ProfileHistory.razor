@@ -1,10 +1,17 @@
 ﻿@page "/profile/history"
+@inject NavigationManager NavigationManager
 @*inject ISnackbar Snackbar*@
 
 <PageTitle>My history</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <UserAvatar />
 <MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+             @bind-ActivePanelIndex="activeIndex" Class="col-sm-5">
+        <MudTabPanel OnClick="navPage" Text="Employee Information" />
+        <MudTabPanel OnClick="navPage" Text="Change Password" />
+        <MudTabPanel OnClick="navPage" Text="Employee History" />
+    </MudTabs>
     <MudTable Items="@transferHist"
               Class="d-flex w-50"
               Striped="@true" Dense="@dense" Hover="@hover">
@@ -55,10 +62,10 @@
     //Transfer History
     public class TransferHistory
     {
-        public string Date { get; set; }
-        public string Type { get; set; }
-        public string From { get; set; }
-        public string To { get; set; }
+        public string? Date { get; set; }
+        public string? Type { get; set; }
+        public string? From { get; set; }
+        public string? To { get; set; }
     }
 
     //TODO: Implement function to use values from entity
@@ -72,9 +79,9 @@
     //Award & Disciplinary History
     public class AwardHistory
     {
-        public string Date { get; set; }
-        public string Type { get; set; }
-        public string Content { get; set; }
+        public string? Date { get; set; }
+        public string? Type { get; set; }
+        public string? Content { get; set; }
     }
 
     //TODO: Implement function to use values from entity
@@ -84,4 +91,24 @@
         new AwardHistory { Date = "2023-12-15", Type = "RP02", Content = "DISCREPANCY REPORT" },
         new AwardHistory { Date = "2023-11-11", Type = "RP01", Content = "PERFORMANCE ISSUE" }
     };
+
+    //Navigation Tab
+    int activeIndex = 2;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/profile/changepw");
+        }
+        else if (activeIndex == 2)
+        {
+            NavigationManager.NavigateTo("/profile/history");
+        }
+    }
+
 }
