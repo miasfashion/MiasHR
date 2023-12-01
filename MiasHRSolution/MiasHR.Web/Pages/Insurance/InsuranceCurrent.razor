@@ -2,42 +2,42 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Current Insurance</PageTitle>
-<UserNameCard  />
+<UserNameCard />
 
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+</MudTabs>
 <MudPaper Class="d-flex justify-content-center" Elevation="0">
-    <MudTabs Outlined="true" Position="Position.Left" Rounded="true"  Border="false"
-             @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-        <MudTabPanel OnClick="navPage" Text="Current Insurance" />
-        <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
-    </MudTabs>
     <MudTable Items="@employeeIns"
               Class="d-flex m-5 ml-4 w-75"
               Striped="@strip" Dense="@dense" Hover="@hover">
 
         <HeaderContent>
-                @*TODO: Length of MudTh string is changing where the table gets divided. 
-                    Currently Set MudTd Class of Name as w-50 to match size*@
-                <MudTh>Type</MudTh>
-                <MudTh>Code</MudTh>
-                <MudTh>Plan Name</MudTh>
-                <MudTh>Coverage</MudTh>
-                <MudTh>Insurance Amt</MudTh>
-                <MudTh>Employee Amt</MudTh>
-                <MudTh>Company Amt</MudTh>
+            @*TODO: Length of MudTh string is changing where the table gets divided.
+            Currently Set MudTd Class of Name as w-50 to match size*@
+            <MudTh>Type</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Plan Name</MudTh>
+            <MudTh>Coverage</MudTh>
+            <MudTh>Insurance Amt</MudTh>
+            <MudTh>Employee Amt</MudTh>
+            <MudTh>Company Amt</MudTh>
         </HeaderContent>
 
         <RowTemplate>
             <MudTd DataLabel="Type">@context.Type</MudTd>
-            <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Plan">@context.Plan </MudTd>
-            <MudTd DataLabel="Coverage">@context.Coverage</MudTd>
-            <MudTd DataLabel="Insurance Amt">@context.InsAmt</MudTd>
-            <MudTd DataLabel="Employee Amt">@context.EmpAmt</MudTd>
-            <MudTd DataLabel="Company Amt">@context.CompAmt</MudTd>
-        </RowTemplate>
+                <MudTd DataLabel="Code">@context.Code</MudTd>
+                <MudTd DataLabel="Plan">@context.Plan </MudTd>
+                <MudTd DataLabel="Coverage">@context.Coverage</MudTd>
+                <MudTd DataLabel="Insurance Amt">@context.InsAmt</MudTd>
+                <MudTd DataLabel="Employee Amt">@context.EmpAmt</MudTd>
+                <MudTd DataLabel="Company Amt">@context.CompAmt</MudTd>
+            </RowTemplate>
 
-    </MudTable>
-</MudPaper>
+        </MudTable>
+    </MudPaper>
 
     @code {
     private bool dense = true;
@@ -48,7 +48,7 @@
     private double totComp;
 
 
-    @*TODO: This is probably where all the data collecting before displaying on the screen 
+    @*TODO: This is probably where all the data collecting before displaying on the screen
             takes place. How can you use API to gather information?*@
     protected override void OnInitialized()
     {
@@ -66,7 +66,7 @@
     @*TODO: Employee Insurance information comes from two different tables
             Need to retrieve from HR_INS_EMPL_PICKED and HR_INS_PLAN*@
 
-    //Employee Insurance 
+    //Employee Insurance
     public class EmployeeInsurance
     {
         public string? Type { get; set; }
@@ -88,7 +88,7 @@
         InsAmt=6.5,EmpAmt=1.95,CompAmt=4.55 }
     };
 
-    //Navigation Tab 
+    //Navigation Tab
     int activeIndex = 0;
 
     private void navPage()
