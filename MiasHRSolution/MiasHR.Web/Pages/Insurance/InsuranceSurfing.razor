@@ -5,12 +5,12 @@
 <UserNameCard />
 
 <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-8" PanelClass="pa-6">
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
     <MudTabPanel OnClick="navPage" Text="Current Insurance" />
     <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
 </MudTabs>
-<MudPaper>
-    <MudText Typo="Typo.h5" GutterBottom="true">Insurance Plan Surfing</MudText>
+<MudPaper Class="w-50 m-4"  Elevation="0">
+    <MudText Class="m-3" Typo="Typo.h5" GutterBottom="true">Insurance Plan Surfing</MudText>
     <MudText>Choose Insurance Coverage (* If you need other coverage, please contact HR directly.)</MudText>
     <MudSelect T="string" Label="Medical" AnchorOrigin="Origin.BottomCenter">
         <MudSelectItem Value="@("Employee Only")" />
@@ -37,9 +37,9 @@
         <MudSelectItem Value="@("Employee Only")" />
     </MudSelect>
     <MudText>LIFE</MudText>
-    <MudButton OnClick="doSomething" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Size="Size.Large">Inquiry</MudButton>
-    <MudAlert Severity="Severity.Warning">This page is not an enrollment application form. You have to submit a hard copy of the health insurance enrollement application paper.</MudAlert>
-    <MudAlert Severity="Severity.Warning">You can download a plan summary information when you click each plan name.</MudAlert>
+    <MudButton  Class="m-3" OnClick="doSomething" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Size="Size.Large">Inquiry</MudButton>
+    <MudAlert Class="m-2" Severity="Severity.Warning">This page is not an enrollment application form. You have to submit a hard copy of the health insurance enrollement application paper.</MudAlert>
+    <MudAlert Class="m-2"  Severity="Severity.Warning">You can download a plan summary information when you click each plan name.</MudAlert>
 
 </MudPaper>
 

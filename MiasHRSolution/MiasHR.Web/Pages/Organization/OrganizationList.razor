@@ -7,29 +7,29 @@
     <MudTabPanel OnClick="navPage" Text="Organization Chart" />
     <MudTabPanel OnClick="navPage" Text="Employee List" />
 </MudTabs>
-<MudTextField Class="justify-content-end" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
-<MudPaper Class="d-flex justify-content-center" Elevation="0">
+<MudTextField Class="m-3 w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
 <MudText Inline="true" GutterBottom="true"><b>EMPLOYEE(S) LIST</b></MudText>
-<MudTable Items="@employeesList"
-          Class="d-flex w-50"
-          Striped="@true" Dense="@dense" Hover="@hover">
-    <HeaderContent>
-        <MudTh>NAME</MudTh>
-        <MudTh>ORG.</MudTh>
-        <MudTh>ORG.TEL</MudTh>
-        <MudTh>EXT.</MudTh>
-        <MudTh>E-MAIL</MudTh>
-    </HeaderContent>
+<MudPaper Class="d-flex m-2 justify-content-center" Elevation="0">
+    <MudTable  Items="@employeesList"
+              Class="d-flex w-50"
+              Striped="@true" Dense="@dense" Hover="@hover">
+        <HeaderContent>
+            <MudTh>NAME</MudTh>
+            <MudTh>ORG.</MudTh>
+            <MudTh>ORG.TEL</MudTh>
+            <MudTh>EXT.</MudTh>
+            <MudTh>E-MAIL</MudTh>
+        </HeaderContent>
 
-    <RowTemplate>
-        <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
-            <MudTd DataLabel="Org">@context.Org</MudTd>
-            <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
-            <MudTd DataLabel="Ext">@context.Ext</MudTd>
-            <MudTd DataLabel="Email">@context.Email</MudTd>
-        </RowTemplate>
-    </MudTable>
-</MudPaper>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
+                <MudTd DataLabel="Org">@context.Org</MudTd>
+                <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
+                <MudTd DataLabel="Ext">@context.Ext</MudTd>
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
     @code {
     public string Search { get; set; }
     private bool dense = true;

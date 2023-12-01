@@ -5,13 +5,13 @@
 <PageTitle>Change Password</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <UserAvatar />
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+    <MudTabPanel OnClick="navPage" Text="Employee Information" />
+    <MudTabPanel OnClick="navPage" Text="Change Password" />
+    <MudTabPanel OnClick="navPage" Text="Employee History" />
+</MudTabs>
 <MudPaper Class="d-flex m-5 justify-content-center" Elevation="0">
-    <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-             @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-        <MudTabPanel OnClick="navPage" Text="Employee Information" />
-        <MudTabPanel OnClick="navPage" Text="Change Password" />
-        <MudTabPanel OnClick="navPage" Text="Employee History" />
-    </MudTabs>
     @using System.Text.RegularExpressions
     @using System.ComponentModel.DataAnnotations
 
@@ -22,7 +22,7 @@
                 @*TODO: Current Password to check validation?*@
                 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
                     <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
-                                  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
+                                  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
                                   OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                                   RequiredError="Type New Password!" />
@@ -30,9 +30,9 @@
                                   InputType="@PasswordCheckInput" Adornment="Adornment.End" AdornmentIcon="@PasswordCheckIcon"
                                   OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
                                   Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
-                                  RequiredError="Type your New Password Again"/>
+                                  RequiredError="Type your New Password Again" />
                     <div class="d-flex align-center justify-space-between">
-                       @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" />*@
+                        @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" />*@
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
                     </div>
                 </MudForm>
@@ -83,7 +83,7 @@
 
     private string PasswordMatch(string arg)
     {
-        if ( pwField1.Value != arg)
+        if (pwField1.Value != arg)
             return "Passwords don't match";
         return "";
     }
