@@ -1,18 +1,17 @@
 ﻿@page "/manager/evaluation"
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
+<PageTitle>Manage Evaluations</PageTitle>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
+</MudContainer>
+<Footer />
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        currentCount++;
-    }
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Manager", href: "/manager"),
+        new BreadcrumbItem("Evaluations", href: null, disabled: true)
+    };
 }
+
