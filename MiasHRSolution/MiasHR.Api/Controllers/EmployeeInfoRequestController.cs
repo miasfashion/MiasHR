@@ -15,7 +15,7 @@ namespace MiasHR.Api.Controllers
 
         public EmployeeInfoRequestController(IEmployeeInfoRequestRepository employeeInfoRequestRepository)
         {
-            this._employeeInfoRequestRepository = employeeInfoRequestRepository;
+            _employeeInfoRequestRepository = employeeInfoRequestRepository;
         }
 
         //Get Employee's basic information
@@ -24,9 +24,9 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeeInfoRequests = await this._employeeInfoRequestRepository.GetBasicEmployeeInfo(emplCode);
+                var employeeInfoRequests = await _employeeInfoRequestRepository.GetBasicEmployeeInfo(emplCode);
 
-                if (employeeInfoRequests == null)
+                if (employeeInfoRequests is null)
                 {
                     return NotFound();
                 }
@@ -49,9 +49,9 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeesInfo = await this._employeeInfoRequestRepository.GetAllEmployeeInfo();
+                var employeesInfo = await _employeeInfoRequestRepository.GetAllEmployeeInfo();
 
-                if (employeesInfo == null)
+                if (employeesInfo is null)
                 {
                     return NotFound();
                 }
@@ -74,9 +74,9 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeeDetailInfo = await this._employeeInfoRequestRepository.GetDetailEmployeeInfo(emplCode);
+                var employeeDetailInfo = await _employeeInfoRequestRepository.GetDetailEmployeeInfo(emplCode);
 
-                if (employeeDetailInfo == null)
+                if (employeeDetailInfo is null)
                 {
                     return NotFound();
                 }
@@ -98,9 +98,9 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeeTransfer = await this._employeeInfoRequestRepository.GetEmployeeTransferHistory(emplCode);
+                var employeeTransfer = await _employeeInfoRequestRepository.GetEmployeeTransferHistory(emplCode);
 
-                if (employeeTransfer == null)
+                if (employeeTransfer is null)
                 {
                     return NotFound();
                 }
@@ -122,9 +122,9 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeeAward = await this._employeeInfoRequestRepository.GetEmployeeAwardDiscHistory(emplCode);
+                var employeeAward = await _employeeInfoRequestRepository.GetEmployeeAwardDiscHistory(emplCode);
 
-                if (employeeAward == null)
+                if (employeeAward is null)
                 {
                     return NotFound();
                 }
@@ -146,8 +146,8 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employeePassword = await this._employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
-                if (employeePassword == null)
+                var employeePassword = await _employeeInfoRequestRepository.UpdateUserPassword(emplCode, newPass);
+                if (employeePassword is null)
                 {
                     return BadRequest();
                 }
@@ -168,8 +168,8 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var managingEmployee = await this._employeeInfoRequestRepository.GetManagerEmployeeList(emplCode);
-                if (managingEmployee == null)
+                var managingEmployee = await _employeeInfoRequestRepository.GetManagerEmployeeList(emplCode);
+                if (managingEmployee is null)
                 {
                     return NotFound();
                 }

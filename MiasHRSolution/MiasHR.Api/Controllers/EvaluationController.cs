@@ -21,7 +21,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var evaluationFactor = await _evaluationRepository.GetEvaluationFactors(emplCode, year, term);
-                if (evaluationFactor == null)
+                if (evaluationFactor is null)
                 {
                     return NotFound();
                 }

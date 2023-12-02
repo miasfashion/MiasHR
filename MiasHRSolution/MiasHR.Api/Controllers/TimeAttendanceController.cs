@@ -32,7 +32,7 @@ namespace MiasHR.Api.Controllers
                 string dateToString = dateTo.ToString("yyyyMMdd");
                 var hrEmployeeTimeHistory = await _timeAttendanceRepository.GetHrEmployeeTimeHistory(emplCode, dateFromString, dateToString);
 
-                return hrEmployeeTimeHistory == null ? NotFound() : Ok(hrEmployeeTimeHistory);
+                return hrEmployeeTimeHistory is null ? NotFound() : Ok(hrEmployeeTimeHistory);
             }
             catch (Exception)
             {
@@ -57,7 +57,7 @@ namespace MiasHR.Api.Controllers
                 string dateToString = dateTo.ToString("yyyyMMdd");
                 var hrEmployeeTimeList = await _timeAttendanceRepository.GetEmployeeTimeList(emplCode, dateFromString, dateToString);
 
-                return hrEmployeeTimeList == null ? NotFound() : Ok(hrEmployeeTimeList);
+                return hrEmployeeTimeList is null ? NotFound() : Ok(hrEmployeeTimeList);
             }
             catch (Exception)
             {

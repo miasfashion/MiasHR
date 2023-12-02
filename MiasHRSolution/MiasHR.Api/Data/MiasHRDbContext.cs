@@ -139,6 +139,8 @@ public partial class MiasHRDbContext : DbContext
 
     public virtual DbSet<HrTransaction> HrTransactions { get; set; }
 
+    public virtual DbSet<HrUserCred> HrUserCreds { get; set; }
+
     public virtual DbSet<HrVacation> HrVacations { get; set; }
 
     public virtual DbSet<HrVacation20150707> HrVacation20150707s { get; set; }
@@ -4529,6 +4531,70 @@ public partial class MiasHRDbContext : DbContext
                 .HasColumnName("modified_user");
         });
 
+        modelBuilder.Entity<HrUserCred>(entity =>
+        {
+            entity.HasKey(e => e.EmplCode);
+
+            entity.ToTable("HR_USER_CRED");
+
+            entity.Property(e => e.EmplCode)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("empl_code");
+            entity.Property(e => e.Status)
+                .HasColumnName("status");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(256)
+                .HasColumnName("password_hash");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_date");
+            entity.Property(e => e.CreatedUser)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("created_user");
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("modified_date");
+            entity.Property(e => e.ModifiedUser)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("modified_user");
+        });
+
+        modelBuilder.Entity<HrUserLoginLog>(entity =>
+        {
+            entity.HasKey(e => e.Seq);
+
+            entity.ToTable("HR_USER_LOGIN_LOG");
+
+            entity.Property(e => e.Seq)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("seq");
+            entity.Property(e => e.EmplCode)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("empl_code");
+            entity.Property(e => e.LoginDate)
+                .HasColumnType("datetime")
+                .HasColumnName("login_date");
+            entity.Property(e => e.AcceptYn)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Y')")
+                .HasColumnName("accept_yn");
+            entity.Property(e => e.Remark)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("remark");
+        });
+
+
         modelBuilder.Entity<HrVacation>(entity =>
         {
             entity.HasKey(e => new { e.OrgCode, e.EmplCode, e.Yyyy, e.VType, e.Seq }).HasName("PK__HR_VACAT__AC8DCEA15165187F");
@@ -4648,9 +4714,7 @@ public partial class MiasHRDbContext : DbContext
 
         modelBuilder.Entity<HrWebLoginLog>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("HR_WEB_LOGIN_LOG");
+            entity.HasKey(e => e.LoginDate);
 
             entity.Property(e => e.AcceptYn)
                 .HasMaxLength(1)
