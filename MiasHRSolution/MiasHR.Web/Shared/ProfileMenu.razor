@@ -1,10 +1,25 @@
-﻿﻿<MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary">
+﻿@inject NavigationManager NavigationManager
+
+<MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary">
     <MudMenuItem Href="/profile" Match="NavLinkMatch.Prefix">Profile</MudMenuItem>
     <MudMenuItem Href="/profile/history" Match="NavLinkMatch.Prefix">History</MudMenuItem>
     <MudMenuItem Href="/profile/changepw" Match="NavLinkMatch.Prefix">Change Password</MudMenuItem>
-    <MudMenuItem Href="/logout" Match="NavLinkMatch.Prefix">Logout</MudMenuItem>
+    <MudMenuItem @onclick="HandleLogout" Match="NavLinkMatch.Prefix">Logout</MudMenuItem>
 </MudMenu>
 
 @code {
+    private void HandleLogout()
+    {
+        // Display a pop-up message indicating successful logout
+        ShowPopupMessage("You have been logged out.");
 
+        // Redirect the user to the login page
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void ShowPopupMessage(string message)
+    {
+        // TODO: Display a pop-up message using a suitable method from your UI library
+        // Replace the following placeholder with the actual pop-up imp
+    }
 }

@@ -1,18 +1,42 @@
 ﻿@page "/manager/daytimeoff/requests"
+@inject NavigationManager NavigationManager
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Manage Day Time Off Requests</PageTitle>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Requests" />
+                <MudTabPanel OnClick="navPage" Text="Approval History" />
+            </MudTabs>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
+<Footer />
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        currentCount++;
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Manager", href: "/manager"),
+        new BreadcrumbItem("Day Time Off Requests", href: null, disabled: true)
+    };
+
+    // Navigation Tab
+    int activeIndex = 0;
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/manager/daytimeoff/requests");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/manager/daytimeoff/history");
+        }
     }
 }

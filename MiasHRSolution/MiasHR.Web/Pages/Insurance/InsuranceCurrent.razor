@@ -1,18 +1,105 @@
 ﻿@page "/insurance/current"
+@inject NavigationManager NavigationManager
 
-<PageTitle>insurance</PageTitle>
+<PageTitle>Current Insurance</PageTitle>
+<UserNameCard />
 
-<h1>Counter</h1>
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+</MudTabs>
+<MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTable Items="@employeeIns"
+              Class="d-flex m-5 ml-4 w-75"
+              Striped="@strip" Dense="@dense" Hover="@hover">
 
-<p role="status">Current count: @currentCount</p>
+        <HeaderContent>
+            @*TODO: Length of MudTh string is changing where the table gets divided.
+            Currently Set MudTd Class of Name as w-50 to match size*@
+            <MudTh>Type</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Plan Name</MudTh>
+            <MudTh>Coverage</MudTh>
+            <MudTh>Insurance Amt</MudTh>
+            <MudTh>Employee Amt</MudTh>
+            <MudTh>Company Amt</MudTh>
+        </HeaderContent>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+        <RowTemplate>
+            <MudTd DataLabel="Type">@context.Type</MudTd>
+                <MudTd DataLabel="Code">@context.Code</MudTd>
+                <MudTd DataLabel="Plan">@context.Plan </MudTd>
+                <MudTd DataLabel="Coverage">@context.Coverage</MudTd>
+                <MudTd DataLabel="Insurance Amt">@context.InsAmt</MudTd>
+                <MudTd DataLabel="Employee Amt">@context.EmpAmt</MudTd>
+                <MudTd DataLabel="Company Amt">@context.CompAmt</MudTd>
+            </RowTemplate>
 
-@code {
-    private int currentCount = 0;
+        </MudTable>
+    </MudPaper>
 
-    private void IncrementCount()
+    @code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool strip = true;
+    private double totIns;
+    private double totEmp;
+    private double totComp;
+
+
+    @*TODO: This is probably where all the data collecting before displaying on the screen
+            takes place. How can you use API to gather information?*@
+    protected override void OnInitialized()
     {
-        currentCount++;
+        base.OnInitialized();
+        CalculateTotals();
+    }
+
+    private void CalculateTotals()
+    {
+        totIns = employeeIns.Sum(item => item.InsAmt);
+        totEmp = employeeIns.Sum(item => item.EmpAmt);
+        totComp = employeeIns.Sum(item => item.CompAmt);
+    }
+
+    @*TODO: Employee Insurance information comes from two different tables
+            Need to retrieve from HR_INS_EMPL_PICKED and HR_INS_PLAN*@
+
+    //Employee Insurance
+    public class EmployeeInsurance
+    {
+        public string? Type { get; set; }
+        public string? Code { get; set; }
+        public string? Plan { get; set; }
+        public string? Coverage { get; set; }
+        public double InsAmt { get; set; }
+        public double EmpAmt { get; set; }
+        public double CompAmt { get; set; }
+    }
+
+    List<EmployeeInsurance> employeeIns = new List<EmployeeInsurance>()
+    {
+        new EmployeeInsurance { Type="PPO", Code="9B1F", Plan="Anthem Gold PPO 25/30% (Broad Network)", Coverage="Employee Only",
+        InsAmt=458.25,EmpAmt=137.48,CompAmt=320.77 },
+        new EmployeeInsurance { Type="DENTAL", Code="3RGY", Plan="Anthem Gold PPO 100/90/60 Active 50/1500 90th E&P Basic", Coverage="Employee Only",
+        InsAmt=42.05,EmpAmt=12.62,CompAmt=29.43 },
+        new EmployeeInsurance { Type="VISION", Code="4BFU", Plan="Anthem Blue View Vision FS.B.10.25.130.130", Coverage="Employee Only",
+        InsAmt=6.5,EmpAmt=1.95,CompAmt=4.55 }
+    };
+
+    //Navigation Tab
+    int activeIndex = 0;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/insurance/current");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/insurance/surfing");
+        }
     }
 }

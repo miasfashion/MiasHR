@@ -1,18 +1,81 @@
 ﻿@page "/manager/daytimeoff/history"
+@inject NavigationManager NavigationManager
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Manage Day Time Off Approval History</PageTitle>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Requests" />
+                <MudTabPanel OnClick="navPage" Text="Approval History" />
+            </MudTabs>
+        </MudPaper>
+        <MudPaper Class="ma-4 pa-4">
+            <MudTable Items="@ApprovalHistory">
+                <HeaderContent>
+                    <MudTh>Request Time</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>Period</MudTh>
+                    <MudTh>First Approval</MudTh>
+                    <MudTh>Second Approval</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.DateTime</MudTd>
+                    <MudTd DataLabel="Days">@context.Name</MudTd>
+                    <MudTd DataLabel="Days">@context.Type</MudTd>
+                    <MudTd DataLabel="Days">@context.Period</MudTd>
+                    <MudTd DataLabel="Days">@context.FirstApproval</MudTd>
+                    <MudTd DataLabel="Days">@context.SecondApproval</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
+<Footer />
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    public class ApprovalRecord
     {
-        currentCount++;
+        public DateTime DateTime { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Period { get; set; }
+        public bool FirstApproval { get; set; }
+        public bool SecondApproval { get; set; }
+    }
+
+    List<ApprovalRecord> ApprovalHistory = new List<ApprovalRecord>
+    {
+        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
+                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true},
+        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
+                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true},
+        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
+                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true}
+    };
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Manager", href: "/manager"),
+        new BreadcrumbItem("Day Time Off Request History", href: null, disabled: true)
+    };
+
+    // Navigation Tab
+    int activeIndex = 1;
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/manager/daytimeoff/requests");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/manager/daytimeoff/history");
+        }
     }
 }

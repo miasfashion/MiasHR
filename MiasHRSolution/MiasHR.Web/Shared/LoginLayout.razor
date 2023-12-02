@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudPaper Class="d-flex justify-content-center" Elevation="0">
+
+        <MudImage Src="images/login_swf.jpg" />
+
+    </MudPaper>
+    <MudMainContent>
+        <MudPaper Class="d-flex m-5 mt-0 justify-content-center" Elevation="0">
+            <MudStack >
+                @Body
+            </MudStack >
+        </MudPaper>
+    </MudMainContent>
+</MudLayout>
+@code {
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+}

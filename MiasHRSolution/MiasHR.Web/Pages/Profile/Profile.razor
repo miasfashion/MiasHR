@@ -1,19 +1,216 @@
-﻿@page "/profile"
+@page "/profile"
 @attribute [Authorize]
+@inject NavigationManager NavigationManager
+@*inject ISnackbar Snackbar*@
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>My Profile</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<UserAvatar />
+<MudTabs PanelClass="" Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+    <MudTabPanel OnClick="navPage" Text="Employee Information" />
+    <MudTabPanel OnClick="navPage" Text="Change Password" />
+    <MudTabPanel OnClick="navPage" Text="Employee History" />
+</MudTabs>
+<MudPaper Class="d-flex justify-content-center" Elevation="0">
+    <MudTable Items="@infor"
+              Class="d-flex m-5 w-50"
+              Striped="@true" Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
+              CancelEditTooltip="Cancel Edit" CommitEditTooltip="Commit Edit" ApplyButtonPosition="@applyButtonPosition"
+              EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
 
-<h1>Counter</h1>
+        <ColGroup>
+            <col />
+            <col />
+            <col style="width:100px;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTHeadRow>
+                @*TODO: Length of MudTh string is changing where the table gets divided.
+                Currently Set MudTd Class of Name as w-50 to match size*@
+                <MudTh>Information</MudTh>
+            </MudTHeadRow>
+        </HeaderContent>
 
-<p role="status">Current count: @currentCount</p>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">@context.Value</MudTd>
+            </RowTemplate>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+            @*TODO: After Confirming Edit, It needs to actually change the value to be displayed*@
+            @*TODO: After Cancel Edit, It needs to show the value again*@
+            <RowEditingTemplate>
+                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">
+                    <MudTextField @bind-Value="@context.Value" />
+                </MudTd>
+            </RowEditingTemplate>
 
-@code {
-    private int currentCount = 0;
+            <EditButtonContent Context="button">
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+            </EditButtonContent>
+        </MudTable>
+    </MudPaper>
 
-    private void IncrementCount()
+    <MudPaper Class="d-flex justify-content-center" Elevation="0">
+        <MudTable Items="@detailInfor"
+                  Class="d-flex w-50"
+                  Striped="@true" Dense="@dense" Hover="@hover"
+                  CanCancelEdit="@canCancelEdit" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
+                  ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
+            <ColGroup>
+                <col />
+                <col />
+                <col style="width:100px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTHeadRow>
+                    <MudTh>Personal Information</MudTh>
+                </MudTHeadRow>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">@context.Value</MudTd>
+            </RowTemplate>
+
+            <RowEditingTemplate>
+                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">
+                    <MudTextField @bind-Value="@context.Value" />
+                </MudTd>
+            </RowEditingTemplate>
+
+            <EditButtonContent Context="button">
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+            </EditButtonContent>
+        </MudTable>
+    </MudPaper>
+
+    <MudPaper Class="d-flex justify-content-center" Elevation="0">
+        <MudTable Items="@emergencyInfor"
+                  Class="d-flex m-5 w-50"
+                  Striped="@true" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
+                  Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
+                  ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
+            <ColGroup>
+                <col style="" />
+                <col />
+                <col style="width:100px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTHeadRow>
+                    <MudTh>Emergency Contact Information</MudTh>
+                </MudTHeadRow>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">@context.Value</MudTd>
+            </RowTemplate>
+
+            <RowEditingTemplate>
+                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                <MudTd DataLabel="Value">
+                    <MudTextField @bind-Value="@context.Value" />
+                </MudTd>
+            </RowEditingTemplate>
+
+            <EditButtonContent Context="button">
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+            </EditButtonContent>
+        </MudTable>
+    </MudPaper>
+
+    @code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool canCancelEdit = true;
+    private TableApplyButtonPosition applyButtonPosition = TableApplyButtonPosition.End;
+    private TableEditButtonPosition editButtonPosition = TableEditButtonPosition.End;
+    private TableEditTrigger editTrigger = TableEditTrigger.EditButton;
+    private EmergencyInformation? itemBeforeEdit;
+
+
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        currentCount++;
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("My Profile", href: null, disabled: true)
+    };
+
+
+    //Simple Information
+    public class MyInformation
+    {
+        public string? Name { get; set; }
+        public string? Value { get; set; }
     }
+
+    //TODO: Implement function to use values from entity
+    List<MyInformation> infor = new List<MyInformation>() {
+        new MyInformation { Name = "Employee Code", Value = "100888" },                       //empl_code
+        new MyInformation { Name = "Name (Nick Name)", Value = "Han, Gang (David)" },       //empl_name
+        new MyInformation { Name = "Division", Value = "COO"},                              //div_name
+        new MyInformation { Name = "Department", Value = "IT (IT)"},                        //dept_1_name  (dept_name)
+        new MyInformation { Name = "Company Tel", Value = "(562)906-1060   Ext. 119"},      //com_tel   Ext. com_tel_ext
+        new MyInformation { Name = "Company Fax", Value = "(562)906-1061"},                 //com_fax
+        new MyInformation { Name = "E-mail", Value = "bk.h@miasfashion.com"},               //com_email
+        new MyInformation { Name = "Hire Date", Value = "Jan 14, 2021"},                    //hire_date_2
+        new MyInformation { Name = "Title", Value = "SOFTWARE DEVELOPER"},                  //title
+        new MyInformation { Name = "FLSA", Value = "Non-Exempt"}                            //flsa
+        };
+
+    //Detailed Information
+    public class PersonalInformation
+    {
+        public string? Name { get; set; }
+        public string? Value { get; set; }
+    }
+
+    //TODO: Implement function to use values from entity
+    List<PersonalInformation> detailInfor = new List<PersonalInformation>() {
+        new PersonalInformation { Name = "Birth Date", Value = "Jan 01, 1970" },                  //birth_date_2
+        new PersonalInformation { Name = "Street", Value = "8762 POINTE AVE." },                  //street
+        new PersonalInformation { Name = "City, State, Zip", Value = "CYPRESS,  CA,  90630" },    //city_state_zip
+        new PersonalInformation { Name = "Home Tel", Value = "" },                                //tel
+        new PersonalInformation { Name = "Cell", Value = "(213)800-2632" },                       //cell
+        };
+
+
+    //Emergency Contact Information
+    public class EmergencyInformation
+    {
+        public string? Name { get; set; }
+        public string? Value { get; set; }
+    }
+
+    //TODO: Implement function to use values from entity
+    List<EmergencyInformation> emergencyInfor = new List<EmergencyInformation>() {
+        new EmergencyInformation { Name = "Name", Value = "Joy Kim" },                   //contact1_name
+        new EmergencyInformation { Name = "Relationship", Value = "Mother" },            //contact1_rel_desc
+        new EmergencyInformation { Name = "Address 1", Value = "" },                     //contact1_addr1
+        new EmergencyInformation { Name = "Address 2", Value = "" },                     //contact1_addr2
+        new EmergencyInformation { Name = "Tel", Value = "" },                           //contact1_tel
+        new EmergencyInformation { Name = "Cell", Value = "(212)401-9663" },             //contact1_cell
+        };
+
+    //Navigation Tab
+    int activeIndex = 0;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/profile/changepw");
+        }
+        else if (activeIndex == 2)
+        {
+            NavigationManager.NavigateTo("/profile/history");
+        }
+    }
+
 }
