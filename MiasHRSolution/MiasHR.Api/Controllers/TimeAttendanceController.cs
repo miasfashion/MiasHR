@@ -17,7 +17,7 @@ namespace MiasHR.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieves the time history of an employee within a specified date range.
+        /// Retrieves the attendance history of an employee within a specified date range.
         /// </summary>
         /// <param name="emplCode">The employee code.</param>
         /// <param name="dateFrom">The start date of the date range.</param>

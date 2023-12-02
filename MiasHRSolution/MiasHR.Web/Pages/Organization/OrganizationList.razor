@@ -1,18 +1,75 @@
 ﻿@page "/organization/list"
+@inject NavigationManager NavigationManager
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Employee List</PageTitle>
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
+    <MudTabPanel OnClick="navPage" Text="Organization Chart" />
+    <MudTabPanel OnClick="navPage" Text="Employee List" />
+</MudTabs>
+<MudTextField Class="m-3 w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+<MudText Inline="true" GutterBottom="true"><b>EMPLOYEE(S) LIST</b></MudText>
+<MudPaper Class="d-flex m-2 justify-content-center" Elevation="0">
+    <MudTable  Items="@employeesList"
+              Class="d-flex w-50"
+              Striped="@true" Dense="@dense" Hover="@hover">
+        <HeaderContent>
+            <MudTh>NAME</MudTh>
+            <MudTh>ORG.</MudTh>
+            <MudTh>ORG.TEL</MudTh>
+            <MudTh>EXT.</MudTh>
+            <MudTh>E-MAIL</MudTh>
+        </HeaderContent>
 
-<h1>Counter</h1>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
+                <MudTd DataLabel="Org">@context.Org</MudTd>
+                <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
+                <MudTd DataLabel="Ext">@context.Ext</MudTd>
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+    @code {
+    public string Search { get; set; }
+    private bool dense = true;
+    private bool hover = true;
 
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-@code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    private void doSomething()
     {
-        currentCount++;
     }
+
+    //Navigation Tab
+    int activeIndex = 1;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/organization/chart");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/organization/list");
+        }
+    }
+
+    //Employee List
+    public class EmployeeList
+    {
+        public string? Name { get; set; }
+        public string? Org { get; set; }
+        public string? OrgTel { get; set; }
+        public int Ext { get; set; }
+        public string? Email { get; set; }
+    }
+
+    //TODO: Implement function to use values from entity
+    List<EmployeeList> employeesList = new List<EmployeeList>()
+    {
+        new EmployeeList { Name = "LEE, SOONJAE (DAVID)", Org = "MIAS", OrgTel = "(562)906-1060", Ext = 110, Email="david.l@miasfashion.com"},
+        new EmployeeList { Name = "KARA, EMILY", Org = "MIAS", OrgTel = "(562)906-1060", Ext = 562, Email="emily.k@miasfashion.com"},
+        new EmployeeList { Name = "CHOON, JA (JENNY)", Org = "MIAS", OrgTel = "(562)906-1060", Ext = 491, Email="jenny.c@miasfashion.com"}
+    };
+
 }

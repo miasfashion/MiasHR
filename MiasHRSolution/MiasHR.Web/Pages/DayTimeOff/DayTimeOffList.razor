@@ -1,23 +1,76 @@
 ﻿@page "/daytimeoff/list"
+@inject NavigationManager NavigationManager
 
-<PageTitle>Counter</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
-<h1>Counter</h1>
+<PageTitle>Day Time Off Requests</PageTitle>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    
+    @* TODO: Set name to user name *@
+    <UserNameCard />
 
-<p role="status">Current count: @currentCount</p>
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Information" />
+                <MudTabPanel OnClick="navPage" Text="Request List" />
+            </MudTabs>
+        </MudPaper>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+        <MudPaper Class="ma-4 pa-4" Elevation="0">
+            <MudTable Items="@employeeDayTimeOffRequests">
+                <HeaderContent>
+                    <MudTh>Date</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>Used Days</MudTh>
+                    <MudTh>Remark</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.Date</MudTd>
+                    <MudTd DataLabel="Days">@context.Type</MudTd>
+                    <MudTd DataLabel="Days">@context.UsedDays</MudTd>
+                    <MudTd DataLabel="Days">@context.Remark</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+    // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Request List", href: null, disabled: true)
     };
+
+    public class employeeDayTimeOffRequest
+    {
+        public DateOnly Date { get; set; }
+        public string Type { get; set; }
+        public decimal UsedDays { get; set; }
+        public string Remark { get; set; }
+    }
+
+    List<employeeDayTimeOffRequest> employeeDayTimeOffRequests = new List<employeeDayTimeOffRequest>
+    {
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,9,11), Type="Business Related", UsedDays=0, Remark="Remote work"},
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,22), Type="VAC", UsedDays=4.25M, Remark="Vacation"},
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,30), Type="Business Related", UsedDays=0, Remark="Remote work"}
+    };
+
+    // Navigation Tab
+    int activeIndex = 1;
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/daytimeoff/info");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/daytimeoff/list");
+        }
+    }
 }
