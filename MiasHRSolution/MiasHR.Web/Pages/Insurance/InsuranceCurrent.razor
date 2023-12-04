@@ -2,44 +2,50 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Current Insurance</PageTitle>
-<UserNameCard />
 
-<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
-    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
-</MudTabs>
-<MudPaper Class="d-flex justify-content-center" Elevation="0">
-    <MudTable Items="@employeeIns"
-              Class="d-flex m-5 ml-4 w-75"
-              Striped="@strip" Dense="@dense" Hover="@hover">
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    <UserNameCard />
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+                <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+            </MudTabs>
+        </MudPaper>
+        <MudPaper Class="ma-4 pa-4">
+            <MudTable Items="@employeeIns"
+                      Class="d-flex m-5 ml-4 w-75"
+                      Striped="@strip" Dense="@dense" Hover="@hover">
 
-        <HeaderContent>
-            @*TODO: Length of MudTh string is changing where the table gets divided.
-            Currently Set MudTd Class of Name as w-50 to match size*@
-            <MudTh>Type</MudTh>
-            <MudTh>Code</MudTh>
-            <MudTh>Plan Name</MudTh>
-            <MudTh>Coverage</MudTh>
-            <MudTh>Insurance Amt</MudTh>
-            <MudTh>Employee Amt</MudTh>
-            <MudTh>Company Amt</MudTh>
-        </HeaderContent>
+                <HeaderContent>
+                    @*TODO: Length of MudTh string is changing where the table gets divided.
+                    Currently Set MudTd Class of Name as w-50 to match size*@
+                    <MudTh>Type</MudTh>
+                    <MudTh>Code</MudTh>
+                    <MudTh>Plan Name</MudTh>
+                    <MudTh>Coverage</MudTh>
+                    <MudTh>Insurance Amt</MudTh>
+                    <MudTh>Employee Amt</MudTh>
+                    <MudTh>Company Amt</MudTh>
+                </HeaderContent>
 
-        <RowTemplate>
-            <MudTd DataLabel="Type">@context.Type</MudTd>
-                <MudTd DataLabel="Code">@context.Code</MudTd>
-                <MudTd DataLabel="Plan">@context.Plan </MudTd>
-                <MudTd DataLabel="Coverage">@context.Coverage</MudTd>
-                <MudTd DataLabel="Insurance Amt">@context.InsAmt</MudTd>
-                <MudTd DataLabel="Employee Amt">@context.EmpAmt</MudTd>
-                <MudTd DataLabel="Company Amt">@context.CompAmt</MudTd>
-            </RowTemplate>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.Type</MudTd>
+                    <MudTd DataLabel="Code">@context.Code</MudTd>
+                    <MudTd DataLabel="Plan">@context.Plan </MudTd>
+                    <MudTd DataLabel="Coverage">@context.Coverage</MudTd>
+                    <MudTd DataLabel="Insurance Amt">@context.InsAmt</MudTd>
+                    <MudTd DataLabel="Employee Amt">@context.EmpAmt</MudTd>
+                    <MudTd DataLabel="Company Amt">@context.CompAmt</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
 
-        </MudTable>
-    </MudPaper>
-
-    @code {
+@code {
     private bool dense = true;
     private bool hover = true;
     private bool strip = true;
@@ -86,6 +92,13 @@
         InsAmt=42.05,EmpAmt=12.62,CompAmt=29.43 },
         new EmployeeInsurance { Type="VISION", Code="4BFU", Plan="Anthem Blue View Vision FS.B.10.25.130.130", Coverage="Employee Only",
         InsAmt=6.5,EmpAmt=1.95,CompAmt=4.55 }
+    };
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Current Insurance Plan",  href: null, disabled: true)
     };
 
     //Navigation Tab
