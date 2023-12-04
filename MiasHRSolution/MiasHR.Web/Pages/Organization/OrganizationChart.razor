@@ -2,12 +2,28 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Organization Chart</PageTitle>
-<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-    <MudTabPanel OnClick="navPage" Text="Organization Chart" />
-    <MudTabPanel OnClick="navPage" Text="Employee List" />
-</MudTabs>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                     @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Organization Chart" />
+                <MudTabPanel OnClick="navPage" Text="Employee List" />
+            </MudTabs>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
 @code {
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("Organization Chart",  href: null, disabled: true)
+    };
+
+
+
     //Navigation Tab
     int activeIndex = 0;
 

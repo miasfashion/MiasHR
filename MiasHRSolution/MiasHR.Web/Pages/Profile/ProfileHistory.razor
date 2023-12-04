@@ -3,50 +3,57 @@
 @*inject ISnackbar Snackbar*@
 
 <PageTitle>My history</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
 
-<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-    <MudTabPanel OnClick="navPage" Text="Employee Information" />
-    <MudTabPanel OnClick="navPage" Text="Change Password" />
-    <MudTabPanel OnClick="navPage" Text="Employee History" />
-</MudTabs>
-<MudPaper Class="d-flex justify-content-center" Elevation="0">
-    <MudTable Items="@transferHist"
-              Class="d-flex w-50"
-              Striped="@true" Dense="@dense" Hover="@hover">
-        <HeaderContent>
-            <MudTHeadRow>
-                <MudTh>Transfer History</MudTh>
-            </MudTHeadRow>
-        </HeaderContent>
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
 
-        <RowTemplate>
-            <MudTd DataLabel="Date" Class="w-25">@context.Date</MudTd>
-                <MudTd DataLabel="Type">@context.Type</MudTd>
-                <MudTd DataLabel="From">@context.From</MudTd>
-                <MudTd DataLabel="To">@context.To</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudPaper>
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                     @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Employee Information" />
+                <MudTabPanel OnClick="navPage" Text="Change Password" />
+                <MudTabPanel OnClick="navPage" Text="Employee History" />
+            </MudTabs>
+        </MudPaper>
+        <MudPaper Class="d-flex justify-content-center" Elevation="0">
+            <MudTable Items="@transferHist"
+                      Class="d-flex m-5"
+                      Striped="@true" Dense="@dense" Hover="@hover">
+                <HeaderContent>
+                    <MudTHeadRow>
+                        <MudTh>Transfer History</MudTh>
+                    </MudTHeadRow>
+                </HeaderContent>
 
-    <MudPaper Class="d-flex justify-content-center" Elevation="0">
-        <MudTable Items="@awardHist"
-                  Class="d-flex m-5 w-50"
-                  Striped="@true" Dense="@dense" Hover="@hover">
-            <HeaderContent>
-                <MudTHeadRow>
-                    <MudTh>Award & Disciplinary History</MudTh>
-                </MudTHeadRow>
-            </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Date" Class="w-25">@context.Date</MudTd>
+                        <MudTd DataLabel="Type">@context.Type</MudTd>
+                        <MudTd DataLabel="From">@context.From</MudTd>
+                        <MudTd DataLabel="To">@context.To</MudTd>
+                    </RowTemplate>
+            </MudTable>
+        </MudPaper>
 
-            <RowTemplate>
-                <MudTd DataLabel="Date">@context.Date</MudTd>
-                <MudTd DataLabel="Type">@context.Type</MudTd>
-                <MudTd DataLabel="Content">@context.Content</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudPaper>
+            <MudPaper Class="d-flex justify-content-center" Elevation="0">
+                <MudTable Items="@awardHist"
+                          Class="d-flex m-5"
+                          Striped="@true" Dense="@dense" Hover="@hover">
+                    <HeaderContent>
+                        <MudTHeadRow>
+                            <MudTh>Award & Disciplinary History</MudTh>
+                        </MudTHeadRow>
+                    </HeaderContent>
+
+                    <RowTemplate>
+                        <MudTd DataLabel="Date">@context.Date</MudTd>
+                        <MudTd DataLabel="Type">@context.Type</MudTd>
+                        <MudTd DataLabel="Content">@context.Content</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+    </MudContainer>
+</MudContainer>
     @code {
     private bool dense = true;
     private bool hover = true;

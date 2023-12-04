@@ -14,7 +14,7 @@
                 <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
             </MudTabs>
         </MudPaper>
-        <MudPaper Class="ma-4 pa-4">
+        <MudPaper Class="ma-4 pa-4" Elevation="0">
             <MudTable Items="@employeeIns"
                       Class="d-flex m-5 ml-4 w-75"
                       Striped="@strip" Dense="@dense" Hover="@hover">
@@ -97,7 +97,7 @@
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Home", href: "/home"),
         new BreadcrumbItem("Current Insurance Plan",  href: null, disabled: true)
     };
 

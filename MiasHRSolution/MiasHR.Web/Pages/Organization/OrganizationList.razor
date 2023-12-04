@@ -2,34 +2,42 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Employee List</PageTitle>
-<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-    <MudTabPanel OnClick="navPage" Text="Organization Chart" />
-    <MudTabPanel OnClick="navPage" Text="Employee List" />
-</MudTabs>
-<MudTextField Class="m-3 w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
-<MudText Inline="true" GutterBottom="true"><b>EMPLOYEE(S) LIST</b></MudText>
-<MudPaper Class="d-flex m-2 justify-content-center" Elevation="0">
-    <MudTable  Items="@employeesList"
-              Class="d-flex w-50"
-              Striped="@true" Dense="@dense" Hover="@hover">
-        <HeaderContent>
-            <MudTh>NAME</MudTh>
-            <MudTh>ORG.</MudTh>
-            <MudTh>ORG.TEL</MudTh>
-            <MudTh>EXT.</MudTh>
-            <MudTh>E-MAIL</MudTh>
-        </HeaderContent>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                     @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Organization Chart" />
+                <MudTabPanel OnClick="navPage" Text="Employee List" />
+            </MudTabs>
+        </MudPaper>
+        <MudText GutterBottom="true" Typo="Typo.h4">EMPLOYEE(S) LIST</MudText>
+        <MudTextField Class="m-5 d-flex w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+        <MudPaper Class="d-flex m-2 justify-content-center" Elevation="0">
+            <MudTable Items="@employeesList"
+                      Class="d-flex w-50"
+                      Striped="@true" Dense="@dense" Hover="@hover">
+                <HeaderContent>
+                    <MudTh>NAME</MudTh>
+                    <MudTh>ORG.</MudTh>
+                    <MudTh>ORG.TEL</MudTh>
+                    <MudTh>EXT.</MudTh>
+                    <MudTh>E-MAIL</MudTh>
+                </HeaderContent>
 
-        <RowTemplate>
-            <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
-                <MudTd DataLabel="Org">@context.Org</MudTd>
-                <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
-                <MudTd DataLabel="Ext">@context.Ext</MudTd>
-                <MudTd DataLabel="Email">@context.Email</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudPaper>
+                <RowTemplate>
+                    <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
+                    <MudTd DataLabel="Org">@context.Org</MudTd>
+                    <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
+                    <MudTd DataLabel="Ext">@context.Ext</MudTd>
+                    <MudTd DataLabel="Email">@context.Email</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
+
     @code {
     public string Search { get; set; }
     private bool dense = true;
@@ -38,6 +46,13 @@
     private void doSomething()
     {
     }
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("Organization Employee List",  href: null, disabled: true)
+    };
 
     //Navigation Tab
     int activeIndex = 1;

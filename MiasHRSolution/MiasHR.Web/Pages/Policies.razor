@@ -1,6 +1,6 @@
 ﻿@page "/policies"
-
 <PageTitle>Policies</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
 <MudText Class="m-4" Typo="Typo.h3">Policies</MudText>
 @*TODO: Connect table of contents with the exact sections on the policy*@
 <MudPaper Class="m-3" Width="300px">
@@ -30,5 +30,10 @@
     Quisque et consequat magna. Integer egestas elit ac nisi consectetur gravida.</MudText>
 
 @code {
-
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("Policies",  href: null, disabled: true)
+    };
 }

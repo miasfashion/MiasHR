@@ -4,124 +4,128 @@
 @*inject ISnackbar Snackbar*@
 
 <PageTitle>My Profile</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+    <MudBreadcrumbs Items="_breadcrumbs" />
 
-<MudTabs PanelClass="" Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-         @bind-ActivePanelIndex="activeIndex" Class="mt-12 ml-12">
-    <MudTabPanel OnClick="navPage" Text="Employee Information" />
-    <MudTabPanel OnClick="navPage" Text="Change Password" />
-    <MudTabPanel OnClick="navPage" Text="Employee History" />
-</MudTabs>
-<MudPaper Class="d-flex justify-content-center" Elevation="0">
-    <MudTable Items="@infor"
-              Class="d-flex m-5 w-50"
-              Striped="@true" Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
-              CancelEditTooltip="Cancel Edit" CommitEditTooltip="Commit Edit" ApplyButtonPosition="@applyButtonPosition"
-              EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
+    <MudContainer Class="d-inline-flex">
+        <MudPaper Elevation="0">
+            <MudTabs PanelClass="" Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                     @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                <MudTabPanel OnClick="navPage" Text="Employee Information" />
+                <MudTabPanel OnClick="navPage" Text="Change Password" />
+                <MudTabPanel OnClick="navPage" Text="Employee History" />
+            </MudTabs>
+        </MudPaper>
+        <MudPaper Class="d-flex" Elevation="0">
+            <MudTable Items="@infor"
+                      Class="m-5"
+                      Striped="@true" Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
+                      CancelEditTooltip="Cancel Edit" CommitEditTooltip="Commit Edit" ApplyButtonPosition="@applyButtonPosition"
+                      EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
 
-        <ColGroup>
-            <col />
-            <col />
-            <col style="width:100px;" />
-        </ColGroup>
-        <HeaderContent>
-            <MudTHeadRow>
-                @*TODO: Length of MudTh string is changing where the table gets divided.
-                Currently Set MudTd Class of Name as w-50 to match size*@
-                <MudTh>Information</MudTh>
-            </MudTHeadRow>
-        </HeaderContent>
+                <ColGroup>
+                    <col />
+                    <col />
+                    <col style="width:100px;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTHeadRow>
+                        @*TODO: Length of MudTh string is changing where the table gets divided.
+                        Currently Set MudTd Class of Name as w-50 to match size*@
+                        <MudTh>Information</MudTh>
+                    </MudTHeadRow>
+                </HeaderContent>
 
-        <RowTemplate>
-            <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">@context.Value</MudTd>
-            </RowTemplate>
+                <RowTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">@context.Value</MudTd>
+                </RowTemplate>
 
-            @*TODO: After Confirming Edit, It needs to actually change the value to be displayed*@
-            @*TODO: After Cancel Edit, It needs to show the value again*@
-            <RowEditingTemplate>
-                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">
-                    <MudTextField @bind-Value="@context.Value" />
-                </MudTd>
-            </RowEditingTemplate>
+                @*TODO: After Confirming Edit, It needs to actually change the value to be displayed*@
+                @*TODO: After Cancel Edit, It needs to show the value again*@
+                <RowEditingTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">
+                        <MudTextField @bind-Value="@context.Value" />
+                    </MudTd>
+                </RowEditingTemplate>
 
-            <EditButtonContent Context="button">
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-            </EditButtonContent>
-        </MudTable>
-    </MudPaper>
+                <EditButtonContent Context="button">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                </EditButtonContent>
+                </MudTable>
+        </MudPaper>
+        <MudPaper Class="d-flex" Elevation="0">
+            <MudTable Items="@detailInfor"
+                      Class="m-5"
+                      Striped="@true" Dense="@dense" Hover="@hover"
+                      CanCancelEdit="@canCancelEdit" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
+                      ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
+                <ColGroup>
+                    <col />
+                    <col />
+                    <col style="width:100px;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTHeadRow>
+                        <MudTh>Personal Information</MudTh>
+                    </MudTHeadRow>
+                </HeaderContent>
 
-    <MudPaper Class="d-flex justify-content-center" Elevation="0">
-        <MudTable Items="@detailInfor"
-                  Class="d-flex w-50"
-                  Striped="@true" Dense="@dense" Hover="@hover"
-                  CanCancelEdit="@canCancelEdit" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
-                  ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
-            <ColGroup>
-                <col />
-                <col />
-                <col style="width:100px;" />
-            </ColGroup>
-            <HeaderContent>
-                <MudTHeadRow>
-                    <MudTh>Personal Information</MudTh>
-                </MudTHeadRow>
-            </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">@context.Value</MudTd>
+                </RowTemplate>
 
-            <RowTemplate>
-                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">@context.Value</MudTd>
-            </RowTemplate>
+                <RowEditingTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">
+                        <MudTextField @bind-Value="@context.Value" />
+                    </MudTd>
+                </RowEditingTemplate>
 
-            <RowEditingTemplate>
-                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">
-                    <MudTextField @bind-Value="@context.Value" />
-                </MudTd>
-            </RowEditingTemplate>
+                <EditButtonContent Context="button">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                </EditButtonContent>
+            </MudTable>
+        </MudPaper>
 
-            <EditButtonContent Context="button">
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-            </EditButtonContent>
-        </MudTable>
-    </MudPaper>
+        <MudPaper Class="d-flex" Elevation="0">
+            <MudTable Items="@emergencyInfor"
+                      Class="m-5"
+                      Striped="@true" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
+                      Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
+                      ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
+                <ColGroup>
+                    <col style="" />
+                    <col />
+                    <col style="width:100px;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTHeadRow>
+                        <MudTh>Emergency Contact Information</MudTh>
+                    </MudTHeadRow>
+                </HeaderContent>
 
-    <MudPaper Class="d-flex justify-content-center" Elevation="0">
-        <MudTable Items="@emergencyInfor"
-                  Class="d-flex m-5 w-50"
-                  Striped="@true" CommitEditTooltip="Commit Edit" CancelEditTooltip="Cancel Edit"
-                  Dense="@dense" Hover="@hover" CanCancelEdit="@canCancelEdit"
-                  ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
-            <ColGroup>
-                <col style="" />
-                <col />
-                <col style="width:100px;" />
-            </ColGroup>
-            <HeaderContent>
-                <MudTHeadRow>
-                    <MudTh>Emergency Contact Information</MudTh>
-                </MudTHeadRow>
-            </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">@context.Value</MudTd>
+                </RowTemplate>
 
-            <RowTemplate>
-                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">@context.Value</MudTd>
-            </RowTemplate>
+                <RowEditingTemplate>
+                    <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
+                    <MudTd DataLabel="Value">
+                        <MudTextField @bind-Value="@context.Value" />
+                    </MudTd>
+                </RowEditingTemplate>
 
-            <RowEditingTemplate>
-                <MudTd DataLabel="Name" Class="w-50">@context.Name</MudTd>
-                <MudTd DataLabel="Value">
-                    <MudTextField @bind-Value="@context.Value" />
-                </MudTd>
-            </RowEditingTemplate>
-
-            <EditButtonContent Context="button">
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-            </EditButtonContent>
-        </MudTable>
-    </MudPaper>
-
+                <EditButtonContent Context="button">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                </EditButtonContent>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
     @code {
     private bool dense = true;
     private bool hover = true;
