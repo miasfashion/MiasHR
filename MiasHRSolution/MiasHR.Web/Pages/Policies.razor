@@ -1,33 +1,36 @@
 ﻿@page "/policies"
 <PageTitle>Policies</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
-<MudText Class="m-4" Typo="Typo.h3">Policies</MudText>
-@*TODO: Connect table of contents with the exact sections on the policy*@
-<MudPaper Class="m-3" Width="300px">
-    <MudList Clickable="true">
-        <MudListSubheader>
-            Table of Contents
-        </MudListSubheader>
-        <MudListItem Text="WELCOME TO OUR TEAM" />
-        <MudListItem Text="1. EMPLOYMENT POLICIES">
-            <NestedList>
-                <MudListItem Text="AT-WILL EMPLOYMENT" />
-                <MudListItem Text="IMMIGRATION LAW COMPLIANCE(I-9)" />
-                <MudListItem Text="EQUAL EMPLOYMENT OPPORTUNITY STATEMENT" />
-            </NestedList>
-        </MudListItem>
-        <MudListItem Text="2. PAYMENT PROCEDURES">
-            <NestedList>
-                <MudListItem Text="TIME REPORTING" />
-                <MudListItem Text="WORKWEEK" />
-            </NestedList>
-        </MudListItem>
-    </MudList>
-</MudPaper>
-<MudText Class="m-5" Align="Align.Center" Typo="Typo.h5">AT-WILL EMPLOYMENT</MudText>
-<MudText Class="m-5" Align="Align.Center" Typo="Typo.body2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae odio et est molestie ullamcorper. 
-    Nunc ornare, lorem ut volutpat consequat, est massa cursus est, at ultricies lorem sapien sed nulla. Proin ac tortor viverra, fringilla nibh a, posuere orci.
-    Quisque et consequat magna. Integer egestas elit ac nisi consectetur gravida.</MudText>
+<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
+
+    <MudBreadcrumbs Items="_breadcrumbs" />
+    <MudText Class="m-4" Typo="Typo.h3">Policies</MudText>
+    @*TODO: Connect table of contents with the exact sections on the policy*@
+    <MudContainer Class="d-inline-flex">
+
+        <MudPaper Style="position:sticky; top:120px" Class="m-4" >
+            <MudList Clickable="true">
+                <MudListSubheader>
+                    Table of Contents
+                </MudListSubheader>
+                <MudListItem Text="WELCOME TO OUR TEAM" />
+                <MudListItem Text="1. EMPLOYMENT POLICIES" />
+                <MudListItem Text="2. PAYMENT PROCEDURES" />
+                <MudListItem Text="3. MEAL & REST BREAK PERIODS POLICY" />
+                <MudListItem Text="4. CODE OF CONDUCT" />
+                <MudListItem Text="5. LEAVES OF ABSENCE" />
+                <MudListItem Text="6. COMPANY POLICIES & PRACTICES" />
+            </MudList>
+        </MudPaper>
+        <MudPaper Class="d-block" Elevation="0">
+            <MudText Class="m-5" Align="Align.Center" Typo="Typo.h5">AT-WILL EMPLOYMENT</MudText>
+            <MudText Class="m-5" Align="Align.Center" Typo="Typo.body2">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae odio et est molestie ullamcorper.
+                Nunc ornare, lorem ut volutpat consequat, est massa cursus est, at ultricies lorem sapien sed nulla. Proin ac tortor viverra, fringilla nibh a, posuere orci.
+                Quisque et consequat magna. Integer egestas elit ac nisi consectetur gravida.
+            </MudText>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
 
 @code {
     // Breadcrumbs

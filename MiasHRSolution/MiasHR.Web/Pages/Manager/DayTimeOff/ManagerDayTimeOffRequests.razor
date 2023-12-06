@@ -8,7 +8,7 @@
     <MudContainer Class="d-inline-flex">
         <MudPaper Elevation="0">
             <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                 <MudTabPanel OnClick="navPage" Text="Requests" />
                 <MudTabPanel OnClick="navPage" Text="Approval History" />
             </MudTabs>

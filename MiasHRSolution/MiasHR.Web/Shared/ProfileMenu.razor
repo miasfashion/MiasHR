@@ -1,13 +1,26 @@
 ﻿@inject NavigationManager NavigationManager
 
-<MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary">
-    <MudMenuItem Href="/profile" Match="NavLinkMatch.Prefix">Profile</MudMenuItem>
-    <MudMenuItem Href="/profile/history" Match="NavLinkMatch.Prefix">History</MudMenuItem>
-    <MudMenuItem Href="/profile/changepw" Match="NavLinkMatch.Prefix">Change Password</MudMenuItem>
-    <MudMenuItem @onclick="HandleLogout" Match="NavLinkMatch.Prefix">Logout</MudMenuItem>
+<MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+    <ActivatorContent>
+        <MudAvatar Image="@img" />
+    </ActivatorContent>
+    <ChildContent>
+        <MudContainer Class="d-flex justify-content-center">
+            <MudAvatar Size="Size.Large" Image="@img" Class="mt-2 justify-content-center" />
+        </MudContainer>
+        <MudText Typo="Typo.body1" Class="m-4 mb-2"><b>Hello, @name</b></MudText>
+        <MudMenuItem Href="/profile" Match="NavLinkMatch.Prefix">Profile</MudMenuItem>
+        <MudMenuItem Href="/profile/history" Match="NavLinkMatch.Prefix">History</MudMenuItem>
+        <MudMenuItem Href="/profile/changepw" Match="NavLinkMatch.Prefix">Change Password</MudMenuItem>
+        <MudMenuItem @onclick="HandleLogout" Match="NavLinkMatch.Prefix">Logout</MudMenuItem>
+    </ChildContent>
 </MudMenu>
 
 @code {
+
+    public string img { get; set; } = "images/happy.jpg";
+    public string name { get; set; } = "Jaehoon";
+
     private void HandleLogout()
     {
         // Display a pop-up message indicating successful logout

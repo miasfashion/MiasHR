@@ -1,5 +1,6 @@
 ﻿@page "/daytimeoff/info"
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Day Time Off Information</PageTitle>
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
@@ -11,7 +12,7 @@
     <MudContainer Class="d-inline-flex">
         <MudPaper Elevation="0">
             <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-            @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                 <MudTabPanel OnClick="navPage" Text="Information" />
                 <MudTabPanel OnClick="navPage" Text="Request List" />
             </MudTabs>
@@ -29,6 +30,7 @@
                 </RowTemplate>
             </MudTable>
         </MudPaper>
+        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary">Request Time Off</MudButton>
     </MudContainer>
 </MudContainer>
 
@@ -83,5 +85,16 @@
         {
             NavigationManager.NavigateTo("/daytimeoff/list");
         }
+    }
+
+    //DayTimeOff Request 
+    private void Request()
+    {
+        var parameters = new DialogParameters<DayTimeOffRequest>();
+        parameters.Add(x => x.ContentText, "Requesting PTO");
+        parameters.Add(x => x.ButtonText, "Confirm");
+        parameters.Add(x => x.Color, Color.Success);
+
+        DialogService.Show<DayTimeOffRequest>("Confirm", parameters);
     }
 }

@@ -10,7 +10,7 @@
         <MudPaper Elevation="0">
 
             <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Class="ma-4">
+                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                 <MudTabPanel OnClick="navPage" Text="Employee Information" />
                 <MudTabPanel OnClick="navPage" Text="Change Password" />
                 <MudTabPanel OnClick="navPage" Text="Employee History" />
