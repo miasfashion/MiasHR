@@ -18,26 +18,107 @@
             </MudTabs>
         </MudPaper>
 
-        <MudPaper Class="ma-4 pa-4" Elevation="0">
-            <MudTable Items="@employeeDayTimeOff">
-                <HeaderContent>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Days</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Type">@context.Type</MudTd>
-                    <MudTd DataLabel="Days">@context.Days</MudTd>
-                </RowTemplate>
-            </MudTable>
+        <MudPaper Class="ma-4 pa-16" Elevation="1">
+            <MudText Typo="Typo.h6">Vacation</MudText>
+            @* TODO: Make chart size adaptable to small screens *@
+            <TelerikChart Width="400px" Height="300px">         
+                <ChartSeriesItems>
+                    <ChartSeries Type="ChartSeriesType.Donut" 
+                                 Data="@vacData" 
+                                 HoleSize="80"
+                                 ColorField="@nameof(ModelData.Color)"
+                                 Field="@nameof(ModelData.Value)" 
+                                 CategoryField="@nameof(ModelData.Category)">
+                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                           Visible="true"
+                                           Background="transparent"
+                                           Template="#= dataItem.Category # : #= dataItem.Value # day(s)">
+                        </ChartSeriesLabels>
+                    </ChartSeries>
+                </ChartSeriesItems>
+                <ChartLegend Visible="false">
+                </ChartLegend>
+            </TelerikChart>
+        </MudPaper>
+
+        <MudPaper Class="ma-4 pa-16" Elevation="1">
+            <MudText Typo="Typo.h6">Sick Days</MudText>
+            @* TODO: Make chart size adaptable to small screens *@
+            <TelerikChart Width="400px" Height="300px">
+                <ChartSeriesItems>
+                    <ChartSeries Type="ChartSeriesType.Donut"
+                                 Data="@sickData"
+                                 HoleSize="80"
+                                 ColorField="@nameof(ModelData.Color)"
+                                 Field="@nameof(ModelData.Value)"
+                                 CategoryField="@nameof(ModelData.Category)">
+                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                           Visible="true"
+                                           Background="transparent"
+                                           Template="#= dataItem.Category # : #= dataItem.Value # day(s)">
+                        </ChartSeriesLabels>
+                    </ChartSeries>
+                </ChartSeriesItems>
+                <ChartLegend Visible="false">
+                </ChartLegend>
+            </TelerikChart>
         </MudPaper>
         <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary">Request Time Off</MudButton>
     </MudContainer>
 </MudContainer>
 
 @code {
-    private bool dense = true;
-    private bool hover = true;
-    private bool strip = true;
+    public class ModelData
+    {
+        public string Category { get; set; }
+        public double Value { get; set; }
+        public string Color { get; set; }
+        public bool ShouldShowInLegend { get; set; } = true;
+    }
+
+    public List<ModelData> vacData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Used",
+            Value = 3,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Available",
+            Value = 5,
+            Color = "#1DE9B6"
+        },
+        new ModelData
+        {
+            Category = "Not Accrued",
+            Value = 5,
+            Color = "#B0BEC5"
+        },
+        new ModelData
+        {
+            Category = "Adjusted",
+            Value = 2,
+            Color = "#FF9100"
+        }
+    };
+
+    public List<ModelData> sickData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Used",
+            Value = 1,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Available",
+            Value = 4,
+            Color = "#1DE9B6"
+        }
+    };
 
     @*TODO: This is probably where all the data collecting before displaying on the screen
             takes place. How can you use API to gather information?*@
