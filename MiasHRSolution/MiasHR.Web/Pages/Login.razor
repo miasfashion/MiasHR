@@ -7,7 +7,7 @@
 <MudPaper Class="d-flex pa-4 justify-content-center" MaxWidth="100%">
     <MudStack AlignItems="AlignItems.Start" Spacing="6">
         <MudTextField @bind-Value="UserID" Label="User ID" Variant="Variant.Outlined" />
-        <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+        <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
         <MudButton Disabled="@_loggingin" OnClick="Loggingin" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Primary">
             @if (_loggingin)
             {
