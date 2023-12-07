@@ -5,39 +5,123 @@
 <PageTitle>Day Time Off Information</PageTitle>
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
     <MudBreadcrumbs Items="_breadcrumbs" />
-    
+
     @* TODO: Set name to user name *@
-    
-    
+
+
     <MudContainer Class="d-inline-flex">
         <MudPaper Elevation="0">
             <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+            @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                 <MudTabPanel OnClick="navPage" Text="Information" />
                 <MudTabPanel OnClick="navPage" Text="Request List" />
             </MudTabs>
         </MudPaper>
 
-        <MudPaper Class="ma-4 pa-4" Elevation="0">
-            <MudTable Items="@employeeDayTimeOff">
-                <HeaderContent>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Days</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Type">@context.Type</MudTd>
-                    <MudTd DataLabel="Days">@context.Days</MudTd>
-                </RowTemplate>
-            </MudTable>
+        <MudPaper Class="ma-4 pa-16" Elevation="1">
+            <MudText Typo="Typo.h6">Vacation</MudText>
+            @* TODO: Make chart size adaptable to small screens *@
+            <TelerikChart Width="400px" Height="300px">
+                <ChartSeriesItems>
+                    <ChartSeries Type="ChartSeriesType.Donut"
+                                 Data="@vacData"
+                                 HoleSize="80"
+                                 ColorField="@nameof(ModelData.Color)"
+                                 Field="@nameof(ModelData.Value)"
+                                 CategoryField="@nameof(ModelData.Category)">
+                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                           Visible="true"
+                                           Background="transparent"
+                                           Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                        </ChartSeriesLabels>
+                    </ChartSeries>
+                </ChartSeriesItems>
+                <ChartLegend Visible="false">
+                </ChartLegend>
+            </TelerikChart>
         </MudPaper>
-        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary">Request Time Off</MudButton>
+
+        <MudPaper Class="ma-4 pa-16" Elevation="1">
+            <MudText Typo="Typo.h6">Sick Days</MudText>
+            @* TODO: Make chart size adaptable to small screens *@
+            <TelerikChart Width="400px" Height="300px">
+                <ChartSeriesItems>
+                    <ChartSeries Type="ChartSeriesType.Donut"
+                                 Data="@sickData"
+                                 HoleSize="80"
+                                 ColorField="@nameof(ModelData.Color)"
+                                 Field="@nameof(ModelData.Value)"
+                                 CategoryField="@nameof(ModelData.Category)">
+                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                           Visible="true"
+                                           Background="transparent"
+                                           Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                        </ChartSeriesLabels>
+                    </ChartSeries>
+                </ChartSeriesItems>
+                <ChartLegend Visible="false">
+                </ChartLegend>
+            </TelerikChart>
+        </MudPaper>
     </MudContainer>
+    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+               Style="width: 200px; height: 60px; position:fixed; bottom: 100px; right: 100px">
+        Request Time Off
+    </MudButton>
 </MudContainer>
 
 @code {
-    private bool dense = true;
-    private bool hover = true;
-    private bool strip = true;
+    public class ModelData
+    {
+        public string? Category { get; set; }
+        public double Value { get; set; }
+        public string? Color { get; set; }
+        public bool ShouldShowInLegend { get; set; } = true;
+    }
+
+    public List<ModelData> vacData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Used",
+            Value = 3,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Available",
+            Value = 5,
+            Color = "#1DE9B6"
+        },
+        new ModelData
+        {
+            Category = "Not Accrued",
+            Value = 6,
+            Color = "#B0BEC5"
+        },
+        new ModelData
+        {
+            Category = "Adjusted",
+            Value = 2,
+            Color = "#FF9100"
+        }
+    };
+
+    public List<ModelData> sickData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Used",
+            Value = 1,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Available",
+            Value = 4,
+            Color = "#1DE9B6"
+        }
+    };
 
     @*TODO: This is probably where all the data collecting before displaying on the screen
             takes place. How can you use API to gather information?*@
@@ -45,26 +129,6 @@
     {
         base.OnInitialized();
     }
-
-    public class EmployeeDayTimeOff
-    {
-        public string Type { get; set; }
-        public decimal Days { get; set; }
-    }
-
-    List<EmployeeDayTimeOff> employeeDayTimeOff = new List<EmployeeDayTimeOff>()
-    {
-        new EmployeeDayTimeOff {Type="Carried Over", Days = 0},
-        new EmployeeDayTimeOff {Type="Current Year", Days = 0},
-        new EmployeeDayTimeOff {Type="Current Accrued", Days = 0},
-        new EmployeeDayTimeOff {Type="Adjust Days", Days = 0},
-        new EmployeeDayTimeOff {Type="Used Days", Days = 0},
-        new EmployeeDayTimeOff {Type="Year End Available", Days = 0},
-        new EmployeeDayTimeOff {Type="Current Available", Days = 0},
-        new EmployeeDayTimeOff {Type="Sick Days", Days = 0},
-        new EmployeeDayTimeOff {Type="Sick Days Used", Days = 0},
-        new EmployeeDayTimeOff {Type="Sick Days Available", Days = 0}
-    };
 
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -87,14 +151,16 @@
         }
     }
 
-    //DayTimeOff Request 
+    //DayTimeOff Request
     private void Request()
     {
         var parameters = new DialogParameters<DayTimeOffRequest>();
-        parameters.Add(x => x.ContentText, "Requesting PTO");
+        parameters.Add(x => x.ContentText, "New Time Off Request");
         parameters.Add(x => x.ButtonText, "Confirm");
         parameters.Add(x => x.Color, Color.Success);
 
-        DialogService.Show<DayTimeOffRequest>("Confirm", parameters);
+        var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+
+        DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
     }
 }
