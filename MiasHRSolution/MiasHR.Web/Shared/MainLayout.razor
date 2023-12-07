@@ -17,8 +17,12 @@
     </MudDrawer>
     <MudMainContent>
         @Body
+        <Footer />
     </MudMainContent>
-    <Footer />
+    <MudScrollToTop TopOffset="100">
+        <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ArrowCircleUp" />
+    </MudScrollToTop>
+
 </MudLayout>
 
 @code {
