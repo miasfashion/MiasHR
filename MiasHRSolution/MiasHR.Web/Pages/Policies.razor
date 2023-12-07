@@ -4,30 +4,933 @@
 
     <MudBreadcrumbs Items="_breadcrumbs" />
     <MudText Class="m-4" Typo="Typo.h3">Policies</MudText>
-    @*TODO: Connect table of contents with the exact sections on the policy*@
-    <MudContainer Class="d-inline-flex">
 
-        <MudPaper Style="position:sticky; top:120px" Class="m-4" >
-            <MudList Clickable="true">
-                <MudListSubheader>
-                    Table of Contents
-                </MudListSubheader>
-                <MudListItem Text="WELCOME TO OUR TEAM" />
-                <MudListItem Text="1. EMPLOYMENT POLICIES" />
-                <MudListItem Text="2. PAYMENT PROCEDURES" />
-                <MudListItem Text="3. MEAL & REST BREAK PERIODS POLICY" />
-                <MudListItem Text="4. CODE OF CONDUCT" />
-                <MudListItem Text="5. LEAVES OF ABSENCE" />
-                <MudListItem Text="6. COMPANY POLICIES & PRACTICES" />
-            </MudList>
-        </MudPaper>
-        <MudPaper Class="d-block" Elevation="0">
-            <MudText Class="m-5" Align="Align.Center" Typo="Typo.h5">AT-WILL EMPLOYMENT</MudText>
-            <MudText Class="m-5" Align="Align.Center" Typo="Typo.body2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae odio et est molestie ullamcorper.
-                Nunc ornare, lorem ut volutpat consequat, est massa cursus est, at ultricies lorem sapien sed nulla. Proin ac tortor viverra, fringilla nibh a, posuere orci.
-                Quisque et consequat magna. Integer egestas elit ac nisi consectetur gravida.
-            </MudText>
+    @*All policies listed. Search main headers in comment*@
+    <MudContainer Class="d-block">
+        <MudPaper Class="m-4">
+            <MudButton @ref="panel" OnClick="Close" StartIcon="@Icons.Material.Filled.SafetyCheck" />
+            <MudExpansionPanels MultiExpansion="true" Elevation="0" DisableBorders="false">
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">WELCOME TO OUR TEAM!!</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudText Typo="Typo.body2">
+                            <p>
+                                We welcome you to MIAS Fashion Manufacturing Company, Inc. We look forward to
+                                the opportunity to work with you. We believe that employees are our most valuable
+                                resource for our success. Our continued success in providing the highest quality products
+                                to our customers depends on having quality people like yourself and your fellow
+                                employees. We want you to enjoy your time here and are committed to helping you
+                                succeed in your position at MIAS Fashion Manufacturing Company, Inc.
+                            </p>
+                            <p>
+                                We have prepared this Employee Handbook as a guide to answer some of the questions
+                                that you may have concerning MIAS Fashion Manufacturing Company, Inc. and its
+                                policies. This Employee Handbook is intended solely as guide. Please read it thoroughly
+                                and if you have questions about the contents of this Employee Handbook, please contact
+                                your General Manager for assistance.
+                            </p>
+                            <p>
+                                We hope that you find your time with us to be an enjoyable and rewarding experience.
+                                Once again, welcome to MIAS Fashion Manufacturing Company, Inc.
+                            </p>
+                            Sincerely,<br />
+                            Peter Ahn<br />
+                            President and CEO<br />
+                        </MudText>
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Employment Policies Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">EMPLOYMENT POLICIES</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">AT-WILL EMPLOYMENT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    Other than certain employees who have entered into separate employment agreements, all
+                                    employment at Company is <strong>“AT-WILL.”</strong>This means that both employees and Company
+                                    have the right to terminate employment at any time, with or without advance notice, and
+                                    with or without cause. Employees also may be demoted or disciplined, and the terms of
+                                    their employment may be altered at any time, with or without cause, at the discretion of
+                                    Company. No one other than the President has the authority to alter this arrangement, to
+                                    enter into an agreement for employment for a specified period of time, or to make any
+                                    agreement contrary to this policy, and any such agreement must be in writing and must be
+                                    signed by the President and by the affected employee.
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">IMMIGRATION LAW COMPLIANCE (I-9)</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        Federal and state law requires all employers to verify each new employee’s identity and
+                                        legal ability to work in the United States. In compliance with the federal Immigration
+                                        Reform and Control Act of 1986 (IRCA), as amended, Company is committed to
+                                        employing only individuals who are authorized to work in the United States. All
+                                        employees, upon being hired, must complete an IRS Form I-9 to provide proof of identity
+                                        and eligibility to legally work in the U.S. Employees must present original documents.
+                                        Providing false identification or making false statements on the I-9 form shall be grounds
+                                        for immediate discharge. Before commencing work, newly rehired employees must also
+                                        complete the form if they have not previously filed an I-9 with Company if their previous
+                                        I-9 is more than three years old, or if their previous I-9 is no longer valid.
+                                    </p>
+                                    <p>
+                                        Current employees are also required to update work eligibility status, should their status
+                                        expire or change. Furthermore, Company will not be responsible for updating an
+                                        employee’s legal status and may not under any circumstances
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EQUAL EMPLOYMENT OPPORTUNITY STATEMENT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        Company provides equal employment opportunities (EEO) to all employees and
+                                        applicants for employment without regard to race, color, religion, gender, sexual
+                                        orientation, gender identity, national origin, age, disability, genetic information, marital
+                                        status, amnesty or status as a covered veteran in accordance with applicable federal, state
+                                        and local laws. Company complies with applicable state and local laws governing
+                                        nondiscrimination in employment in every location in which Company has facilities.
+                                        This policy applies to all terms and conditions of employment, including hiring,
+                                        placement, promotion, termination, layoff, recall, transfer, leaves of absence,
+                                        compensation and training.
+                                    </p>
+                                    <p>
+                                        Company is strongly committed to and is actively committed to equal employment
+                                        opportunity in the workplace. As such, Company offers employment opportunities on a
+                                        non-discriminatory basis to all qualified individuals, including those who may happen to be disabled. 
+                                        Company will offer reasonable accommodation to disabled individuals,
+                                        where appropriate, to permit them to perform the essential functions of their job.
+                                        Company expressly prohibits any form of unlawful employee harassment based on race,
+                                        color, religion, gender, sexual orientation, national origin, age, genetic information,
+                                        disability or veteran status. Improper interference with the ability of Company’s
+                                        employees to perform their expected job duties is absolutely not tolerated. All employees,
+                                        as per the law, must be at least 18 years of age. Employees under the age of 18 must
+                                        comply with all federal wage and hour guidelines, no exceptions. The required work
+                                        permits must be supplied when applicable.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">AMERICANS WITH DISABILITIES ACT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        The Americans with Disabilities Act (ADA) and the Americans with Disabilities
+                                        Amendments Act, known as the ADAAA, are federal laws that prohibit employers with
+                                        15 or more employees from discriminating against applicants and individuals with
+                                        disabilities and that when needed provide reasonable accommodations to applicants and
+                                        employees who are qualified for a job, with or without reasonable accommodations, so
+                                        that they may perform the essential job duties of the position.
+                                    </p>
+                                    <p>
+                                        It is the policy of Company to comply with all federal and state laws concerning the
+                                        employment of persons with disabilities and to act in accordance with regulations and
+                                        guidance issued by the Equal Employment Opportunity Commission (EEOC).
+                                        Furthermore, it is our policy not to discriminate against qualified individuals with
+                                        disabilities in regard to application procedures, hiring, advancement, discharge,
+                                        compensation, training or other terms, conditions and privileges of employment.
+                                    </p>
+                                    <p>
+                                        Company will reasonably accommodate qualified individuals with a disability so that
+                                        they can perform the essential functions of a job unless doing so causes a direct threat to
+                                        these individuals or others in the workplace and the threat cannot be eliminated by
+                                        reasonable accommodation and/or if the accommodation creates an undue hardship to
+                                        Company. If you have a disability that requires some accommodation in the workplace,
+                                        please talk with the General Manager so that a full understanding of the disability and an
+                                        evaluation of the appropriate accommodation, if any, can be made. We will treat
+                                        information concerning disabilities in a confidential manner consistent with the need to
+                                        protect the safety and health of the other employees and the public.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EMPLOYEE BACKGROUND CHECK</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        In compliance with the Los Angeles Fair Chance Initiative for Hiring, Company will not
+                                        inquire about or require an applicant to disclose their criminal history. Upon making a
+                                        conditional offer of employment, Company may conduct a job-related background check
+                                        or may request a comprehensive background check according to the position applied for
+                                        A comprehensive background check may consist of prior criminal record, employment
+                                        verification, professional reference checks, and education confirmation.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PRE-EMPLOYMENT SCREENING ASSESSMENTS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        All applicants are required to successfully complete several job-related
+                                        screenings/assessments. To maintain a safe work environment Company requires the
+                                        successful completion of various types of screenings/assessments as a condition of
+                                        employment. All federal, state, and local requirements concerning job related screenings
+                                        of Company’s employees are adhered to. All applicants being considered for
+                                        employment with Company may be required to submit to a pre-employment physical and
+                                        drug screening.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">MEDICAL EXAMINATION/ILLEGAL DRUG AND ALCOHOL TESTS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        Company establishes its right to require an employee to submit to a medical examination
+                                        and/or tests for illegal drugs or alcohol when Company has a business need for such
+                                        medical exam/tests or has reasonable suspicion that an employee is under the influence.
+                                        Failure to submit to a medical exam/test, or a test giving positive results, is grounds for
+                                        immediate termination.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PERSONNEL RECORDS AND ADMINISTRATION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <ul>
+                                        <li>
+                                            <b><u>Confidentiality:</u></b> It is necessary for Company to maintain certain records about
+                                            you which are directly related to your job and Company’s responsibilities. At all
+                                            times Company will do its best to balance your rights to privacy with the
+                                            Company's need to collect and use your personal information.
+                                        </li>
+                                        <li>
+                                            <b><u>Reviewing Your Personnel File:</u></b> Your personnel file is confidential and is
+                                            available to you, your manager and upper management personnel. It will only
+                                            contain such information as is needed by Company to conduct its business or as is
+                                            required by Federal or State law. You have the right to review your personnel
+                                            file. Ask your manager to make appropriate arrangements and an appointment
+                                            will be made for a mutually convenient time. No copies of documents in your file
+                                            may be made, with the exception of documents that you have previously signed.
+                                            You may add your version of any disputed item to the file.
+                                        </li>
+                                        <li>
+                                            All medical records and background check reports, if any, will be kept in a
+                                            separate confidential file.
+                                        </li>
+                                    </ul>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CHANGE OF PERSONAL DATA</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        Employees have the responsibility to ensure that their personal files are up to date.
+                                        Company should be notified of any change in:
+                                    </p>
+                                <MudText Typo="Typo.body2" Style="display:list-item">
+                                    <ul>
+                                        <li>Legal Name</li>
+                                        <li>Home Address</li>
+                                        <li>Home contact telephone number</li>
+                                        <li>Contact person in case of an emergency</li>
+                                        <li>Tax Filing Status (W-4)</li>
+                                        <li>Any other records Compnay deems necessary</li>
+                                    </ul>
+                                </MudText>
+                                    <p>
+                                        Any change needs to be reported in writing without delay to the management. Failure to
+                                        keep your records up to date shall relieve Company of any of its responsibilities as a
+                                        result of inaccurate information. Falsification of any information can result in legal
+                                        difficulties with both State and Federal agencies and/or dismissal from Company.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">HEALTH RELATED ISSUES</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        An employee who becomes aware of any health-related issue that may impact the
+                                        employee’s job performance should notify their manager of his/her health-related issue as
+                                        soon as possible.
+                                    </p>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EMPLOYEE CLASSIFICATION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                    <p>
+                                        In order to determine an employee’s status and eligibility for various benefits, the
+                                        following employment classifications have been established.
+                                    </p>
+                                </MudText>
+                                <MudText Style="display:list-item">
+                                    <ul>
+                                        <li><u>Regular Employees</u>
+                                            <p>
+                                                Regular employees are those who are hired to work on a regular schedule. Regular
+                                                employees may be classified as full-time or part-time.
+                                            </p>
+                                        </li>
+                                        <li><u>Full Time Employees</u></li>
+                                        <li><u>Part-Time Employees</u></li>
+                                        <li><u></u></li>
+
+                                    </ul>
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">NON-EXEMPT AND EXEMPT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PROBATIONARY PERIOD</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">TRAINING</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EVALUATIONS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">SCHEDULE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Payment Procedures Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">PAYMENT PROCEDURES</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">TIME REPORTING</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">WORKWEEK</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PAYROLL CHECKS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PAYROLL DEDUCTIONS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CHANGE OF ADDRESS, PHONE, E-MAIL, W-4</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">OVERTIME</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">OVERTIME PRE-APPROVAL</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CALL BACK PAY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">REPORTING PAY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">BUSINESS EXPENSES</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">DISCRETIONARY BONUS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Meal & Rest Break Periods Policy Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">MEAL & REST BREAK PERIODS POLICY</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">MEAL BREAK PERIOD POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">REST BREAK PERIODS POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">LACTATION ACCOMMODATION (LABOR CODE SECTION 1030)</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Code of Conduct Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">CODE OF CONDUCT</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">HARASSMENT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">WORKPLACE BULLYING</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">VIOLENCE IN THE WORKPLACE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CONFLICT OF INTEREST</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">OUTSIDE EMPLOYMENT POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">NO DATING POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">COMPLAINT AND PROBLEM PROCEDURE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CORRECTIVE PROCEDURE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CRISIS SUSPENSION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">DRUG-FREE WORKPLACE POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">WORKPLACE INSPECTIONS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">ABSENCES</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">TARDINESS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EMPLOYMENT TERMINATION/RESIGNATION/LAYOFF</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EXIT INTERVIEW</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">RETURN OF COMPANY PROPERTY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Leaves Of Absence Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">LEAVES OF ABSENCE</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PAID VACATION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PAID SICK LEAVE POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">FAMILY AND MEDICAL LEAVES (FAMILY AND MEDICAL LEAVE ACT)</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">FAMILY AND MEDICAL LEAVE (CALIFORNIA FAMILY RIGHTS ACT)</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PREGNANCY-RELATED DISABILITY LEAVES</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">JURY DUTY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">VOTING PRIVILEGES</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">MILITARY LEAVE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">BEREAVEMENT LEAVE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">HOLIDAYS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">EMPLOYEE GROUP INSURANCE BENEFITS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </ChildContent>
+                </MudExpansionPanel>
+
+                @*********Company Policies & Practices Section*********@
+                <MudExpansionPanel>
+                    <TitleContent>
+                        <MudText Typo="Typo.h4">COMPANY POLICIES & PRACTICES</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">MANAGEMENT/EMPLOYEE RELATIONS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">TEAMWORK</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CALIFORNIA TRANSPARENCY IN SUPPLY CHAINS ACT</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">WOMEN'S RIGHTS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">SAFETY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">ACCIDENT AND EMERGENCY SITUATIONS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CRIME AND ROBBERY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">DRESS CODE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">CELL PHONE/SMART PHONE POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">COMPLIANCE WITH VEHICULAR LAWS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">SMOKING POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">VISITORS IN THE WORKPLACE</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">COMPANY SOCIAL EVENTS</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">COMPANY PROPERTY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">ELECTRONIC COMMUNICATION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">SOCIAL MEDIA NETWORK POLICY</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">PROPRIETARY & CONFIDENTIAL INFORMATION</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body2">
+                                </MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
         </MudPaper>
     </MudContainer>
 </MudContainer>
@@ -39,4 +942,11 @@
         new BreadcrumbItem("Home", href: "/home"),
         new BreadcrumbItem("Policies",  href: null, disabled: true)
     };
+
+    private MudButton panel { get; set; }
+    private MudExpansionPanels panels { get; set; }
+    private void Close()
+    {
+        panels.CollapseAll();
+    }
 }
