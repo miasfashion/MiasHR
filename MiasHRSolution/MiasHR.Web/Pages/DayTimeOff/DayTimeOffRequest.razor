@@ -1,7 +1,72 @@
-﻿<MudDialog>
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+
+<MudDialog>
     <DialogContent>
-        <MudText>@ContentText
-        </MudText>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                            <MudSelectItem T="string" Value="@("Vacation")" />
+                            <MudSelectItem T="string" Value="@("Sick Day")" />
+                            <MudSelectItem T="string" Value="@("Absence")" />
+                        </MudSelect>
+                        <MudContainer Class="d-flex mt-4 mb-4">
+                            <MudDatePicker Label="Start Date" @bind-Date="startDate" Required="true" />
+                            <MudTimePicker Label="Start Time" AmPm="true" @bind-Time="startTime" MinuteSelectionStep="30" Required="true" />
+                        </MudContainer>
+                        <MudContainer Class="d-flex mt-4 mb-4">
+                            <MudDatePicker Label="End Date" @bind-Date="endDate" Required="true" />
+                            <MudTimePicker Label="End Time" AmPm="true" @bind-Time="endTime" MinuteSelectionStep="30" Required="true" />
+                        </MudContainer>
+                        <MudSelect @bind-Value="reasonValue" T="string" Label="Reason" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                            <MudSelectItem T="string" Value="@("Vacation")" />
+                            <MudSelectItem T="string" Value="@("Personal Matters")" />
+                            <MudSelectItem T="string" Value="@("Sick Day")" />
+                            <MudSelectItem T="string" Value="@("Business Related")" />
+                            <MudSelectItem T="string" Value="@("Death in Family")" />
+                            <MudSelectItem T="string" Value="@("Jury Duty / Witness")" />
+                            <MudSelectItem T="string" Value="@("Maternity / Paternity")" />
+                            <MudSelectItem T="string" Value="@("Absence")" />
+                            <MudSelectItem T="string" Value="@("Other")" />
+                        </MudSelect>
+                        <MudTextField T="string" Label="About" AutoGrow Lines="3" HelperText="Include information for approver" HelperTextOnFocus="true" Variant="Variant.Outlined" Class="ma-4" />
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="6">
+                <MudContainer Class="d-flex flex-grow-1 flex-column">
+                    <MudPaper Class="flex-grow-1 mb-4 pa-4">
+                        <MudText Class="mb-2">Vacation Available</MudText>
+                        <MudTable Items="@vacAvailable">
+                            <HeaderContent>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Days</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Days">@context.Type</MudTd>
+                                <MudTd DataLabel="Days">@context.Days</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudPaper>
+                    <MudPaper Class="flex-grow-1 mb-4 pa-4">
+                        <MudText Class="mb-2">Current Usage</MudText>
+                        <MudTable Items="@vacUsed">
+                            <HeaderContent>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Days</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Days">@context.Type</MudTd>
+                                <MudTd DataLabel="Days">@context.Days</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudPaper>
+                </MudContainer>
+            </MudItem>
+        </MudGrid>
     </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -19,4 +84,32 @@
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
+
+    private bool success;
+    string[] errors = { };
+    MudForm form;
+    private string typeValue;
+    private string reasonValue;
+    private DateTime? startDate = DateTime.Today;
+    private TimeSpan? startTime = new TimeSpan(08, 00, 00);
+    private DateTime? endDate = DateTime.Today;
+    private TimeSpan? endTime = new TimeSpan(17, 00, 00);
+
+    public class vacDays
+    {
+        public string? Type { get; set; }
+        public decimal Days { get; set; }
+    }
+
+    List<vacDays> vacAvailable = new List<vacDays>
+    {
+        new vacDays { Type="Vacation", Days=5m},
+        new vacDays { Type="Sick Days", Days=4m}
+    };
+
+    List<vacDays> vacUsed = new List<vacDays>
+    {
+        new vacDays { Type="Vacation", Days=1m},
+        new vacDays { Type="Sick Days", Days=0m}
+    };
 }
