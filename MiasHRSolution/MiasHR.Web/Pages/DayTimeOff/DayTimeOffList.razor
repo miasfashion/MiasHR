@@ -4,10 +4,14 @@
 
 <PageTitle>Day Time Off Requests</PageTitle>
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    
-    @* TODO: Set name to user name *@
-    
+    <MudStack Row="true">
+        <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
+        <MudSpacer />
+        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+                   Style="width: 200px; height: 60px;">
+            Request Time Off
+        </MudButton>
+    </MudStack>
 
     <MudContainer Class="d-inline-flex">
         <MudPaper Elevation="0">
@@ -35,10 +39,6 @@
             </MudTable>
         </MudPaper>
     </MudContainer>
-    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
-               Style="width: 200px; height: 60px; position:fixed; bottom: 100px; right: 100px">
-        Request Time Off
-    </MudButton>
 </MudContainer>
 
 @code {
