@@ -11,13 +11,26 @@
         <MudItem xs="12" sm="12" md="4">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="6">
+               <MudItem xs="12" sm="6">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                        <MudAlert Icon="@Icons.Material.Filled.WorkHistory" Severity="Severity.Normal" Class="my-2">
+                            This Week
+                            @string.Join(", ", thispeople.Select(i => $"{i}"))
+                            are Off
+                        </MudAlert>
+                        <MudAlert Icon="@Icons.Material.Filled.NextWeek" Severity="Severity.Normal" Class="my-2">
+                            Next Week
+                            @string.Join(", ", nextpeople.Select(i => $"{i}"))
+                            are Off</MudAlert>
+                    </MudPaper>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                        <MudAlert Severity="Severity.Warning" Class="my-2">You have @ptoamt pending Time Off Requests</MudAlert>
+
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
         </MudItem>
@@ -38,9 +51,30 @@
     </MudGrid>
 </MudContainer>
 
-@code {
+
+@code{
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", "/home")
     };
-}
+
+    //List of PTO (Time Off) Requests that have status 1 OPEN
+    public class OffRequest
+    {
+        public DateOnly Request { get; set; }
+        public string? Type { get; set; }
+        public string? Period { get; set; }
+        public string? Approved { get; set; }
+    }
+    //this week off people Will have to check whether approved, if date falls between M-F then save name
+
+    string[] thispeople = { "Joe", "Jae", "Joo", "John" };
+    string[] nextpeople = { "Poo", "Pong", "Pack", "Ping" };
+    int ptoamt = 1;
+
+    List<OffRequest> sampRequest = new List<OffRequest>(){
+        new OffRequest { Request= new DateOnly(2023,12,23), Type="ABSENCE (by HR)", Period = "12/23/2023-1/23/2023", Approved = "N"},
+        new OffRequest { Request= new DateOnly(2023,11,11), Type="Sick day [ DAY OFF ]", Period = "11/11/2023-11/22/2023", Approved = "Y"}
+
+    };
+    }

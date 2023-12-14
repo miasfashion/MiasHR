@@ -8,7 +8,6 @@
     @*All policies listed. Search main headers in comment*@
     <MudContainer Class="d-block">
         <MudPaper Class="m-4">
-            <MudButton @ref="panel" OnClick="Close" StartIcon="@Icons.Material.Filled.SafetyCheck" />
             <MudExpansionPanels MultiExpansion="true" Elevation="0" DisableBorders="false">
                 <MudExpansionPanel>
                     <TitleContent>
@@ -3015,12 +3014,6 @@
         new BreadcrumbItem("Policies",  href: null, disabled: true)
     };
 
-    private MudButton panel { get; set; }
-    private MudExpansionPanels panels { get; set; }
-    private void Close()
-    {
-        panels.CollapseAll();
-    }
 
     //Table for Paid Vacation
     public class VacationPlan

@@ -5,17 +5,18 @@
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
     <MudBreadcrumbs Items="_breadcrumbs" />
     <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
+        <MudPaper Elevation="0" Class="mud-theme-primary">
             <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
                      @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                 <MudTabPanel OnClick="navPage" Text="Organization Chart" />
                 <MudTabPanel OnClick="navPage" Text="Employee List" />
             </MudTabs>
         </MudPaper>
-
         <MudContainer Class="d-block">
-            <MudText GutterBottom="true" Typo="Typo.h4">EMPLOYEE(S) LIST</MudText>
-            <MudTextField Class="m-5 d-flex w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+            <MudPaper Elevation="0" Class="d-flex">
+                <MudText Class="mud-theme-secondary" Inline="true" Typo="Typo.h4">EMPLOYEE(S) LIST</MudText>
+                <MudTextField Class="m-5 d-flex w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+            </MudPaper>
             <MudPaper Class="m-2 justify-content-center" Elevation="0">
                 <MudTable Items="@employeesList"
                           Class="d-flex"
