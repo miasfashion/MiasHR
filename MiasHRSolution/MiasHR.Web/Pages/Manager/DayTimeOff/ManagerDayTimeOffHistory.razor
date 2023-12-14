@@ -2,39 +2,49 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Manage Day Time Off Approval History</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Requests" />
-                <MudTabPanel OnClick="navPage" Text="Approval History" />
-            </MudTabs>
-        </MudPaper>
-        <MudPaper Class="ma-4 pa-4">
-            <MudTable Items="@ApprovalHistory">
-                <HeaderContent>
-                    <MudTh>Request Time</MudTh>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Period</MudTh>
-                    <MudTh>First Approval</MudTh>
-                    <MudTh>Second Approval</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Type">@context.DateTime</MudTd>
-                    <MudTd DataLabel="Days">@context.Name</MudTd>
-                    <MudTd DataLabel="Days">@context.Type</MudTd>
-                    <MudTd DataLabel="Days">@context.Period</MudTd>
-                    <MudTd DataLabel="Days">@context.FirstApproval</MudTd>
-                    <MudTd DataLabel="Days">@context.SecondApproval</MudTd>
-                </RowTemplate>
-            </MudTable>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-4" Typo="Typo.h4">Day Time Off History</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Requests" />
+                    <MudTabPanel OnClick="navPage" Text="Approval History" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
+            <MudPaper Class="mt-4 ma-2 pa-4">
+                <MudTable Items="@ApprovalHistory">
+                    <HeaderContent>
+                        <MudTh>Request Time</MudTh>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Type</MudTh>
+                        <MudTh>Period</MudTh>
+                        <MudTh>First Approval</MudTh>
+                        <MudTh>Second Approval</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Type">@context.DateTime</MudTd>
+                        <MudTd DataLabel="Days">@context.Name</MudTd>
+                        <MudTd DataLabel="Days">@context.Type</MudTd>
+                        <MudTd DataLabel="Days">@context.Period</MudTd>
+                        <MudTd DataLabel="Days">@context.FirstApproval</MudTd>
+                        <MudTd DataLabel="Days">@context.SecondApproval</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
         </MudPaper>
     </MudContainer>
 </MudContainer>
+
 
 @code {
     public class ApprovalRecord

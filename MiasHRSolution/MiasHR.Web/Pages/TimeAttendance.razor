@@ -1,50 +1,53 @@
 ﻿@page "/timeattendance"
 
 <PageTitle>Time & Attendance</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-
-    @* TODO: Set name to user name *@
-    
-
-    <MudPaper Class="d-inline-flex ma-4 pa-4">
-        <MudDateRangePicker Class="ma-2" Label="Date Range" @bind-DateRange="_dateRange" />
-        <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
-    </MudPaper>
-    <MudPaper Class="ma-4 pa-4">
-        <MudTable Items="@summary">
-            <HeaderContent>
-                <MudTh>Level One Count</MudTh>
-                <MudTh>Level One Minute</MudTh>
-                <MudTh>Level Two Count</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Type">@context.LevelOneCount</MudTd>
-                <MudTd DataLabel="Days">@context.LevelOneMins</MudTd>
-                <MudTd DataLabel="Days">@context.LevelTwoCount</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudPaper>
-    <MudPaper Class="ma-4 pa-4">
-        <MudTable Items="@timeAttendanceHistory">
-            <HeaderContent>
-                <MudTh>Date</MudTh>
-                <MudTh>In Out</MudTh>
-                <MudTh>Time</MudTh>
-                <MudTh>Level</MudTh>
-                <MudTh>Day Schedule</MudTh>
-                <MudTh>Reason</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Type">@context.Date</MudTd>
-                <MudTd DataLabel="Days">@context.InOut</MudTd>
-                <MudTd DataLabel="Days">@context.Time</MudTd>
-                <MudTd DataLabel="Days">@context.Level</MudTd>
-                <MudTd DataLabel="Days">@context.DaySchedule</MudTd>
-                <MudTd DataLabel="Days">@context.Reason</MudTd>
-            </RowTemplate>
-        </MudTable>
-    </MudPaper>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudText Class="ml-4" Typo="Typo.h4">Time & Attendance</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex flex-column">
+        <MudPaper Class="pa-4" Elevation="0">
+            <MudPaper Class="d-inline-flex mx-4 mb-4 pa-4">
+                <MudDateRangePicker Class="ma-2" Label="Date Range" @bind-DateRange="_dateRange" />
+                <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
+            </MudPaper>
+        </MudPaper>
+        <MudPaper Class="mx-4 pa-4" Elevation="0">
+            <MudTable Items="@summary">
+                <HeaderContent>
+                    <MudTh>Level One Count</MudTh>
+                    <MudTh>Level One Minute</MudTh>
+                    <MudTh>Level Two Count</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.LevelOneCount</MudTd>
+                    <MudTd DataLabel="Days">@context.LevelOneMins</MudTd>
+                    <MudTd DataLabel="Days">@context.LevelTwoCount</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+        <MudPaper Class="mx-4 pa-4" Elevation="0">
+            <MudTable Items="@timeAttendanceHistory">
+                <HeaderContent>
+                    <MudTh>Date</MudTh>
+                    <MudTh>In Out</MudTh>
+                    <MudTh>Time</MudTh>
+                    <MudTh>Level</MudTh>
+                    <MudTh>Day Schedule</MudTh>
+                    <MudTh>Reason</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Type">@context.Date</MudTd>
+                    <MudTd DataLabel="Days">@context.InOut</MudTd>
+                    <MudTd DataLabel="Days">@context.Time</MudTd>
+                    <MudTd DataLabel="Days">@context.Level</MudTd>
+                    <MudTd DataLabel="Days">@context.DaySchedule</MudTd>
+                    <MudTd DataLabel="Days">@context.Reason</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudContainer>
 </MudContainer>
 
 @code {
