@@ -3,44 +3,51 @@
 @inject IDialogService DialogService
 
 <PageTitle>Day Time Off Requests</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudStack Row="true">
-        <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
-        <MudSpacer />
-        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
-                   Style="width: 200px; height: 60px;">
-            Request Time Off
-        </MudButton>
-    </MudStack>
-
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Information" />
-                <MudTabPanel OnClick="navPage" Text="Request List" />
-            </MudTabs>
-        </MudPaper>
-
-        <MudPaper Class="ma-4 pa-4" Elevation="0">
-            <MudTable Items="@employeeDayTimeOffRequests">
-                <HeaderContent>
-                    <MudTh>Date</MudTh>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Used Days</MudTh>
-                    <MudTh>Remark</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Type">@context.Date</MudTd>
-                    <MudTd DataLabel="Days">@context.Type</MudTd>
-                    <MudTd DataLabel="Days">@context.UsedDays</MudTd>
-                    <MudTd DataLabel="Days">@context.Remark</MudTd>
-                </RowTemplate>
-            </MudTable>
+<MudStack Row="true">
+    <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
+    <MudSpacer />
+    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+               Style="width: 200px; height: 60px;">
+        Request Time Off
+    </MudButton>
+</MudStack>
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-2" Typo="Typo.h4">Day Time Off Request List</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Information" />
+                    <MudTabPanel OnClick="navPage" Text="Request List" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
+            <MudPaper Class="mt-4 ma-2" Elevation="0">
+                <MudTable Items="@employeeDayTimeOffRequests">
+                    <HeaderContent>
+                        <MudTh>Date</MudTh>
+                        <MudTh>Type</MudTh>
+                        <MudTh>Used Days</MudTh>
+                        <MudTh>Remark</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Type">@context.Date</MudTd>
+                        <MudTd DataLabel="Days">@context.Type</MudTd>
+                        <MudTd DataLabel="Days">@context.UsedDays</MudTd>
+                        <MudTd DataLabel="Days">@context.Remark</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
         </MudPaper>
     </MudContainer>
 </MudContainer>
-
 @code {
 
     // Breadcrumbs
