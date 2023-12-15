@@ -1,4 +1,4 @@
-﻿@page "/evaluation"
+﻿@page "/evaluation/new"
 
 <PageTitle>Self Evaluation</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -71,7 +71,7 @@
     @*TODO: Implement function to use values from entity*@
 
     //Factors (changes based on the group code)
-    public class FactorList
+    public class FactorEntry
     {
         public string? Factor { get; set; }
         public string? Grade { get; set; }
@@ -81,10 +81,10 @@
 
     //Factor grades and descriptions are in HR_EVAL_FACTOR_DETAI and has assigned point to it
     //Current HR site has Factor Code hidden in the grid
-    List<FactorList> factorLists = new List<FactorList>()
+    List<FactorEntry> factorLists = new List<FactorEntry>()
     {
-        new FactorList { Factor="Knowledge of Job",Grade="B",GradeDesc="Have a great wealth of knowledge about all job facets"},
-        new FactorList { Factor="Dedication to Work", Grade="C", GradeDesc="Completes work well enough to pass minimum standards"},
-        new FactorList { Factor="Quality Management", Grade="D", GradeDesc="Defect rate in some processes unacceptable"}
+        new FactorEntry { Factor="Knowledge of Job",Grade="B",GradeDesc="Have a great wealth of knowledge about all job facets"},
+        new FactorEntry { Factor="Dedication to Work", Grade="C", GradeDesc="Completes work well enough to pass minimum standards"},
+        new FactorEntry { Factor="Quality Management", Grade="D", GradeDesc="Defect rate in some processes unacceptable"}
     };
 }
