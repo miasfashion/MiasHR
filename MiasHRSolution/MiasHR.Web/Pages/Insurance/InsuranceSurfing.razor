@@ -2,49 +2,56 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Insurance Surfing</PageTitle>
-
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Current Insurance" />
-                <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
-            </MudTabs>
-        </MudPaper>
-        <MudPaper Class="ma-4 pa-4" Elevation="0">
-            <MudText Class="m-3" Typo="Typo.h5" GutterBottom="true">Insurance Plan Surfing</MudText>
-            <MudText>Choose Insurance Coverage (* If you need other coverage, please contact HR directly.)</MudText>
-            <MudSelect T="string" Label="Medical" AnchorOrigin="Origin.BottomCenter">
-                <MudSelectItem Value="@("Employee Only")" />
-                <MudSelectItem Value="@("Employee And Spouse")" />
-                <MudSelectItem Value="@("Employee And Children")" />
-                <MudSelectItem Value="@("Family")" />
-            </MudSelect>
-            <MudText>MEDICAL</MudText>
-            <MudSelect T="string" Label="Dental" AnchorOrigin="Origin.BottomCenter">
-                <MudSelectItem Value="@("Employee Only")" />
-                <MudSelectItem Value="@("Employee And Spouse")" />
-                <MudSelectItem Value="@("Employee And Children")" />
-                <MudSelectItem Value="@("Family")" />
-            </MudSelect>
-            <MudText>DENTAL</MudText>
-            <MudSelect T="string" Label="Vision" AnchorOrigin="Origin.BottomCenter">
-                <MudSelectItem Value="@("Employee Only")" />
-                <MudSelectItem Value="@("Employee And Spouse")" />
-                <MudSelectItem Value="@("Employee And Children")" />
-                <MudSelectItem Value="@("Family")" />
-            </MudSelect>
-            <MudText>VISION</MudText>
-            <MudSelect T="string" Label="Life" AnchorOrigin="Origin.BottomCenter">
-                <MudSelectItem Value="@("Employee Only")" />
-            </MudSelect>
-            <MudText>LIFE</MudText>
-            <MudButton Class="m-3" OnClick="doSomething" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Size="Size.Large">Inquiry</MudButton>
-            <MudAlert Class="m-2" Severity="Severity.Warning">This page is not an enrollment application form. You have to submit a hard copy of the health insurance enrollement application paper.</MudAlert>
-            <MudAlert Class="m-2" Severity="Severity.Warning">You can download a plan summary information when you click each plan name.</MudAlert>
-
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-4" Typo="Typo.h4">Insurance Surfing</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+                    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-block" Elevation="0">
+            <MudPaper Class="mt-4 ma-2 pa-4" Elevation="1">
+                <MudText Typo="Typo.subtitle2">Choose Insurance Coverage (* If you need other coverage, please contact HR directly.)</MudText>
+                <MudSelect T="string" Label="Medical" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="@("Employee Only")" />
+                    <MudSelectItem Value="@("Employee And Spouse")" />
+                    <MudSelectItem Value="@("Employee And Children")" />
+                    <MudSelectItem Value="@("Family")" />
+                </MudSelect>
+                <MudText>MEDICAL</MudText>
+                <MudSelect T="string" Label="Dental" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="@("Employee Only")" />
+                    <MudSelectItem Value="@("Employee And Spouse")" />
+                    <MudSelectItem Value="@("Employee And Children")" />
+                    <MudSelectItem Value="@("Family")" />
+                </MudSelect>
+                <MudText>DENTAL</MudText>
+                <MudSelect T="string" Label="Vision" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="@("Employee Only")" />
+                    <MudSelectItem Value="@("Employee And Spouse")" />
+                    <MudSelectItem Value="@("Employee And Children")" />
+                    <MudSelectItem Value="@("Family")" />
+                </MudSelect>
+                <MudText>VISION</MudText>
+                <MudSelect T="string" Label="Life" AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="@("Employee Only")" />
+                </MudSelect>
+                <MudText>LIFE</MudText>
+                <MudButton Class="m-3" OnClick="doSomething" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Size="Size.Large">Inquiry</MudButton>
+                <MudAlert Class="m-2" Severity="Severity.Warning">This page is not an enrollment application form. You have to submit a hard copy of the health insurance enrollement application paper.</MudAlert>
+                <MudAlert Class="m-2" Severity="Severity.Warning">You can download a plan summary information when you click each plan name.</MudAlert>
+            </MudPaper>
         </MudPaper>
     </MudContainer>
 </MudContainer>

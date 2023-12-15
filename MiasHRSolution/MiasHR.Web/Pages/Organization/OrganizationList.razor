@@ -2,35 +2,42 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Employee List</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0" Class="mud-theme-primary">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Organization Chart" />
-                <MudTabPanel OnClick="navPage" Text="Employee List" />
-            </MudTabs>
-        </MudPaper>
-        <MudContainer Class="d-block">
-            <MudPaper Elevation="0" Class="d-flex">
-                <MudText Class="mud-theme-secondary" Inline="true" Typo="Typo.h4">EMPLOYEE(S) LIST</MudText>
-                <MudTextField Class="m-5 d-flex w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
-            </MudPaper>
-            <MudPaper Class="m-2 justify-content-center" Elevation="0">
-                <MudTable Items="@employeesList"
-                          Class="d-flex"
-                          Striped="@true" Dense="@dense" Hover="@hover">
-                    <HeaderContent>
-                        <MudTh>NAME</MudTh>
-                        <MudTh>ORG.</MudTh>
-                        <MudTh>ORG.TEL</MudTh>
-                        <MudTh>EXT.</MudTh>
-                        <MudTh>E-MAIL</MudTh>
-                    </HeaderContent>
 
-                    <RowTemplate>
-                        <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-4" Typo="Typo.h4">Employee List</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Organization Chart" />
+                    <MudTabPanel OnClick="navPage" Text="Employee List" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
+            <MudContainer Class="d-block">
+                <MudTextField Class="m-5 d-flex w-25" @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" OnAdornmentClick="doSomething" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+                <MudPaper Class="m-2 justify-content-center" Elevation="0">
+                    <MudTable Items="@employeesList"
+                              Class="d-flex"
+                              Striped="@true" Dense="@dense" Hover="@hover">
+                        <HeaderContent>
+                            <MudTh>NAME</MudTh>
+                            <MudTh>ORG.</MudTh>
+                            <MudTh>ORG.TEL</MudTh>
+                            <MudTh>EXT.</MudTh>
+                            <MudTh>E-MAIL</MudTh>
+                        </HeaderContent>
+
+                        <RowTemplate>
+                            <MudTd DataLabel="Name" Class="w-25">@context.Name</MudTd>
                             <MudTd DataLabel="Org">@context.Org</MudTd>
                             <MudTd DataLabel="OrgTel">@context.OrgTel</MudTd>
                             <MudTd DataLabel="Ext">@context.Ext</MudTd>
@@ -39,8 +46,9 @@
                     </MudTable>
                 </MudPaper>
             </MudContainer>
-        </MudContainer>
+        </MudPaper>
     </MudContainer>
+</MudContainer>
 
     @code {
     public string Search { get; set; }

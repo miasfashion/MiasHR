@@ -2,23 +2,28 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Current Insurance</PageTitle>
-
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Current Insurance" />
-                <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
-            </MudTabs>
-        </MudPaper>
-        <MudPaper Class="ma-4 pa-4" Elevation="0">
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-4" Typo="Typo.h4">Current Insurance</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Current Insurance" />
+                    <MudTabPanel OnClick="navPage" Text="Insurance Surfing" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
             <MudTable Items="@employeeIns"
-                      Class="d-flex m-5 ml-4 w-75"
+                      Class="d-flex mt-4 ma-2"
                       Striped="@strip" Dense="@dense" Hover="@hover">
-
                 <HeaderContent>
                     @*TODO: Length of MudTh string is changing where the table gets divided.
                     Currently Set MudTd Class of Name as w-50 to match size*@

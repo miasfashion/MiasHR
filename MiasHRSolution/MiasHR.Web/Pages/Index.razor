@@ -11,7 +11,7 @@
         <MudItem xs="12" sm="12" md="4">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
         </MudItem>
-               <MudItem xs="12" sm="6">
+        <MudItem xs="12" sm="6">
             <MudGrid>
                 <MudItem xs="12">
                     <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
@@ -23,17 +23,20 @@
                         <MudAlert Icon="@Icons.Material.Filled.NextWeek" Severity="Severity.Normal" Class="my-2">
                             Next Week
                             @string.Join(", ", nextpeople.Select(i => $"{i}"))
-                            are Off</MudAlert>
+                            are Off
+                        </MudAlert>
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12">
                     <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
                         <MudAlert Severity="Severity.Warning" Class="my-2">You have @ptoamt pending Time Off Requests</MudAlert>
-                        <MudText>@sampRequest[0], @sampRequest[1]</MudText>
-                        @for (int i = 0; i<ptoamt; i++)
+                        @*Added Progress ex. Domino pizza tracker just so dashboard doesn't look empty*@
+                        @foreach (var item in sampRequest)
                         {
-                            <MudText Typo="Typo.body1">Reqeust for @sampRequest[i].Period is still pending.</MudText>
-                            <MudProgressLinear Color="@colors[i % colors.Length]" Striped="true" Size="Size.Medium" Value="50" Class="my-1"/>
+                            <MudText Typo="Typo.body1">Request for @item.Period is still pending</MudText>
+                            <MudProgressLinear Color="@colors[sampRequest.IndexOf(item) % colors.Length]" Striped="true" Size="Size.Large" Value="50" Class="my-2">
+                                <MudText>Waiting for Approve...</MudText>
+                            </MudProgressLinear>
                         }
                     </MudPaper>
                 </MudItem>
@@ -57,7 +60,7 @@
 </MudContainer>
 
 
-@code{
+@code {
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", "/home")
@@ -74,16 +77,16 @@
     //this week off people Will have to check whether approved, if date falls between M-F then save name
     string[] thispeople = { "Joe", "Jae", "Joo", "John" };
     string[] nextpeople = { "Poo", "Pong", "Pack", "Ping" };
-    //Calculate the pending 
+    //Calculate the pending
     int ptoamt = 1;
     //Used to switch Colors
     MudBlazor.Color[] colors = { MudBlazor.Color.Primary, MudBlazor.Color.Secondary, MudBlazor.Color.Success, MudBlazor.Color.Info, MudBlazor.Color.Warning, MudBlazor.Color.Error };
 
 
-    
+
 
     List<OffRequest> sampRequest = new List<OffRequest>(){
         new OffRequest { Request= new DateOnly(2023,12,23), Type="ABSENCE (by HR)", Period = "12/23/2023-1/23/2023", Approved = "N"},
-        new OffRequest { Request= new DateOnly(2023,11,11), Type="Sick day [ DAY OFF ]", Period = "11/11/2023-11/22/2023", Approved = "Y"}
+        new OffRequest { Request= new DateOnly(2023,11,11), Type="Sick day [ DAY OFF ]", Period = "11/11/2023-11/22/2023", Approved = "N"}
     };
-    }
+}

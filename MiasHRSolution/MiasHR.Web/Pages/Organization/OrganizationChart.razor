@@ -2,18 +2,30 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Organization Chart</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    <MudContainer Class="d-inline-flex">
-        <MudPaper Elevation="0">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                     @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                <MudTabPanel OnClick="navPage" Text="Organization Chart" />
-                <MudTabPanel OnClick="navPage" Text="Employee List" />
-            </MudTabs>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
+        </MudHidden>
+        <MudText Class="ml-4" Typo="Typo.h4">Self Evaluation: 2023 Year End</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudPaper Elevation="0">
+                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
+                @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
+                    <MudTabPanel OnClick="navPage" Text="Organization Chart" />
+                    <MudTabPanel OnClick="navPage" Text="Employee List" />
+                </MudTabs>
+            </MudPaper>
+        </MudHidden>
+        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
+            @* TODO: ADD PAGE CONTENT *@
         </MudPaper>
     </MudContainer>
 </MudContainer>
+
 @code {
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()

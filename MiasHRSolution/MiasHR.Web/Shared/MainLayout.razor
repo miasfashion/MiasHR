@@ -16,8 +16,10 @@
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        @Body
-        <Footer />
+        <MudContainer Class="mt-16 px-8">
+            @Body
+            <Footer />
+        </MudContainer>
     </MudMainContent>
     <MudScrollToTop TopOffset="100">
         <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ArrowCircleUp" />

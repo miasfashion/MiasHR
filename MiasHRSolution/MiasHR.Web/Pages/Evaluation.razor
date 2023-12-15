@@ -1,22 +1,23 @@
 ﻿@page "/evaluation"
 
 <PageTitle>Self Evaluation</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
-
-    <MudBreadcrumbs Items="_breadcrumbs" />
-    <MudContainer Class="d-block">
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudText Class="ml-4" Typo="Typo.h4">Self Evaluation: 2023 Year End</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex flex-column">
         @*TODO: Term and Year should be taken from the data sources
         Information located in HR_General_Code class= 19, org_code = MIas
         *@
-        <MudText Class="p-2 " Typo="Typo.h3">Self Evaluation: 2023 Year End</MudText>
-        <MudPaper Class="m-3 p-3 w-25">
-            <MudTextField Class="m-3" @bind-Value="year" Label="Year" Variant="Variant.Outlined" Validation="@(new Func<string, IEnumerable<string>>(YearCheck))" Required="true"
+        <MudPaper Class="d-flex ma-4">
+            <MudTextField Class="ma-2" @bind-Value="year" Label="Year" Variant="Variant.Outlined" Validation="@(new Func<string, IEnumerable<string>>(YearCheck))" Required="true"
                           RequiredError="Type Year to Search" />
-            <MudSelect Class="m-3" T="string" @bind-Value="@defaultTerm" Label="Term" AnchorOrigin="Origin.BottomCenter" Required="true" RequiredError="Choose Term to Evaluate">
+            <MudSelect Class="ma-2" T="string" @bind-Value="@defaultTerm" Label="Term" AnchorOrigin="Origin.BottomCenter" Required="true" RequiredError="Choose Term to Evaluate">
                 <MudSelectItem Value="@("Half")" />
                 <MudSelectItem Value="@("Year End")" />
             </MudSelect>
-            <MudButton Class="m-3" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Search" Color="Color.Primary">Search</MudButton>
+            <MudButton Class="ma-2" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Search" Color="Color.Primary">Search</MudButton>
         </MudPaper>
         <MudTable Items="@factorLists"
                   Class="d-flex m-5 ml-4 w-75"
@@ -28,9 +29,9 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Factor">@context.Factor</MudTd>
-                    <MudTd DataLabel="Grade">@context.Grade</MudTd>
-                    <MudTd DataLabel="GradeDesc">@context.GradeDesc</MudTd>
-                </RowTemplate>
+                <MudTd DataLabel="Grade">@context.Grade</MudTd>
+                <MudTd DataLabel="GradeDesc">@context.GradeDesc</MudTd>
+            </RowTemplate>
         </MudTable>
         <MudTextField Class="m-3" @bind-Value="comment" Label="Comment" Variant="Variant.Outlined" />
         <MudButton Class="m-4 float-end" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary">Submit</MudButton>
