@@ -1,22 +1,30 @@
 ﻿@page "/policies"
+
 <PageTitle>Policies</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 @*All policies listed. Search main headers in comment*@
 <MudContainer Class="d-block">
     <MudContainer Class="d-flex">
-        <MudText Class="ml-4" Typo="Typo.h4">Policies</MudText>
+        <MudText Class="ma-4" Typo="Typo.h4">Policies</MudText>
     </MudContainer>
-    <MudButtonGroup Variant="Variant.Filled">
-                         <MudButton OnClick="@ExpandClick" >Expand All</MudButton>
-                         <MudButton OnClick="@CollapseClick" >Collapse All</MudButton>
-</MudButtonGroup>
+    <MudButton Variant="Variant.Filled" OnClick="@ExpandClick">
+        @if (PanelsExpanded)
+        {
+            <MudIcon Icon="@Icons.Material.Filled.ExpandLess" />
+        }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Filled.ExpandMore" />
+        }
+        @(PanelsExpanded ? "Collapse" : "Expand") All
+    </MudButton>
     <MudPaper Class="d-flex flex-column">
         <MudContainer Class="d-flex justify-content-left">
 
         </MudContainer>
 
         <MudExpansionPanels @ref="PanelsParent" MultiExpansion="true" Elevation="0" DisableBorders="false">
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle">
                 <TitleContent>
                     <MudText Typo="Typo.h4">Welcome to our team!</MudText>
                 </TitleContent>
@@ -49,7 +57,7 @@
             </MudExpansionPanel>
 
             @*********Employment Policies Section*********@
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle">
                 <TitleContent>
                     <MudText Typo="Typo.h5">EMPLOYMENT POLICIES</MudText>
                 </TitleContent>
@@ -484,7 +492,7 @@
             </MudExpansionPanel>
 
             @*********Payment Procedures Section*********@
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle" >
                 <TitleContent>
                     <MudText Typo="Typo.h5">PAYMENT PROCEDURES</MudText>
                 </TitleContent>
@@ -727,7 +735,7 @@
             </MudExpansionPanel>
 
             @*********Meal & Rest Break Periods Policy Section*********@
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle" >
                 <TitleContent>
                     <MudText Typo="Typo.h5">MEAL & REST BREAK PERIODS POLICY</MudText>
                 </TitleContent>
@@ -825,7 +833,7 @@
             </MudExpansionPanel>
 
             @*********Code of Conduct Section*********@
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle">
                 <TitleContent>
                     <MudText Typo="Typo.h5">CODE OF CONDUCT</MudText>
                 </TitleContent>
@@ -1664,7 +1672,7 @@
             </MudExpansionPanel>
 
             @*********Leaves Of Absence Section*********@
-            <MudExpansionPanel>
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle">
                 <TitleContent>
                     <MudText Typo="Typo.h5">LEAVES OF ABSENCE</MudText>
                 </TitleContent>
@@ -2382,8 +2390,8 @@
                     </ChildContent>
                 </MudExpansionPanel>
 
-                @*********Company Policies & Practices Section*********@
-                <MudExpansionPanel>
+            @*********Company Policies & Practices Section*********@
+            <MudExpansionPanel IsExpandedChanged="@PanelToggle">
                     <TitleContent>
                         <MudText Typo="Typo.h5">COMPANY POLICIES & PRACTICES</MudText>
                     </TitleContent>
@@ -3012,14 +3020,13 @@
         </MudPaper>
     </MudContainer>
 
-    @code {
-        // Breadcrumbs
+@code {
+    // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", href: "/home"),
         new BreadcrumbItem("Policies",  href: null, disabled: true)
     };
-
 
     //Table for Paid Vacation
     public class VacationPlan
@@ -3039,21 +3046,51 @@
     // Panel Expansion Control
     private List<MudExpansionPanels> _panels = new();
     public MudExpansionPanels PanelsParent { set => _panels.Add(value); }
-    public bool PanelExpanded { get; set; }
+    public bool PanelsExpanded { get; set; }
+    public int expandedCount = 0;
 
     public void ExpandClick()
     {
-        foreach (var p in _panels)
+        if (PanelsExpanded)
         {
-            p.ExpandAll();
+            foreach (var p in _panels)
+            {
+                p.CollapseAll();
+            }
+            PanelsExpanded = false;
+            expandedCount = 0;
+        }
+        else
+        {
+            expandedCount = 0;
+            foreach (var p in _panels)
+            {
+                p.ExpandAll();
+            }
+            PanelsExpanded = true;
         }
     }
 
-    public void CollapseClick()
+    public void PanelToggle(bool expanded)
     {
-        foreach (var p in _panels)
+        if (expanded)
         {
-            p.CollapseAll();
+            expandedCount++;
+        }
+        else
+        {
+            expandedCount--;
+        }
+
+        Console.WriteLine("toggled : " + expandedCount);
+
+        if (expandedCount == 0)
+        {
+            PanelsExpanded = false;
+        }
+        else
+        {
+            PanelsExpanded = true;
         }
     }
 }
