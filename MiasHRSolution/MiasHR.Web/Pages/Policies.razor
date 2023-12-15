@@ -8,7 +8,6 @@
     </MudContainer>
     <MudPaper Class="d-flex flex-column">
         <MudContainer Class="d-flex justify-content-left">
-            <MudButton @ref="panel" OnClick="Close" StartIcon="@Icons.Material.Filled.KeyboardArrowDown" />
         </MudContainer>
         <MudExpansionPanels MultiExpansion="true" Elevation="0" DisableBorders="false">
             <MudExpansionPanel>
@@ -3015,12 +3014,6 @@
         new BreadcrumbItem("Policies",  href: null, disabled: true)
     };
 
-    private MudButton panel { get; set; }
-    private MudExpansionPanels panels { get; set; }
-    private void Close()
-    {
-        panels.CollapseAll();
-    }
 
     //Table for Paid Vacation
     public class VacationPlan

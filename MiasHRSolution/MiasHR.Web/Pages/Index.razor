@@ -3,7 +3,27 @@
     @*<MudBreadcrumbs Items="_breadcrumbs" />*@
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
-            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+            <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                @foreach (var item in sampRequest)
+                {
+                    @if (item.Approved == "Y")
+                    {
+                        var today = DateTime.Today;
+
+                        if (today >= item.From && today <= item.To)
+                        {
+                            <MudText>You have On going Time Off from @item.From to @item.To</MudText>
+                            <br />
+                        }
+                        else if (today<item.From)
+                        {
+                            <MudText>You have Upcoming Time Off Schedule from @item.From to @item.To</MudText>
+                            <br />
+                        }
+
+                    }
+                }
+            </MudPaper>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
@@ -14,10 +34,37 @@
         <MudItem xs="12" sm="6">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                        <MudAlert Icon="@Icons.Material.Filled.WorkHistory" Severity="Severity.Normal" Class="my-2">
+                            This Week
+                            @string.Join(", ", thispeople.Select(i => $"{i}"))
+                            are Off
+                        </MudAlert>
+                        <MudAlert Icon="@Icons.Material.Filled.NextWeek" Severity="Severity.Normal" Class="my-2">
+                            Next Week
+                            @string.Join(", ", nextpeople.Select(i => $"{i}"))
+                            are Off
+                        </MudAlert>
+                    </MudPaper>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;"></MudPaper>
+                    <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                        <MudAlert Severity="Severity.Warning" Class="my-2">You have @ptoamt pending Time Off Requests</MudAlert>
+                        @*Added Progress ex. Domino pizza tracker just so dashboard doesn't look empty*@
+                        @foreach (var item in sampRequest)
+                        {
+                            @if (item.Approved == "N")
+                            {
+                                <MudText Typo="Typo.body1">
+                                    Request for @item.From to @item.To 
+                                    is still pending
+                                </MudText>
+                                <MudProgressLinear Color="@colors[sampRequest.IndexOf(item) % colors.Length]" Striped="true" Size="Size.Large" Value="50" Class="my-2">
+                                    <MudText>Waiting for Approve...</MudText>
+                                </MudProgressLinear>
+                            }
+                        }
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
         </MudItem>
@@ -38,9 +85,36 @@
     </MudGrid>
 </MudContainer>
 
+
 @code {
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", "/home")
+    };
+
+    //List of PTO (Time Off) Requests that have status 1 OPEN
+    public class OffRequest
+    {
+        public DateTime Request { get; set; }
+        public string? Type { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+        public string? Approved { get; set; }
+    }
+    //this week off people Will have to check whether approved, if date falls between M-F then save name
+    string[] thispeople = { "Joe", "Jae", "Joo", "John" };
+    string[] nextpeople = { "Poo", "Pong", "Pack", "Ping" };
+    //Calculate the pending
+    int ptoamt = 1;
+    //Used to switch Colors
+    MudBlazor.Color[] colors = { MudBlazor.Color.Primary, MudBlazor.Color.Secondary, MudBlazor.Color.Success, MudBlazor.Color.Info, MudBlazor.Color.Warning, MudBlazor.Color.Error };
+
+
+
+
+    List<OffRequest> sampRequest = new List<OffRequest>(){
+        new OffRequest { Request= new DateTime(2023,12,23), Type="ABSENCE (by HR)", From = new DateTime(2023,12,23), To = new DateTime(2024,01,23), Approved = "N"},
+        new OffRequest { Request= new DateTime(2023,12,14), Type="Sick day [ DAY OFF ]", From = new DateTime(2023,12,24), To = new DateTime(2024,1,22), Approved = "Y"},
+        new OffRequest { Request= new DateTime(2023,11,11), Type="Sick day [ DAY OFF ]", From = new DateTime(2023,12,11), To = new DateTime(2023,12,22), Approved = "Y"}
     };
 }
