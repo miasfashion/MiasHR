@@ -36,19 +36,23 @@
                         <MudTh>Type</MudTh>
                         <MudTh>Used Days</MudTh>
                         <MudTh>Remark</MudTh>
+                        <MudTh>From</MudTh>
+                        <MudTh>To</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Type">@context.Date</MudTd>
-                        <MudTd DataLabel="Days">@context.Type</MudTd>
-                        <MudTd DataLabel="Days">@context.UsedDays</MudTd>
-                        <MudTd DataLabel="Days">@context.Remark</MudTd>
+                        <MudTd DataLabel="Date">@context.Date</MudTd>
+                        <MudTd DataLabel="Type">@context.Type</MudTd>
+                        <MudTd DataLabel="UsedDays">@context.UsedDays</MudTd>
+                        <MudTd DataLabel="Remark">@context.Remark</MudTd>
+                        <MudTd DataLabel="From">@context.From</MudTd>
+                        <MudTd DataLabel="To">@context.To</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
         </MudPaper>
     </MudContainer>
 </MudContainer>
-@code {
+    @code {
 
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -63,13 +67,15 @@
         public string? Type { get; set; }
         public decimal UsedDays { get; set; }
         public string? Remark { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 
     List<employeeDayTimeOffRequest> employeeDayTimeOffRequests = new List<employeeDayTimeOffRequest>
     {
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,9,11), Type="Business Related", UsedDays=0, Remark="Remote work"},
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,22), Type="VAC", UsedDays=4.25M, Remark="Vacation"},
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,30), Type="Business Related", UsedDays=0, Remark="Remote work"}
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,9,11), Type="Business Related", UsedDays=5.25M, Remark="Remote work", From = new DateTime(2023,12,22,8,0,0), To = new DateTime(2023,12,30,10,0,0)},
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,22), Type="VAC", UsedDays= 1, Remark="Vacation", From = new DateTime(2023,12,24,0,0,0), To = new DateTime(2023,12,25,0,0,0)},
+        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,30), Type="Business Related", UsedDays=0.25M, Remark="Remote work", From = new DateTime(2023,12,31,13,0,0), To = new DateTime(2023,12,31,15,0,0)}
     };
 
     // Navigation Tab

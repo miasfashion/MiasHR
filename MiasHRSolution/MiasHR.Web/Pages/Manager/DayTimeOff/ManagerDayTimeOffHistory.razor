@@ -27,17 +27,19 @@
                         <MudTh>Request Time</MudTh>
                         <MudTh>Name</MudTh>
                         <MudTh>Type</MudTh>
-                        <MudTh>Period</MudTh>
+                        <MudTh>From</MudTh>
+                        <MudTh>To</MudTh>
                         <MudTh>First Approval</MudTh>
                         <MudTh>Second Approval</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Type">@context.DateTime</MudTd>
-                        <MudTd DataLabel="Days">@context.Name</MudTd>
-                        <MudTd DataLabel="Days">@context.Type</MudTd>
-                        <MudTd DataLabel="Days">@context.Period</MudTd>
-                        <MudTd DataLabel="Days">@context.FirstApproval</MudTd>
-                        <MudTd DataLabel="Days">@context.SecondApproval</MudTd>
+                        <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
+                            <MudTd DataLabel="Name">@context.Name</MudTd>
+                            <MudTd DataLabel="Type">@context.Type</MudTd>
+                            <MudTd DataLabel="From">@context.From</MudTd>
+                            <MudTd DataLabel="To">@context.To</MudTd>
+                            <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
+                            <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
@@ -46,13 +48,14 @@
 </MudContainer>
 
 
-@code {
+    @code {
     public class ApprovalRecord
     {
         public DateTime DateTime { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public string Period { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public bool FirstApproval { get; set; }
         public bool SecondApproval { get; set; }
     }
@@ -60,11 +63,11 @@
     List<ApprovalRecord> ApprovalHistory = new List<ApprovalRecord>
     {
         new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
-                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true},
+                            From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=true},
         new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
-                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true},
+                            From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=true},
         new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
-                            Period="11/25/2023 - 11/29/2023", FirstApproval=true, SecondApproval=true}
+                             From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=true}
     };
 
     // Breadcrumbs
