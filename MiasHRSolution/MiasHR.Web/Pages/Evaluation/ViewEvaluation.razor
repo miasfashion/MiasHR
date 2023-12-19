@@ -1,0 +1,91 @@
+﻿@page "/evaluation/{Type}/{Year:int}/{Term}/"
+
+<PageTitle>Self Evaluation</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudText Class="ml-4" Typo="Typo.h4">Self Evaluation: 2023 Year End</MudText>
+    </MudContainer>
+    <MudContainer Class="d-flex flex-column">
+        <MudPaper Class="ma-4 pa-4">
+            @*TODO: Term and Year should be taken from the data sources
+            Information located in HR_General_Code class= 19, org_code = MIas
+            *@
+            <MudText>Type: {@Type} | Year: {@Year} | Term: {@Term}</MudText>
+            <MudTable Items="@factorLists"
+                      Class="d-flex m-5 ml-4 w-75"
+                      Striped="@strip" Dense="@dense" Hover="@hover">
+                <HeaderContent>
+                    <MudTh>Factor</MudTh>
+                    <MudTh>Grade</MudTh>
+                    <MudTh>Grade Description</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Factor">@context.Factor</MudTd>
+                    <MudTd DataLabel="Grade">@context.Grade</MudTd>
+                    <MudTd DataLabel="GradeDesc">@context.GradeDesc</MudTd>
+                </RowTemplate>
+            </MudTable>
+            <MudTextField Class="m-3" @bind-Value="comment" Label="Comment" Variant="Variant.Outlined" />
+            <MudButton Class="m-4 float-end" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary">Submit</MudButton>
+        </MudPaper>
+    </MudContainer>
+</MudContainer>
+
+@code {
+    [Parameter]
+    public string? Type { get; set; }
+    [Parameter]
+    public int? Year { get; set; }
+    [Parameter]
+    public string? Term { get; set; }
+
+    private string? comment = "";
+
+    private bool dense = true;
+    private bool hover = true;
+    private bool strip = true;
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("Self Evaluation",  href: "/evaluation"),
+        new BreadcrumbItem("New Evaluation",  href: null, disabled: true)
+    };
+
+    //Check valid year length
+    private IEnumerable<string> YearCheck(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Year is required!";
+            yield break;
+        }
+        if (pw.Length != 4)
+        {
+            yield return "Type correct year";
+            yield break;
+        }
+    }
+
+    @*TODO: Implement function to use values from entity*@
+
+    //Factors (changes based on the group code)
+    public class FactorEntry
+    {
+        public string? Factor { get; set; }
+        public string? Grade { get; set; }
+        public string? GradeDesc { get; set; }
+    }
+
+
+    //Factor grades and descriptions are in HR_EVAL_FACTOR_DETAI and has assigned point to it
+    //Current HR site has Factor Code hidden in the grid
+    List<FactorEntry> factorLists = new List<FactorEntry>()
+    {
+        new FactorEntry { Factor="Knowledge of Job",Grade="B",GradeDesc="Have a great wealth of knowledge about all job facets"},
+        new FactorEntry { Factor="Dedication to Work", Grade="C", GradeDesc="Completes work well enough to pass minimum standards"},
+        new FactorEntry { Factor="Quality Management", Grade="D", GradeDesc="Defect rate in some processes unacceptable"}
+    };
+}

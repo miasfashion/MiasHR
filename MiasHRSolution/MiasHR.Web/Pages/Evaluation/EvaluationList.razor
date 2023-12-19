@@ -1,0 +1,94 @@
+﻿@page "/evaluation"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Self Evaluation</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudContainer Class="d-flex">
+        <MudText Class="ml-4" Typo="Typo.h4">Evaluation</MudText>
+    </MudContainer>
+    <MudContainer Class="d-block">
+        <MudTable Items="@evaluations"
+                  Class="d-flex mt-4 ma-2"
+                  Striped="@strip" Dense="@dense" Hover="@hover">
+            <ColGroup>
+                <col />
+                <col />
+                <col />
+                <col style="width: 100px;"/>
+            </ColGroup>
+            <HeaderContent>
+                @*TODO: Length of MudTh string is changing where the table gets divided.
+                Currently Set MudTd Class of Name as w-50 to match size*@
+                <MudTh>Year</MudTh>
+                <MudTh>Term</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Year">@context.Year</MudTd>
+                <MudTd DataLabel="Term">@context.Term</MudTd>
+                <MudTd DataLabel="Status">@context.Status</MudTd>
+                <MudTd>
+                    @if(context.Status == "Pending")
+                    {
+                        <MudButton OnClick=@(()=> NavEval("pending", context.Year, context.Term)) Class="mud-theme-secondary">Begin</MudButton>
+                    } 
+                    else if(context.Status == "Complete")
+                    {
+                        <MudButton OnClick=@(()=> NavEval("complete", context.Year, context.Term)) Class="mud-theme-primary">View</MudButton>
+                    }
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudContainer>
+</MudContainer>
+
+@code {
+    private bool dense = false;
+    private bool hover = true;
+    private bool strip = true;
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/home"),
+        new BreadcrumbItem("Self Evaluation",  href: null, disabled: true)
+    };
+
+    //Check valid year length
+    private IEnumerable<string> YearCheck(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Year is required!";
+            yield break;
+        }
+        if (pw.Length != 4)
+        {
+            yield return "Type correct year";
+            yield break;
+        }
+    }
+
+    //Evaluation
+    public class EvaluationEntry
+    {
+        public int? Year { get; set; }
+        public string? Term { get; set; }
+        public string? Status { get; set; }
+    }
+
+    public List<EvaluationEntry> evaluations = new List<EvaluationEntry>()
+    {
+        new EvaluationEntry(){ Year = 2023, Term = "Year End", Status = "Pending"},
+        new EvaluationEntry(){ Year = 2023, Term = "Half", Status = "Complete"},
+        new EvaluationEntry(){ Year = 2022, Term = "Year End", Status = "Complete"},
+        new EvaluationEntry(){ Year = 2022, Term = "Half", Status = "Complete"}
+    };
+
+    private void NavEval(string type, int? year, string? term)
+    {
+        NavigationManager.NavigateTo("/evaluation/"+ type + "/" + year + "/" + term, true);
+    }
+}
