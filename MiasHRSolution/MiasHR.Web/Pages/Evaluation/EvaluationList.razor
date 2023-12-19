@@ -1,4 +1,5 @@
 ﻿@page "/evaluation"
+@inject NavigationManager NavigationManager
 
 <PageTitle>Self Evaluation</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -31,11 +32,11 @@
                 <MudTd>
                     @if(context.Status == "Pending")
                     {
-                        <MudButton Class="mud-theme-secondary">Begin</MudButton>
+                        <MudButton OnClick=@(()=> NavEval("pending", context.Year, context.Term)) Class="mud-theme-secondary">Begin</MudButton>
                     } 
-                    else
+                    else if(context.Status == "Complete")
                     {
-                        <MudButton Class="mud-theme-primary">View</MudButton>
+                        <MudButton OnClick=@(()=> NavEval("complete", context.Year, context.Term)) Class="mud-theme-primary">View</MudButton>
                     }
                 </MudTd>
             </RowTemplate>
@@ -85,4 +86,9 @@
         new EvaluationEntry(){ Year = 2022, Term = "Year End", Status = "Complete"},
         new EvaluationEntry(){ Year = 2022, Term = "Half", Status = "Complete"}
     };
+
+    private void NavEval(string type, int? year, string? term)
+    {
+        NavigationManager.NavigateTo("/evaluation/"+ type + "/" + year + "/" + term, true);
+    }
 }
