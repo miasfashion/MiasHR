@@ -6,12 +6,21 @@
     <MudContainer Class="d-flex">
         <MudText Class="ml-4" Typo="Typo.h4">Evaluations</MudText>
     </MudContainer>
-    <MudContainer Class="d-flex">
+    <MudContainer Class="d-flex mud-theme-primary">
         @* TODO: ADD PAGE CONTENT *@
+        <MudPaper Class="pa-4 w-50" Elevation="1">
+            <MudSelect T="string" Label="Select Employee to Evaluate" >
+                <MudSelectItem Value="@all">@all</MudSelectItem>
+                    @foreach (var employee in employees)
+                {
+                    <MudSelectItem T="string" Value="@employee">@employee</MudSelectItem>
+                }
+            </MudSelect>
+        </MudPaper>
     </MudContainer>
 </MudContainer>
 
-@code {
+    @code {
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
@@ -19,5 +28,12 @@
         new BreadcrumbItem("Manager", href: "/manager/home"),
         new BreadcrumbItem("Evaluations", href: null, disabled: true)
     };
+
+    private string all = "All";
+    private string[] employees =
+        {
+            "Paul","Sang","James"
+    };
+
 }
 
