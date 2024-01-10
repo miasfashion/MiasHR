@@ -1,5 +1,6 @@
 ﻿@page "/manager/daytimeoff/requests"
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -20,13 +21,73 @@
                 </MudTabs>
             </MudPaper>
         </MudHidden>
-        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
-            @* TODO: ADD PAGE CONTENT. Need to accept Time Off Request*@
+        <MudPaper Class="d-flex flex-grow-1" Elevation="0">
+            <MudTable Items="@PendingRequests">
+                <HeaderContent>
+                    <MudTh>Request Time</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>From</MudTh>
+                    <MudTh>To</MudTh>
+                    <MudTh>First Approval</MudTh>
+                    <MudTh>Second Approval</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Type">@context.Type</MudTd>
+                    <MudTd DataLabel="From">@context.From</MudTd>
+                    <MudTd DataLabel="To">@context.To</MudTd>
+                    <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
+                    <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
+                    <MudTd>
+                        <MudButton OnClick="View" Class="mud-theme-primary">View</MudButton>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
         </MudPaper>
     </MudContainer>
 </MudContainer>
 
 @code {
+    private bool dense = false;
+    private bool hover = true;
+    private bool strip = true;
+
+    public class PendingRequest
+    {
+        public DateTime DateTime { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+        public bool FirstApproval { get; set; }
+        public bool SecondApproval { get; set; }
+    }
+
+    public List<PendingRequest> PendingRequests = new List<PendingRequest>()
+    {
+        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
+                            From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
+        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
+                            From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
+        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
+                             From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
+    };
+
+    //DayTimeOff View
+    private void View()
+    {
+        var parameters = new DialogParameters<ManagerDayTimeOffRequest>();
+        parameters.Add(x => x.ContentText, "View Time Off Request");
+        parameters.Add(x => x.ButtonText, "Close");
+
+        var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+
+        DialogService.Show<ManagerDayTimeOffRequest>("View Time Off Request", parameters, options);
+    }
+
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {

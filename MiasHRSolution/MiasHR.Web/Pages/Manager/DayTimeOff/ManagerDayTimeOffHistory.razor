@@ -21,34 +21,32 @@
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
-            <MudPaper Class="mt-4 ma-2 pa-4">
-                <MudTable Items="@ApprovalHistory">
-                    <HeaderContent>
-                        <MudTh>Request Time</MudTh>
-                        <MudTh>Name</MudTh>
-                        <MudTh>Type</MudTh>
-                        <MudTh>From</MudTh>
-                        <MudTh>To</MudTh>
-                        <MudTh>First Approval</MudTh>
-                        <MudTh>Second Approval</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
-                            <MudTd DataLabel="Name">@context.Name</MudTd>
-                            <MudTd DataLabel="Type">@context.Type</MudTd>
-                            <MudTd DataLabel="From">@context.From</MudTd>
-                            <MudTd DataLabel="To">@context.To</MudTd>
-                            <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
-                            <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            </MudPaper>
+            <MudTable Items="@ApprovalHistory">
+                <HeaderContent>
+                    <MudTh>Request Time</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                    <MudTh>From</MudTh>
+                    <MudTh>To</MudTh>
+                    <MudTh>First Approval</MudTh>
+                    <MudTh>Second Approval</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Type">@context.Type</MudTd>
+                    <MudTd DataLabel="From">@context.From</MudTd>
+                    <MudTd DataLabel="To">@context.To</MudTd>
+                    <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
+                    <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
+                </RowTemplate>
+            </MudTable>
         </MudPaper>
     </MudContainer>
 </MudContainer>
 
 
-    @code {
+@code {
     public class ApprovalRecord
     {
         public DateTime DateTime { get; set; }
