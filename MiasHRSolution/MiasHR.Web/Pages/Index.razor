@@ -12,12 +12,12 @@
 
                         if (today >= item.From && today <= item.To)
                         {
-                            <MudText>You have On going Time Off from @item.From to @item.To</MudText>
+                            <MudText>You have On going Time Off from @item.From ~ @item.To</MudText>
                             <br />
                         }
                         else if (today<item.From)
                         {
-                            <MudText>You have Upcoming Time Off Schedule from @item.From to @item.To</MudText>
+                            <MudText>You have Upcoming Time Off Schedule from @item.From ~ @item.To</MudText>
                             <br />
                         }
 
@@ -109,7 +109,7 @@
     //Calculate the pending
     int ptoamt = 1;
     //Used to switch Colors
-    MudBlazor.Color[] colors = { MudBlazor.Color.Primary, MudBlazor.Color.Secondary, MudBlazor.Color.Success, MudBlazor.Color.Info, MudBlazor.Color.Warning, MudBlazor.Color.Error };
+    MudBlazor.Color[] colors = { MudBlazor.Color.Secondary, MudBlazor.Color.Primary, MudBlazor.Color.Success, MudBlazor.Color.Info, MudBlazor.Color.Warning, MudBlazor.Color.Error };
 
 
 
