@@ -1,0 +1,75 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText>Type</MudText>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-flex" Elevation="0">
+                    <MudText>Start Date</MudText>
+                    <MudText>Start Time</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-inline-flex" Elevation="0">
+                    <MudText>End Date</MudText>
+                    <MudText>End Time</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-inline-flex" Elevation="0">
+                    <MudText>Reason</MudText>
+                    <MudText>About</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">Reject</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Submit">Approve</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string ContentText { get; set; }
+
+    [Parameter] public string ButtonText { get; set; }
+
+    [Parameter] public Color Color { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    private bool success;
+    string[] errors = { };
+    MudForm form;
+    private string typeValue;
+    private string reasonValue;
+    private DateTime? startDate = DateTime.Today;
+    private TimeSpan? startTime = new TimeSpan(08, 00, 00);
+    private DateTime? endDate = DateTime.Today;
+    private TimeSpan? endTime = new TimeSpan(17, 00, 00);
+
+    public class vacDays
+    {
+        public string? Type { get; set; }
+        public decimal Days { get; set; }
+    }
+
+    List<vacDays> vacAvailable = new List<vacDays>
+    {
+        new vacDays { Type="Vacation", Days=5m},
+        new vacDays { Type="Sick Days", Days=4m}
+    };
+
+    List<vacDays> vacUsed = new List<vacDays>
+    {
+        new vacDays { Type="Vacation", Days=1m},
+        new vacDays { Type="Sick Days", Days=0m}
+    };
+}
