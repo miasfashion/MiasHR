@@ -2,40 +2,53 @@
 
 @layout LoginLayout
 @using Microsoft.AspNetCore.Components
+@using MiasHR.Models.DTOs;
+
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject IConfiguration Configuration
+
+
 <PageTitle>Login</PageTitle>
-<MudPaper Class="d-flex pa-4 justify-content-center" MaxWidth="100%">
-    <MudStack AlignItems="AlignItems.Start" Spacing="6">
-        <MudTextField @bind-Value="UserID" Label="User ID" Variant="Variant.Outlined" />
-        <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
-        <MudButton Disabled="@_loggingin" OnClick="Loggingin" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Primary">
-            @if (_loggingin)
-            {
-                <MudProgressCircular Class="ms-1" Size="Size.Small" Indeterminate="true" />
-                <MudText Class="ms-2">Logging In</MudText>
-            }
-            else
-            {
-                <MudText>Submit</MudText>
-            }
-        </MudButton>
-    </MudStack>
+<MudPaper Class="d-flex pa-2 justify-center" MaxWidth="100%">
+    <MudPaper Class="pa-4" Elevation="0">
+        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudTextField T="string" Label="Username" @ref="usernameField" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
+            <MudTextField T="string" Label="Password" @ref="passwordField" InputType="InputType.Password"
+                          Required="true" RequiredError="Password is required!" Variant="Variant.Outlined" Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPasswordField" AdornmentAriaLabel="Show Password" />
+            <div class="d-flex align-center justify-end mt-1">
+                <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@_loggingin" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Submit</MudButton>
+            </div>
+        </MudForm>
+    </MudPaper>
 </MudPaper>
 
 @code {
-    public string UserID { get; set; } = "admin";
-    public string Password { get; set; } = "mias1060";
     private bool _loggingin = false;
+    private bool isShow = false;
+    private bool success = false;
 
-    bool isShow;
+    string[] errors = { };
+    MudTextField<string> usernameField;
+    MudTextField<string> passwordField;
+    MudForm form;
+    
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-    private async Task Loggingin()
+    private async Task HandleLogin()
     {
+        UserDTO user = new UserDTO { Username = usernameField.Value, PasswordHash = passwordField.Value };
+
         //Authentication Logic 
+        var result = await Http.PostAsJsonAsync("api/Auth/Login", user);
+        var token = await result.Content.ReadAsStringAsync();
         _loggingin = true;
-        await Task.Delay(2000);
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
 
         //Redirect if Successs
         if (_loggingin)
@@ -46,7 +59,7 @@
         _loggingin = false;
     }
 
-    void ButtonTestclick()
+    void ShowPasswordField()
     {
         @if (isShow)
         {
