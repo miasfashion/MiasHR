@@ -1,77 +1,76 @@
 @page "/"
 
 @layout LoginLayout
+
 @using Microsoft.AspNetCore.Components
 @using MiasHR.Models.DTOs;
+@using MiasHR.Web.Services.Contracts;
 
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ILocalStorageService LocalStorage
+@inject IAuthService AuthService
 @inject IConfiguration Configuration
 
 
 <PageTitle>Login</PageTitle>
 <MudPaper Class="d-flex pa-2 justify-center" MaxWidth="100%">
     <MudPaper Class="pa-4" Elevation="0">
-        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-            <MudTextField T="string" Label="Username" @ref="usernameField" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
-            <MudTextField T="string" Label="Password" @ref="passwordField" InputType="InputType.Password"
-                          Required="true" RequiredError="Password is required!" Variant="Variant.Outlined" Adornment="Adornment.End"
-                          AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPasswordField" AdornmentAriaLabel="Show Password" />
+        @if (loginFailed)
+        {
+            <MudAlert Severity="Severity.Error" Dense>Invalid username or password.</MudAlert>
+        }
+        <MudForm @ref="form" Model="userCredentials" Validation="true">
+            <MudTextField Label="Username" @bind-Value="userCredentials.Username" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
+            <MudTextField Label="Password" @bind-Value="userCredentials.Password" FullWidth
+                           Required="true" RequiredError="Password is required!" Variant="Variant.Outlined"
+                           InputType="@passwordInputType"
+                           Adornment="Adornment.End" AdornmentIcon="@passwordAdornmentIcon"
+                           OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
             <div class="d-flex align-center justify-end mt-1">
-                <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@_loggingin" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Submit</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Login</MudButton>
             </div>
         </MudForm>
     </MudPaper>
 </MudPaper>
 
-@code {
-    private bool _loggingin = false;
-    private bool isShow = false;
+ @code {
+    private UserDTO userCredentials = new UserDTO();
+    private bool loginFailed = false;
     private bool success = false;
+    private bool showPassword = false;
+
+    private InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
+    private string passwordAdornmentIcon => showPassword ? Icons.Filled.VisibilityOff : Icons.Filled.Visibility;
 
     string[] errors = { };
-    MudTextField<string> usernameField;
-    MudTextField<string> passwordField;
     MudForm form;
-    
+
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     private async Task HandleLogin()
     {
-        UserDTO user = new UserDTO { Username = usernameField.Value, PasswordHash = passwordField.Value };
-
-        //Authentication Logic 
-        var result = await Http.PostAsJsonAsync("api/Auth/Login", user);
-        var token = await result.Content.ReadAsStringAsync();
-        _loggingin = true;
-        await LocalStorage.SetItemAsync("token", token);
-        await AuthStateProvider.GetAuthenticationStateAsync();
-
-        //Redirect if Successs
-        if (_loggingin)
+        try
         {
-            NavigationManager.NavigateTo("/home");
+            var result = await AuthService.Login(userCredentials);
+            if(await AuthService.IsLoggedIn())
+            {
+                NavigationManager.NavigateTo("/home");
+            }
+            else
+            {
+                
+            }
         }
-        
-        _loggingin = false;
+        catch (Exception ex)
+        {
+            throw;
+        }
+
     }
 
-    void ShowPasswordField()
+    private void TogglePasswordVisibility()
     {
-        @if (isShow)
-        {
-            isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
+        showPassword = !showPassword;
     }
 }

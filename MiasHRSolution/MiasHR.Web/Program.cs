@@ -8,23 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
-//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      policy =>
-//                      {
-//                          policy.WithOrigins("https://localhost:7187")
-//                            .AllowAnyMethod()
-//                            .AllowAnyHeader()
-//                            .AllowCredentials();
-//                      });
-//});
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7211/") });
 builder.Services.AddMudServices();
