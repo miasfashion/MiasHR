@@ -9,5 +9,7 @@ namespace MiasHR.Web.Services.Contracts
         Task<RequestResultDTO> Register(UserDTO request, DateOnly birthDate);
         Task Logout();
         Task<bool> IsLoggedIn();
+        Task<string?> GetUserEmplCode();
+        Task<string?> GetUserName();
     }
 }

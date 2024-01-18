@@ -1,5 +1,7 @@
 @page "/"
 
+@attribute [AllowAnonymous]
+
 @layout LoginLayout
 
 @using Microsoft.AspNetCore.Components
@@ -10,6 +12,7 @@
 @inject HttpClient Http
 @inject IAuthService AuthService
 @inject IConfiguration Configuration
+@inject ISnackbar Snackbar
 
 
 <PageTitle>Login</PageTitle>
@@ -59,7 +62,7 @@
             }
             else
             {
-                
+                Snackbar.Add("Login Failed");
             }
         }
         catch (Exception ex)

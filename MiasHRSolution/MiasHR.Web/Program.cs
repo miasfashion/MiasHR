@@ -1,5 +1,7 @@
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
+global using Blazored.SessionStorage;
+
 
 using MiasHR.Web;
 using MiasHR.Web.Services;
@@ -19,5 +21,6 @@ builder.Services.AddScoped<AuthenticationStateProvider, MiasAuthStateProvider>()
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();

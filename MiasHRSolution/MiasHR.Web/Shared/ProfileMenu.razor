@@ -1,4 +1,7 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using MiasHR.Web.Services.Contracts;
+
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
 
 <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
     <ActivatorContent>
@@ -8,7 +11,7 @@
         <MudContainer Class="d-flex justify-content-center">
             <MudAvatar Size="Size.Large" Image="@img" Class="mt-2 justify-content-center" />
         </MudContainer>
-        <MudText Typo="Typo.body1" Class="m-4 mb-2"><b>Hello, @name</b></MudText>
+        <MudText Typo="Typo.body1" Class="m-4 mb-2"><b>Hello, @userName</b></MudText>
 @*         <MudMenuItem Href="/profile" Match="NavLinkMatch.Prefix">Profile</MudMenuItem>
         <MudMenuItem Href="/profile/history" Match="NavLinkMatch.Prefix">History</MudMenuItem> *@
         <MudMenuItem Href="/profile/changepw" Match="NavLinkMatch.Prefix">Change Password</MudMenuItem>
@@ -17,14 +20,16 @@
 </MudMenu>
 
 @code {
-
-    public string img { get; set; } = "images/happy.jpg";
-    public string name { get; set; } = "Jaehoon";
+    private string img = "images/happy.jpg";
+    private string userName = "Unknown";
 
     private void HandleLogout()
     {
         // Display a pop-up message indicating successful logout
         ShowPopupMessage("You have been logged out.");
+
+        // Remove JWT from session storage
+        AuthService.Logout();
 
         // Redirect the user to the login page
         NavigationManager.NavigateTo("/");
@@ -34,5 +39,16 @@
     {
         // TODO: Display a pop-up message using a suitable method from your UI library
         // Replace the following placeholder with the actual pop-up imp
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var name = await AuthService.GetUserName();
+
+        if (name != null)
+        {
+            userName = name;
+        }
+
     }
 }

@@ -63,7 +63,7 @@ namespace MiasHR.Api.Controllers
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
             var emplCode = employee.EmplCode;
-            string role = employee.Title is null ? "Employee" : employee.Title;
+            string role = "Employee";
                 
             List<Claim> claims = new List<Claim>
             {

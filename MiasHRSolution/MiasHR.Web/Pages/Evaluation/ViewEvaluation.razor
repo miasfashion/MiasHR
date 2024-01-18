@@ -1,5 +1,7 @@
 ﻿@page "/evaluation/{Type}/{Year:int}/{Term}/"
 
+@attribute [Authorize]
+
 <PageTitle>Self Evaluation</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">

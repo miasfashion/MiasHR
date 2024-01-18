@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -7,18 +6,18 @@ namespace MiasHR.Web
 {
     public class MiasAuthStateProvider : AuthenticationStateProvider
     {
-        private readonly ILocalStorageService _localStorage;
+        private readonly ISessionStorageService _sessionStorage;
         private readonly HttpClient _http;
 
-        public MiasAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
+        public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient http)
         {
-            _localStorage = localStorage;
+            _sessionStorage = sessionStorage;
             _http = http;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string token = await _localStorage.GetItemAsStringAsync("token");
+            string token = await _sessionStorage.GetItemAsStringAsync("authToken");
 
             var identity = new ClaimsIdentity();
             _http.DefaultRequestHeaders.Authorization = null;
@@ -31,11 +30,11 @@ namespace MiasHR.Web
             }
 
             var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
+            var authState = new AuthenticationState(user);
 
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            NotifyAuthenticationStateChanged(Task.FromResult(authState));
 
-            return await Task.FromResult(state);
+            return await Task.FromResult(authState);
         }
 
 
