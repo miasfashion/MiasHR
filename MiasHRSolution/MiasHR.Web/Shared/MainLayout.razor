@@ -1,6 +1,8 @@
 ﻿@layout TelerikLayout
 @inherits LayoutComponentBase
 
+@attribute [Authorize]
+
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -13,7 +15,7 @@
         <ProfileMenu />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu/>
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudContainer Class="mt-16 px-8">
@@ -24,7 +26,6 @@
     <MudScrollToTop TopOffset="100">
         <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ArrowCircleUp" />
     </MudScrollToTop>
-
 </MudLayout>
 
 @code {

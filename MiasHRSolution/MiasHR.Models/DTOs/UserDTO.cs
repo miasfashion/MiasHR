@@ -2,8 +2,8 @@
 {
     public class UserDTO
     {
-        public required string Username { get; set; }
+        public string Username { get; set; }
 
-        public required string PasswordHash { get; set; }
+        public string Password{ get; set; }
     }
 }

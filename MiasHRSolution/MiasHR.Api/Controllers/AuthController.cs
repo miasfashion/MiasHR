@@ -26,7 +26,7 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employee = await _authRepository.Login(request.Username, request.PasswordHash);
+                var employee = await _authRepository.Login(request.Username, request.Password);
 
                 return employee is null ? Unauthorized() : CreateToken(employee);
             }
@@ -36,7 +36,6 @@ namespace MiasHR.Api.Controllers
                                   "Error retrieving data from database");
             }
 
-            
         }
 
         [HttpPost("api/[controller]/[action]")]
@@ -44,11 +43,11 @@ namespace MiasHR.Api.Controllers
         {
             // temporarily take plain text password and hash it here.
             // TODO: move hashing to frontend
-            var pw = BCrypt.Net.BCrypt.HashPassword(request.PasswordHash);
+            var pw = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             try
             {
-                //var result = await _authRepository.Register(request.Username, request.PasswordHash, birthDate);
+                //var result = await _authRepository.Register(request.Username, request.Password, birthDate);
                 var result = await _authRepository.Register(request.Username, pw, birthDate);
 
                 return result.status != "SUCCESS" ? BadRequest(result) : Ok(result);
@@ -64,7 +63,7 @@ namespace MiasHR.Api.Controllers
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
             var emplCode = employee.EmplCode;
-            string role = employee.Title is null ? "Employee" : employee.Title;
+            string role = "Employee";
                 
             List<Claim> claims = new List<Claim>
             {

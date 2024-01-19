@@ -1,25 +1,42 @@
-﻿using System.Security.Claims;
+﻿using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace MiasHR.Web
 {
     public class MiasAuthStateProvider : AuthenticationStateProvider
     {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmsiLCJleHAiOjE2OTkzOTU4MjR9.WwwXOeHsca955MLWbEetVHeLqxHQOYyYWzpdigA9hYJQ3CQzwMaKPiknnjyMdN7Y_mccjJYdLCtChLh2cXL8jQ";
-            //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.sbCCa9ggL0VYU05g-lyA6baWZMOPUgiX4xLY9_6Rp0I";
+        private readonly ISessionStorageService _sessionStorage;
+        private readonly HttpClient _http;
 
-            var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-            //var identity = new ClaimsIdentity();
+        public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient http)
+        {
+            _sessionStorage = sessionStorage;
+            _http = http;
+        }
+
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            string token = await _sessionStorage.GetItemAsStringAsync("authToken");
+
+            var identity = new ClaimsIdentity();
+            _http.DefaultRequestHeaders.Authorization = null;
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                _http.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+            }
 
             var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
+            var authState = new AuthenticationState(user);
 
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            NotifyAuthenticationStateChanged(Task.FromResult(authState));
 
-            return Task.FromResult(state);
+            return await Task.FromResult(authState);
         }
+
 
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
