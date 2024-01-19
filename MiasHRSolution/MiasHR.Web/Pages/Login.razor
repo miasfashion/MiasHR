@@ -22,7 +22,7 @@
         {
             <MudAlert Severity="Severity.Error" Dense>Invalid username or password.</MudAlert>
         }
-        <MudForm @ref="form" Model="userCredentials" Validation="true">
+        <MudForm @ref="form" Model="userCredentials" Validation="true" @onkeydown="@HandleEnterKeyPress">
             <MudTextField Label="Username" @bind-Value="userCredentials.Username" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
             <MudTextField Label="Password" @bind-Value="userCredentials.Password" FullWidth
                            Required="true" RequiredError="Password is required!" Variant="Variant.Outlined"
@@ -30,7 +30,7 @@
                            Adornment="Adornment.End" AdornmentIcon="@passwordAdornmentIcon"
                            OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
             <div class="d-flex align-center justify-end mt-1">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Login</MudButton>
+                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" Disabled="@isProcessing" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Login</MudButton>
             </div>
         </MudForm>
     </MudPaper>
@@ -41,6 +41,7 @@
     private bool loginFailed = false;
     private bool success = false;
     private bool showPassword = false;
+    private bool isProcessing = false;
 
     private InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
     private string passwordAdornmentIcon => showPassword ? Icons.Filled.VisibilityOff : Icons.Filled.Visibility;
@@ -53,27 +54,39 @@
 
     private async Task HandleLogin()
     {
+        isProcessing = true;
         try
         {
             var result = await AuthService.Login(userCredentials);
             if(await AuthService.IsLoggedIn())
             {
+                isProcessing = false;
                 NavigationManager.NavigateTo("/home");
             }
             else
             {
+                isProcessing = false;
                 Snackbar.Add("Login Failed");
             }
         }
         catch (Exception ex)
         {
+            isProcessing = false;
             throw;
         }
-
     }
 
     private void TogglePasswordVisibility()
     {
         showPassword = !showPassword;
+    }
+
+    // Keystroke binding
+    private void HandleEnterKeyPress(KeyboardEventArgs e)
+    {
+        if (!isProcessing && (e.Code == "Enter" || e.Key == "Enter"))
+        {
+            HandleLogin();
+        }
     }
 }
