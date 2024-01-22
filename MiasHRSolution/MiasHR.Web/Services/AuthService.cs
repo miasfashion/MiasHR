@@ -1,6 +1,7 @@
 ﻿using Azure.Identity;
 using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net.Http.Json;
 using System.Security.Claims;
 
@@ -86,9 +87,23 @@ namespace MiasHR.Web.Services
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public Task<RequestResultDTO> Register(UserDTO request, DateOnly birthDate)
+        public async Task<HttpResponseMessage> Register(UserDTO request, DateOnly birthDate)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Auth/Register?birthDate=" + birthDate, request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    await _sessionStorage.SetItemAsync("msg", message);
+                    return response;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

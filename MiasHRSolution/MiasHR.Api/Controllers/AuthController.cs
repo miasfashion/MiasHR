@@ -39,7 +39,7 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPost("api/[controller]/[action]")]
-        public async Task<ActionResult<RequestResultDTO>> Register(UserDTO request, DateOnly birthDate)
+        public async Task<ActionResult<string>> Register(UserDTO request, DateOnly birthDate)
         {
             // temporarily take plain text password and hash it here.
             // TODO: move hashing to frontend
@@ -50,7 +50,7 @@ namespace MiasHR.Api.Controllers
                 //var result = await _authRepository.Register(request.Username, request.Password, birthDate);
                 var result = await _authRepository.Register(request.Username, pw, birthDate);
 
-                return result.status != "SUCCESS" ? BadRequest(result) : Ok(result);
+                return result.status;
             }
             catch (Exception)
             {

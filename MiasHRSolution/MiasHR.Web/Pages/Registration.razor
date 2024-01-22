@@ -1,0 +1,150 @@
+@page "/registration"
+
+@layout LoginLayout
+@using MiasHR.Models.DTOs
+@using Microsoft.AspNetCore.Components
+@using MiasHR.Web.Services.Contracts;
+@using System.Text.RegularExpressions
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject IAuthService AuthService
+@inject IConfiguration Configuration
+@inject ISnackbar Snackbar
+@inject ISessionStorageService SessionStorage
+
+
+<PageTitle>Register new account</PageTitle>
+
+  <MudPaper Class="pa-5 m-5">
+        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            @*Check *@
+            <MudTextField T="string" Label="User Email" HelperText="Use your Company Email" @bind-Value="userCredentials.Username"
+                          InputType="@emailInput" Validation="@(new Func<string, IEnumerable<string>>(EmailValidation))" Required="true"
+                          RequiredError="Type your Company Email!" />
+            <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @bind-Value="userCredentials.Password"
+                          InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                          OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
+                          Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                          RequiredError="Type your Password!" />
+            <MudIconButton Class="d-inline m-2" Variant="Variant.Filled" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
+            <MudTextField T="DateTime" Format="yyyy-MM-dd" Label="Birth Date" InputType="InputType.Date" Required="true" @bind-Value="birth"
+                          RequiredError="Type your Birth Date!" />
+            <div class="d-flex m-2 align-center justify-space-between">
+                <MudButton OnClick="HandleRegist" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+            </div>
+        </MudForm>
+        @*To Show Requirements for strong password*@
+        <MudPopover AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
+            <div class="d-flex flex-column">
+                <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
+                <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
+                <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
+                <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
+                <MudButton OnClick="@ToggleTip" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+            </div>
+        </MudPopover>
+    </MudPaper>  
+
+@code {
+    private UserDTO userCredentials = new UserDTO();
+    bool success;
+    string[] errors = { };
+    DateTime birth;  
+    MudForm? form;
+
+    // Password Visibility Section
+    bool isShow;
+    InputType emailInput = InputType.Email;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    
+    //Checking PW visibility
+    void PWVisibilityClick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    private IEnumerable<string> EmailValidation(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            yield return "Email is required!";
+            yield break;
+        }
+
+        // Check if the email contains "@miasfashion.com" or "@tjgiant.com"
+        if (!email.EndsWith("@miasfashion.com", StringComparison.OrdinalIgnoreCase) && !email.EndsWith("@tjgiant.com", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "Email must be from @miasfashion.com or @tjgiant.com domain";
+        }
+    }
+
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    // Toggle Pop Over Setting for Tool Tip 
+    public bool _isOpen;
+
+    public void ToggleTip()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+
+    // Register new user
+    private async Task HandleRegist()
+    {
+        try
+        {
+            DateOnly birthDate = DateOnly.FromDateTime(birth);
+            var result = await AuthService.Register(userCredentials, birthDate);
+
+            // Getting string message stored to show in snackbar
+            string err = await SessionStorage.GetItemAsStringAsync("msg");
+            err = err.Trim('\"');
+
+            if (result.IsSuccessStatusCode && string.Equals(err,"success",StringComparison.OrdinalIgnoreCase))
+            {
+                NavigationManager.NavigateTo("/");
+                Snackbar.Add("Account has been successfully created.");
+            }
+            else
+            {
+                Snackbar.Add(err);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during registration: {ex.Message}");
+            Snackbar.Add("An error occurred during registration.");
+        }
+    }
+}
