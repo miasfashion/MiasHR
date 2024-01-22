@@ -30,7 +30,10 @@
                            Adornment="Adornment.End" AdornmentIcon="@passwordAdornmentIcon"
                            OnAdornmentClick="TogglePasswordVisibility" AdornmentAriaLabel="Show Password" />
             <div class="d-flex align-center justify-end mt-1">
-                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" Disabled="@isProcessing" EndIcon="@Icons.Material.Filled.Login" Class="ml-auto">Login</MudButton>
+                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" Disabled="@isProcessing" EndIcon="@Icons.Material.Filled.Login" Class="m-2">Login</MudButton>
+                 <MudButton OnClick='()=>NavigationManager.NavigateTo("/registration")' Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAddAlt1" Color="Color.Primary">
+                     <MudText>Create Account</MudText>
+                 </MudButton>
             </div>
         </MudForm>
     </MudPaper>
