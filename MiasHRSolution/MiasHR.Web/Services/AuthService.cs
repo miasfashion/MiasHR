@@ -85,6 +85,7 @@ namespace MiasHR.Web.Services
         {
             await _sessionStorage.RemoveItemAsync("authToken");
             _httpClient.DefaultRequestHeaders.Authorization = null;
+            await _authStateProvider.GetAuthenticationStateAsync();
         }
 
         public async Task<HttpResponseMessage> Register(UserDTO request, DateOnly birthDate)
