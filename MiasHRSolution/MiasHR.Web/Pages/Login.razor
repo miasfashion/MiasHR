@@ -1,4 +1,4 @@
-@page "/"
+@page "/login"
 
 @attribute [AllowAnonymous]
 
@@ -63,7 +63,7 @@
                 if (await AuthService.IsLoggedIn())
                 {
                     isProcessing = false;
-                    NavigationManager.NavigateTo("/home");
+                    NavigationManager.NavigateTo("/");
                 }
                 else
                 {
@@ -102,7 +102,7 @@
     {
         if (await AuthService.IsLoggedIn())
         {
-            NavigationManager.NavigateTo("/home");
+            NavigationManager.NavigateTo("/");
         }
     }
 }

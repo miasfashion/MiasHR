@@ -1,4 +1,4 @@
-@page "/home"
+@page "/"
 
 @attribute [Authorize]
 
@@ -81,7 +81,7 @@
 @code {
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        new BreadcrumbItem("Home", "/home")
+        new BreadcrumbItem("Home", "/")
     };
 
     //List of PTO (Time Off) Requests that have status 1 OPEN
