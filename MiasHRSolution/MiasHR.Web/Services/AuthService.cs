@@ -92,13 +92,7 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/Auth/Register?birthDate=" + birthDate, request);
-                if (response.IsSuccessStatusCode)
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    await _sessionStorage.SetItemAsync("msg", message);
-                    return response;
-                }
-                return null;
+                return response;
             }
             catch (Exception ex)
             {

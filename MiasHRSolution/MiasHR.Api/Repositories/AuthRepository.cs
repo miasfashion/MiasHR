@@ -4,6 +4,7 @@ using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using Telerik.SvgIcons;
 
 namespace MiasHR.Api.Repositories
 {
@@ -139,6 +140,31 @@ namespace MiasHR.Api.Repositories
         public Task<RequestResultDTO> UpdateUserPassword(string username, string oldPasswordHash, string newPasswordHash)
         {
             throw new NotImplementedException();
+
         }
+
+        public async Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate)
+        {
+            try
+            {
+                var checkPassword = await _miasHRDbContext.HrEmployeeAllHistories.Where(r => r.ComEmail == username && r.Status != 3 && r.BirthDate == birthDate.ToString("yyyymmdd"))
+                    .AsNoTrackingWithIdentityResolution()
+                    .ToListAsync();
+
+                //Check whether there is any employee history with given email and birthdate 
+                string message = (checkPassword.Any()) ? "User Found" : "User Not Found";
+
+                return new UpdateMessageDTO { msg = message, com_email = username };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetUserExist: {ex.Message}");
+
+                return new UpdateMessageDTO { msg = "An error occurred", com_email = username };
+            }
+        }
+
+
     }
+
 }

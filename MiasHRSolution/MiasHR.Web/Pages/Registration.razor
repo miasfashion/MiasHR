@@ -128,17 +128,15 @@
             var result = await AuthService.Register(userCredentials, birthDate);
 
             // Getting string message stored to show in snackbar
-            string err = await SessionStorage.GetItemAsStringAsync("msg");
-            err = err.Trim('\"');
-
-            if (result.IsSuccessStatusCode && string.Equals(err,"success",StringComparison.OrdinalIgnoreCase))
+            string msg = await result.Content.ReadAsStringAsync();
+            if (result.IsSuccessStatusCode && string.Equals(msg,"success",StringComparison.OrdinalIgnoreCase))
             {
                 NavigationManager.NavigateTo("/");
                 Snackbar.Add("Account has been successfully created.");
             }
             else
             {
-                Snackbar.Add(err);
+                Snackbar.Add(msg);
             }
         }
         catch (Exception ex)
