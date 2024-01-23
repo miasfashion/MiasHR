@@ -23,8 +23,8 @@
             <MudAlert Severity="Severity.Error" Dense>Invalid username or password.</MudAlert>
         }
         <MudForm @ref="form" Model="userCredentials" Validation="true" @onkeydown="@HandleEnterKeyPress">
-            <MudTextField Label="Username" @bind-Value="userCredentials.Username" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
-            <MudTextField Label="Password" @bind-Value="userCredentials.Password" FullWidth
+            <MudTextField Label="Username" @bind-Value="userCredentials.Username" Immediate="true" Required="true" RequiredError="Username is required!" Variant="Variant.Outlined" />
+            <MudTextField Label="Password" @bind-Value="userCredentials.Password" Immediate="true" FullWidth
                            Required="true" RequiredError="Password is required!" Variant="Variant.Outlined"
                            InputType="@passwordInputType"
                            Adornment="Adornment.End" AdornmentIcon="@passwordAdornmentIcon"
@@ -58,10 +58,18 @@
         try
         {
             var result = await AuthService.Login(userCredentials);
-            if(await AuthService.IsLoggedIn())
+            if (result != null)
             {
-                isProcessing = false;
-                NavigationManager.NavigateTo("/home");
+                if (await AuthService.IsLoggedIn())
+                {
+                    isProcessing = false;
+                    NavigationManager.NavigateTo("/home");
+                }
+                else
+                {
+                    isProcessing = false;
+                    Snackbar.Add("Login Failed");
+                }
             }
             else
             {
@@ -87,6 +95,14 @@
         if (!isProcessing && (e.Code == "Enter" || e.Key == "Enter"))
         {
             HandleLogin();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsLoggedIn())
+        {
+            NavigationManager.NavigateTo("/home");
         }
     }
 }

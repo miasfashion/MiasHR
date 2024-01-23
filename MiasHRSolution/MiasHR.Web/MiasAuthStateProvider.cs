@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -8,6 +10,8 @@ namespace MiasHR.Web
     {
         private readonly ISessionStorageService _sessionStorage;
         private readonly HttpClient _http;
+        private const string _expectedIssuer = "MiasIT";
+        private const string _expectedAudience = "MiasUser";
 
         public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient http)
         {
@@ -24,9 +28,15 @@ namespace MiasHR.Web
 
             if (!string.IsNullOrEmpty(token))
             {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                _http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                var claims = ParseClaimsFromJwt(token);
+                var issuer = claims.FirstOrDefault(c => c.Type == "iss")?.Value;
+                var audience = claims.FirstOrDefault(c => c.Type == "aud")?.Value;
+
+                if (issuer == _expectedIssuer && audience == _expectedAudience)
+                {
+                    identity = new ClaimsIdentity(claims, "jwt");
+                    _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                }
             }
 
             var user = new ClaimsPrincipal(identity);
@@ -37,6 +47,12 @@ namespace MiasHR.Web
             return await Task.FromResult(authState);
         }
 
+        public static IEnumerable<Claim> _ParseClaimsFromJwt(string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(jwt);
+            return jsonToken.Claims;
+        }
 
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {

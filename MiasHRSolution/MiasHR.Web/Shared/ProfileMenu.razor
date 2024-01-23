@@ -1,4 +1,6 @@
-﻿@using MiasHR.Web.Services.Contracts;
+﻿@attribute [Authorize]
+
+@using MiasHR.Web.Services.Contracts;
 
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
