@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.JsonWebTokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -9,14 +8,14 @@ namespace MiasHR.Web
     public class MiasAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ISessionStorageService _sessionStorage;
-        private readonly HttpClient _http;
+        private readonly HttpClient _httpClient;
         private const string _expectedIssuer = "MiasIT";
         private const string _expectedAudience = "MiasUser";
 
-        public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient http)
+        public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient)
         {
             _sessionStorage = sessionStorage;
-            _http = http;
+            _httpClient = httpClient;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -24,7 +23,7 @@ namespace MiasHR.Web
             string token = await _sessionStorage.GetItemAsStringAsync("authToken");
 
             var identity = new ClaimsIdentity();
-            _http.DefaultRequestHeaders.Authorization = null;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -35,7 +34,7 @@ namespace MiasHR.Web
                 if (issuer == _expectedIssuer && audience == _expectedAudience)
                 {
                     identity = new ClaimsIdentity(claims, "jwt");
-                    _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
                 }
             }
 

@@ -58,7 +58,7 @@
         try
         {
             var result = await AuthService.Login(userCredentials);
-            if (result != null)
+            if (result.IsSuccessStatusCode)
             {
                 if (await AuthService.IsLoggedIn())
                 {

@@ -42,15 +42,4 @@
         // TODO: Display a pop-up message using a suitable method from your UI library
         // Replace the following placeholder with the actual pop-up imp
     }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var name = await AuthService.GetUserName();
-
-        if (name != null)
-        {
-            userName = name;
-        }
-
-    }
 }
