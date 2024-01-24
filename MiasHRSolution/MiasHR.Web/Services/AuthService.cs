@@ -99,5 +99,18 @@ namespace MiasHR.Web.Services
                 throw ex;
             }
         }
+        public async Task<HttpResponseMessage> GetUserExist(UserCheckDTO request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Auth/GetUserExist", request);
+                return response;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

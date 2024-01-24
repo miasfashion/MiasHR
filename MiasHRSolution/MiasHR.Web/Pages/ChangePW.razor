@@ -1,0 +1,163 @@
+﻿@page "/changePW"
+
+@attribute [AllowAnonymous]
+
+@layout LoginLayout
+@using MiasHR.Models.DTOs
+@using Microsoft.AspNetCore.Components
+@using MiasHR.Web.Services.Contracts
+@using System.Text.RegularExpressions
+
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+
+
+<PageTitle>Change Password</PageTitle>
+
+<MudPaper Class="pa-5 m-5">
+    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+        <MudPaper Class="d-flex" Elevation="0">
+            @*TODO: Current Password to check validation?*@
+
+            <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                          InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+                          OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
+                          Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                          RequiredError="Type New Password!" />
+            <MudIconButton Size="Size.Small" Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
+        </MudPaper>
+        <MudTextField T="string" Label="Password" HelperText="Repeat the password"
+                      InputType="@PasswordCheckInput" Adornment="Adornment.End" AdornmentIcon="@PasswordCheckIcon"
+                      OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
+                      Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
+                      RequiredError="Type your New Password Again" />
+        <div class="d-flex align-center justify-space-between">
+            <MudButton OnClick="HandleChangePW" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Confirm</MudButton>
+        </div>
+    </MudForm>
+    @*To Show Requirements for strong password*@
+    <MudPopover AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
+        <div class="d-flex flex-column">
+            <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
+            <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
+            <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
+            <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
+            <MudButton OnClick="@ToggleTip" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+        </div>
+    </MudPopover>
+</MudPaper>
+
+@code {
+    bool success;
+    string[] errors = { };
+    MudTextField<string> pwField1;
+    MudForm? form;
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "Passwords don't match";
+        return "";
+    }
+
+    // Password Visibility Section
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    InputType PasswordCheckInput = InputType.Password;
+    string PasswordCheckIcon = Icons.Material.Filled.VisibilityOff;
+
+    void PWVisibilityClick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    void PWCheckVisibilityClick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordCheckIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordCheckInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordCheckIcon = Icons.Material.Filled.Visibility;
+            PasswordCheckInput = InputType.Text;
+        }
+    }
+
+    //Navigation Tab
+    int activeIndex = 1;
+
+    private void navPage()
+    {
+        if (activeIndex == 0)
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
+        else if (activeIndex == 1)
+        {
+            NavigationManager.NavigateTo("/profile/changepw");
+        }
+        else if (activeIndex == 2)
+        {
+            NavigationManager.NavigateTo("/profile/history");
+        }
+    }
+
+    // Toggle Pop Over Setting for Tool Tip
+    public bool _isOpen;
+
+    public void ToggleTip()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+
+    // Changing Password
+    private async Task HandleChangePW()
+    {
+        try
+        {
+
+            
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }
+}

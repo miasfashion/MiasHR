@@ -127,8 +127,8 @@ namespace MiasHR.Api.Repositories
             await _miasHRDbContext.AddAsync(userCred);
             await _miasHRDbContext.SaveChangesAsync();
 
-            var data = new Dictionary<string, dynamic> 
-            { 
+            var data = new Dictionary<string, dynamic>
+            {
                 { "username", username },
                 { "passwordHash", passwordHash },
                 { "birthDate", birthDate }
@@ -145,22 +145,35 @@ namespace MiasHR.Api.Repositories
 
         public async Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate)
         {
-            try
+
+            var existingUserCred = await _miasHRDbContext.HrUserCreds
+          .AsNoTrackingWithIdentityResolution()
+          .FirstOrDefaultAsync(x => x.Username == username
+                           && x.Status != 3);
+
+            if (existingUserCred is null)
             {
-                var checkPassword = await _miasHRDbContext.HrEmployeeAllHistories.Where(r => r.ComEmail == username && r.Status != 3 && r.BirthDate == birthDate.ToString("yyyymmdd"))
-                    .AsNoTrackingWithIdentityResolution()
-                    .ToListAsync();
-
-                //Check whether there is any employee history with given email and birthdate 
-                string message = (checkPassword.Any()) ? "User Found" : "User Not Found";
-
-                return new UpdateMessageDTO { msg = message, com_email = username };
+                return new UpdateMessageDTO { msg = "USER DOESN'T EXIST. PLEASE REGISTER", com_email = username };
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error in GetUserExist: {ex.Message}");
+                //Check whether there is any employee history with given email and birthdate 
+                var emailCheck = await _miasHRDbContext.HrEmployees
+                    .AsNoTrackingWithIdentityResolution()
+                    .FirstAsync(e => e.ComEmail == username && e.Status != 3);
+                if (emailCheck is null)
+                {
+                    return new UpdateMessageDTO { msg = "EMPLOYEE EMAIL NOT FOUND", com_email = username };
+                }
 
-                return new UpdateMessageDTO { msg = "An error occurred", com_email = username };
+                var birthDateCheck = await _miasHRDbContext.HrEmployeeDetails
+                    .AsNoTrackingWithIdentityResolution()
+                    .FirstAsync(b => b.BirthDate == birthDate.ToString("yyyyMMdd") && b.Status != 3);
+                if (birthDateCheck is null)
+                {
+                    return new UpdateMessageDTO { msg = "EMPLOYEE BIRTHDATE NOT FOUND", com_email = username };
+                }
+                return new UpdateMessageDTO { msg = "SUCCESS", com_email = username };
             }
         }
 

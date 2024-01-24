@@ -59,12 +59,27 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        [HttpPost("api/[controller]/[action]")]
+        public async Task<ActionResult<string>> GetUserExist(UserCheckDTO request)
+        {
+            try
+            {
+                var userCheck = await _authRepository.GetUserExist(request.Username, request.Birthdate);
+
+                return userCheck.msg;
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                  "Error retrieving data from database");
+            }
+        }
         private string CreateToken(HrEmployee employee)
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
             var emplCode = employee.EmplCode;
             string role = "Employee";
-                
+
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, name),

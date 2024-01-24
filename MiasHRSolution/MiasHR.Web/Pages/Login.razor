@@ -48,7 +48,7 @@
     private bool isProcessing = false;
 
     private InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
-    private string passwordAdornmentIcon => showPassword ? Icons.Filled.VisibilityOff : Icons.Filled.Visibility;
+    private string passwordAdornmentIcon => showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility;
 
     string[] errors = { };
     MudForm form;
@@ -76,7 +76,7 @@
         catch (Exception ex)
         {
             isProcessing = false;
-            throw;
+            throw ex;
         }
     }
 
