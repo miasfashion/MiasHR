@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -11,6 +10,8 @@ namespace MiasHR.Web
         private readonly ISessionStorageService _sessionStorage;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private const string _expectedIssuer = "MiasIT";
+        private const string _expectedAudience = "MiasUser";
 
         public MiasAuthStateProvider(ISessionStorageService sessionStorage, IConfiguration configuration, HttpClient httpClient)
         {
@@ -32,8 +33,7 @@ namespace MiasHR.Web
                 var issuer = claims.FirstOrDefault(c => c.Type == "iss")?.Value;
                 var audience = claims.FirstOrDefault(c => c.Type == "aud")?.Value;
 
-                if (issuer == _configuration.GetSection("AppSettings:Issuer").Value! 
-                    && audience == _configuration.GetSection("AppSettings:Audience").Value!)
+                if (issuer == _expectedIssuer && audience == _expectedAudience)
                 {
                     identity = new ClaimsIdentity(claims, "jwt");
                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));

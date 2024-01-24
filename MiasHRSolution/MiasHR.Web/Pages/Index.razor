@@ -2,6 +2,10 @@
 
 @attribute [Authorize]
 
+@using MiasHR.Web.Services.Contracts;
+
+@inject IAuthService AuthService
+
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
     @*<MudBreadcrumbs Items="_breadcrumbs" />*@
     <MudGrid>
@@ -46,24 +50,13 @@
             <MudGrid>
                 <MudItem xs="12">
                     <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
-                        @foreach (var item in sampRequest)
+                        @if (api_success)
                         {
-                            @if (item.Approved == "Y")
-                            {
-                                var today = DateTime.Today;
-
-                                if (today >= item.From && today <= item.To)
-                                {
-                                    <MudText>You have On going Time Off from @item.From ~ @item.To</MudText>
-                                    <br />
-                                }
-                                else if (today < item.From)
-                                {
-                                    <MudText>You have Upcoming Time Off Schedule from @item.From ~ @item.To</MudText>
-                                    <br />
-                                }
-
-                            }
+                            <MudText>Api call success</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Api call failed</MudText>
                         }
                     </MudPaper>
                 </MudItem>
@@ -101,12 +94,27 @@
     //Used to switch Colors
     MudBlazor.Color[] colors = { MudBlazor.Color.Secondary, MudBlazor.Color.Primary, MudBlazor.Color.Success, MudBlazor.Color.Info, MudBlazor.Color.Warning, MudBlazor.Color.Error };
 
-
-
-
     List<OffRequest> sampRequest = new List<OffRequest>(){
         new OffRequest { Request= new DateTime(2023,12,23), Type="ABSENCE (by HR)", From = new DateTime(2023,12,23), To = new DateTime(2024,01,23), Approved = "N"},
         new OffRequest { Request= new DateTime(2023,12,14), Type="Sick day [ DAY OFF ]", From = new DateTime(2023,12,24), To = new DateTime(2024,1,22), Approved = "Y"},
         new OffRequest { Request= new DateTime(2023,11,11), Type="Sick day [ DAY OFF ]", From = new DateTime(2023,12,11), To = new DateTime(2023,12,22), Approved = "Y"}
     };
+
+
+
+    // TODO: remove before production
+    private bool api_success = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsLoggedIn())
+        {
+            var emplCode = await AuthService.GetUserEmplCode();
+            var response = await AuthService.TestApi(emplCode);
+            if (response == "success")
+            {
+                api_success = true;
+            }
+        }
     }
+}

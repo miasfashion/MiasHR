@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidIssuer = builder.Configuration.GetSection("AppSettings:Issuer").Value!,
             ValidateAudience = true,
-            ValidAudience = builder.Configuration.GetSection("AppSettings:Audience").Value!,
+            ValidAudience = builder.Configuration.GetSection("AppSettings:Audience").Value!
         };
     });
 
@@ -67,6 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

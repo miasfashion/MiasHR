@@ -1,12 +1,12 @@
 ﻿using MiasHR.Api.Repositories.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
-using System.Linq.Expressions;
 using MiasHR.Api.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MiasHR.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeeInfoRequestController : ControllerBase

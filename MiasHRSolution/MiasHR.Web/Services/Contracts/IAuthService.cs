@@ -11,5 +11,6 @@ namespace MiasHR.Web.Services.Contracts
         Task<bool> IsLoggedIn();
         Task<string?> GetUserEmplCode();
         Task<string?> GetUserName();
+        Task<string?> TestApi(string emplCode);
     }
 }

@@ -2,9 +2,11 @@ using MiasHR.Api.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
 using MiasHR.Api.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MiasHR.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     public class DayTimeOffRequestController : ControllerBase
     {

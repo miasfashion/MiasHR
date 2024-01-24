@@ -1,9 +1,11 @@
 ﻿using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MiasHR.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -18,6 +20,7 @@ namespace MiasHR.Api.Controllers
             _jwtAuthenticationService = jwtAuthenticationService;
         }
 
+        
         [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<string>> Login(UserDTO request)
         {

@@ -14,31 +14,6 @@ namespace MiasHR.Api.Services
         {
             _configuration = configuration;
         }
-
-        public bool ValidateJwtToken(string jwt)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!)),
-                ValidateIssuer = true,
-                ValidIssuer = _configuration.GetSection("AppSettings:Issuer").Value!,
-                ValidateAudience = true,
-                ValidAudience = _configuration.GetSection("AppSettings:Audience").Value!,
-            };
-
-            try
-            {
-                tokenHandler.ValidateToken(jwt, validationParameters, out var validatedToken);
-                return true;
-            }
-            catch (SecurityTokenException)
-            {
-                return false;
-            }
-        }
-
         public string CreateToken(HrEmployee employee)
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
