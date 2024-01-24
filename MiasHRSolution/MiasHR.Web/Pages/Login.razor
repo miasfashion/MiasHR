@@ -21,6 +21,7 @@
         {
             <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
         }
+
         else
         {
             @if (loginFailed)
@@ -40,10 +41,11 @@
                          <MudText>Create Account</MudText>
                      </MudButton>
                  </div>
+                 <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick='()=>NavigationManager.NavigateTo("/forgotPW")'>Forgot Password?</MudButton>
              </MudForm>
-             
+
         }
-        
+
     </MudPaper>
 </MudPaper>
 
@@ -55,7 +57,7 @@
     private bool isProcessing = false;
 
     private InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
-    private string passwordAdornmentIcon => showPassword ? Icons.Filled.VisibilityOff : Icons.Filled.Visibility;
+    private string passwordAdornmentIcon => showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility;
 
     string[] errors = { };
     MudForm form;
@@ -94,7 +96,7 @@
         {
             isProcessing = false;
             loginFailed = true;
-            throw;
+            throw ex;
         }
         finally
         {

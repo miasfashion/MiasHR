@@ -1,4 +1,4 @@
-﻿using MiasHR.Models.DTOs;
+using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -92,20 +92,49 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/Auth/Register?birthDate=" + birthDate, request);
-                if (response.IsSuccessStatusCode)
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    await _sessionStorage.SetItemAsync("msg", message);
-                    return response;
-                }
-                return null;
+                return response;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+        public async Task<UpdateMessageDTO> GetUserExist(UserCheckDTO request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Auth/GetUserExist", request);
 
+                //DTO will be used to collect both Status Msg and Empl Code
+                if (response.IsSuccessStatusCode)
+                {
+                    var dto = await response.Content.ReadFromJsonAsync<UpdateMessageDTO>();
+                    await _sessionStorage.SetItemAsync("empl", dto?.empl_code);
+                    return dto; 
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<HttpResponseMessage> UpdateUserPassword(string emplCode, string newPassword)
+        {
+            try
+            {
+                var resposne = await _httpClient.PutAsJsonAsync("api/Auth/UpdateUserPassword", new { EmplCode = emplCode, NewPassword = newPassword });
+                return resposne;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<string?> TestApi(string emplCode)
         {
             var year = 2023;
