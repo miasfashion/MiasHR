@@ -1,6 +1,7 @@
 ﻿@page "/changePW"
 
 @attribute [AllowAnonymous]
+@implements IDisposable
 
 @layout LoginLayout
 @using MiasHR.Models.DTOs
@@ -181,5 +182,12 @@
                 }
             }
         }
+    }
+
+    // Dispose method to be called when the component is disposed
+    public void Dispose()
+    {
+        // Remove employee ID from session storage when navigating away
+        sessionStorage.RemoveItemAsync("empl");
     }
 }
