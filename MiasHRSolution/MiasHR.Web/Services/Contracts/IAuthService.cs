@@ -7,7 +7,8 @@ namespace MiasHR.Web.Services.Contracts
     {
         Task<HttpResponseMessage> Login(UserDTO request);
         Task<HttpResponseMessage> Register(UserDTO request, DateOnly birthDate);
-        Task<HttpResponseMessage> GetUserExist(UserCheckDTO request);
+        Task<UpdateMessageDTO> GetUserExist(UserCheckDTO request);
+        Task<HttpResponseMessage> UpdateUserPassword(string emplCode, string newPassword);
         Task Logout();
         Task<bool> IsLoggedIn();
         Task<string?> GetUserEmplCode();

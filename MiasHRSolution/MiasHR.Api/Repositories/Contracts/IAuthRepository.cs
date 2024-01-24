@@ -8,7 +8,7 @@ namespace MiasHR.Api.Repositories.Contracts
     {
         Task<RequestResultDTO> Register(string username, string passwordHash, DateOnly birthDate);
         Task<HrEmployee>? Login(string username, string passwordHash);
-        Task<RequestResultDTO> UpdateUserPassword(, string newPasswordHash);
+        Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPasswordHash);
         Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate);
     }
 }

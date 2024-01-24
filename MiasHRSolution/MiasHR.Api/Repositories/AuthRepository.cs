@@ -64,30 +64,41 @@ namespace MiasHR.Api.Repositories
             return employee;
         }
 
+        /// <summary>
+        /// Registers a new user with the provided username, password hash, and birthdate.
+        /// </summary>
+        /// <param name="username">The username to register.</param>
+        /// <param name="passwordHash">The hashed password for the user.</param>
+        /// <param name="birthDate">The birthdate of the user.</param>
+        /// <returns>
+        /// A RequestResultDTO representing the result of the registration.
+        /// The RequestResultDTO contains a status indicating success or failure, along with additional information.
+        /// </returns>
         public async Task<RequestResultDTO> Register(string username, string passwordHash, DateOnly birthDate)
         {
-            // check if user already exists
+            // Check if the user already exists
             var existingUserCred = await _miasHRDbContext.HrUserCreds
                 .AsNoTrackingWithIdentityResolution()
-                .FirstOrDefaultAsync(x => x.Username == username
-                                 && x.Status != 3);
+                .FirstOrDefaultAsync(x => x.Username == username && x.Status != 3);
 
             if (existingUserCred is not null)
             {
+                // User already exists, return appropriate message
                 return new RequestResultDTO("USER EXISTS", null);
             }
 
-            // verify username is a valid Mias email
+            // Verify that the username is a valid Mias email
             var employee = await _miasHRDbContext.HrEmployees
                 .AsNoTrackingWithIdentityResolution()
                 .FirstOrDefaultAsync(x => x.ComEmail == username);
 
             if (employee is null)
             {
+                // Employee email not found, return appropriate message
                 return new RequestResultDTO("EMPLOYEE EMAIL NOT FOUND", null);
             }
 
-            // verify birthdate matches employee record
+            // Verify that the birthdate matches the employee record
             var birthDateString = birthDate.ToString("yyyyMMdd");
 
             var employeeDetail = await _miasHRDbContext.HrEmployeeDetails
@@ -96,21 +107,24 @@ namespace MiasHR.Api.Repositories
 
             if (employeeDetail is null)
             {
+                // Employee detail not found, return appropriate message
                 return new RequestResultDTO("EMPLOYEE DETAIL NOT FOUND", null);
             }
 
             if (employeeDetail.BirthDate is null || employeeDetail.BirthDate != birthDateString)
             {
+                // Birthdate validation failed, return appropriate message
                 return new RequestResultDTO("BIRTHDATE VALIDATION FAILED", null);
             }
 
-            // create user cred record
-            // name for log entry max length 10
+            // Create user cred record
+            // Name for log entry max length 10
             string logName = employee.FirstName.ToUpper();
             if (logName.Length > 10)
             {
                 logName = logName.Substring(0, 10);
             }
+
             var userCred = new HrUserCred
             {
                 EmplCode = employee.EmplCode,
@@ -123,57 +137,113 @@ namespace MiasHR.Api.Repositories
                 ModifiedUser = logName
             };
 
-            // add user cred record to database
+            // Add user cred record to the database
             await _miasHRDbContext.AddAsync(userCred);
             await _miasHRDbContext.SaveChangesAsync();
 
+            // Prepare data for the success result
             var data = new Dictionary<string, dynamic>
-            {
-                { "username", username },
-                { "passwordHash", passwordHash },
-                { "birthDate", birthDate }
-            };
+    {
+        { "username", username },
+        { "passwordHash", passwordHash },
+        { "birthDate", birthDate }
+    };
 
+            // Return success result with additional information
             return new RequestResultDTO("SUCCESS", data);
         }
 
-        public async Task<RequestResultDTO> UpdateUserPassword(string username, string oldPasswordHash, string newPasswordHash)
+        /// <summary>
+        /// Updates the password for a user based on the provided employee code and new password.
+        /// </summary>
+        /// <param name="emplCode">The employee code identifying the user.</param>
+        /// <param name="newPassword">The new password to set for the user.</param>
+        /// <returns>
+        /// A RequestResultDTO representing the result of the password update.
+        /// The RequestResultDTO contains a status indicating success or failure, along with additional information.
+        /// </returns>
+        public async Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPassword)
         {
-            throw new NotImplementedException();
+            // Default result with "FAILED" status
+            RequestResultDTO requestResultDTO = new RequestResultDTO("FAILED", null);
 
-        }
+            // Retrieve the user with the provided employee code
+            var updatePassword = await _miasHRDbContext.HrUserCreds
+                .FirstOrDefaultAsync(r => r.EmplCode == emplCode);
 
-        public async Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate)
-        {
-
-            var existingUserCred = await _miasHRDbContext.HrUserCreds
-          .AsNoTrackingWithIdentityResolution()
-          .FirstOrDefaultAsync(x => x.Username == username
-                           && x.Status != 3);
-
-            if (existingUserCred is null)
+            if (updatePassword != null)
             {
-                return new UpdateMessageDTO { msg = "USER DOESN'T EXIST. PLEASE REGISTER", com_email = username };
+                // Update the password hash and modified date
+                updatePassword.PasswordHash = newPassword;
+                updatePassword.ModifiedDate = DateTime.Now;
+
+                // TODO: Log the user who modified the password
+
+                // Save changes to the database
+                _miasHRDbContext.SaveChanges();
+
+                // Set result status to "SUCCESS" and include additional information
+                requestResultDTO.status = "SUCCESS";
+                requestResultDTO.data = new Dictionary<string, dynamic>();
+                requestResultDTO.data.Add("emplCode", emplCode);
+                requestResultDTO.data.Add("newPass", newPassword);
             }
             else
             {
-                //Check whether there is any employee history with given email and birthdate 
+                // User with the provided employee code not found, throw an exception
+                throw new Exception($"Update Password Failed with ID {emplCode}");
+            }
+
+            return requestResultDTO;
+        }
+
+        /// <summary>
+        /// Checks the existence of a user based on the provided username and birthdate.
+        /// </summary>
+        /// <param name="username">The username to check for existence.</param>
+        /// <param name="birthDate">The birthdate to check for existence in the employee details.</param>
+        /// <returns>
+        /// An UpdateMessageDTO representing the result of the user existence check.
+        /// The UpdateMessageDTO contains a message indicating success or failure, along with additional information.
+        /// </returns>
+        public async Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate)
+        {
+            // Check if the user credentials exist
+            var existingUserCred = await _miasHRDbContext.HrUserCreds
+                .AsNoTrackingWithIdentityResolution()
+                .FirstOrDefaultAsync(x => x.Username == username && x.Status != 3);
+
+            if (existingUserCred is null)
+            {
+                // User credentials not found, return appropriate message
+                return new UpdateMessageDTO { msg = "USER DOESN'T EXIST. PLEASE REGISTER" };
+            }
+            else
+            {
+                // Check whether there is any employee history with the given email
                 var emailCheck = await _miasHRDbContext.HrEmployees
                     .AsNoTrackingWithIdentityResolution()
                     .FirstAsync(e => e.ComEmail == username && e.Status != 3);
+
                 if (emailCheck is null)
                 {
-                    return new UpdateMessageDTO { msg = "EMPLOYEE EMAIL NOT FOUND", com_email = username };
+                    // Employee email not found, return appropriate message
+                    return new UpdateMessageDTO { msg = "EMPLOYEE EMAIL NOT FOUND" };
                 }
 
+                // Check whether there is any employee detail with the given birthdate
                 var birthDateCheck = await _miasHRDbContext.HrEmployeeDetails
                     .AsNoTrackingWithIdentityResolution()
-                    .FirstAsync(b => b.BirthDate == birthDate.ToString("yyyyMMdd") && b.Status != 3);
+                    .FirstOrDefaultAsync(b => b.BirthDate == birthDate.ToString("yyyyMMdd") && b.Status != 3);
+
                 if (birthDateCheck is null)
                 {
-                    return new UpdateMessageDTO { msg = "EMPLOYEE BIRTHDATE NOT FOUND", com_email = username };
+                    // Employee birthdate not found, return appropriate message
+                    return new UpdateMessageDTO { msg = "EMPLOYEE BIRTHDATE NOT FOUND" };
                 }
-                return new UpdateMessageDTO { msg = "SUCCESS", com_email = username };
+
+                // User, email, and birthdate all exist, return success message with additional information
+                return new UpdateMessageDTO { msg = "SUCCESS", com_email = username, empl_code = emailCheck.EmplCode };
             }
         }
 

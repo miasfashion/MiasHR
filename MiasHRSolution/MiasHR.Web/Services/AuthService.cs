@@ -100,12 +100,36 @@ namespace MiasHR.Web.Services
                 throw ex;
             }
         }
-        public async Task<HttpResponseMessage> GetUserExist(UserCheckDTO request)
+        public async Task<UpdateMessageDTO> GetUserExist(UserCheckDTO request)
         {
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/Auth/GetUserExist", request);
-                return response;
+
+                //DTO will be used to collect both Status Msg and Empl Code
+                if (response.IsSuccessStatusCode)
+                {
+                    var dto = await response.Content.ReadFromJsonAsync<UpdateMessageDTO>();
+                    await _sessionStorage.SetItemAsync("empl", dto?.empl_code);
+                    return dto; 
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<HttpResponseMessage> UpdateUserPassword(string emplCode, string newPassword)
+        {
+            try
+            {
+                var resposne = await _httpClient.PutAsJsonAsync("api/Auth/UpdateUserPassword", new { EmplCode = emplCode, NewPassword = newPassword });
+                return resposne;
             }
             catch(Exception ex)
             {

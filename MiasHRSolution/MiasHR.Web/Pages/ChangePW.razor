@@ -7,27 +7,31 @@
 @using Microsoft.AspNetCore.Components
 @using MiasHR.Web.Services.Contracts
 @using System.Text.RegularExpressions
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using System.Text.Json
 
 @inject NavigationManager NavigationManager
 @inject IAuthService AuthService
 @inject ISnackbar Snackbar
+@inject ISessionStorageService sessionStorage
 
 
 <PageTitle>Change Password</PageTitle>
 
 <MudPaper Class="pa-5 m-5">
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
         <MudPaper Class="d-flex" Elevation="0">
             @*TODO: Current Password to check validation?*@
 
-            <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+            <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @bind-Value="password"
                           InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
                           OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
                           Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                           RequiredError="Type New Password!" />
             <MudIconButton Size="Size.Small" Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
         </MudPaper>
-        <MudTextField T="string" Label="Password" HelperText="Repeat the password"
+        <MudTextField T="string" Label="Password" HelperText="Repeat the password"@bind-Value="repeat"
                       InputType="@PasswordCheckInput" Adornment="Adornment.End" AdornmentIcon="@PasswordCheckIcon"
                       OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
                       Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
@@ -50,8 +54,9 @@
 
 @code {
     bool success;
+    string? password;
+    string? repeat;
     string[] errors = { };
-    MudTextField<string> pwField1;
     MudForm? form;
 
     private IEnumerable<string> PasswordStrength(string pw)
@@ -73,7 +78,7 @@
 
     private string PasswordMatch(string arg)
     {
-        if (pwField1.Value != arg)
+        if (password != arg)
             return "Passwords don't match";
         return "";
     }
@@ -117,25 +122,6 @@
         }
     }
 
-    //Navigation Tab
-    int activeIndex = 1;
-
-    private void navPage()
-    {
-        if (activeIndex == 0)
-        {
-            NavigationManager.NavigateTo("/profile");
-        }
-        else if (activeIndex == 1)
-        {
-            NavigationManager.NavigateTo("/profile/changepw");
-        }
-        else if (activeIndex == 2)
-        {
-            NavigationManager.NavigateTo("/profile/history");
-        }
-    }
-
     // Toggle Pop Over Setting for Tool Tip
     public bool _isOpen;
 
@@ -152,12 +138,48 @@
     {
         try
         {
+            // When you try to change password while logged in, needs to clean out token after changing password
+            if (await AuthService.IsLoggedIn())
+            {
+                var empl = await AuthService.GetUserEmplCode();
 
+                var result = await AuthService.UpdateUserPassword(empl, password);
+                await AuthService.Logout();
+            }
             
+            // When you access through forgot my password, will clean session storage
+            else
+            {
+                var empl = await sessionStorage.GetItemAsStringAsync("empl");
+
+                var result = await AuthService.UpdateUserPassword(empl, password);
+                await sessionStorage.RemoveItemAsync("empl");
+            }
+            NavigationManager.NavigateTo("/");
+
         }
         catch(Exception ex)
         {
             
         }
     }
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (form.IsValid)
+        {
+            if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            {
+                try
+                {
+                    HandleChangePW();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during user validation: {ex.Message}");
+                    Snackbar.Add("An error occurred during user validation.");
+                }
+            }
+        }
+    }
+
 }
