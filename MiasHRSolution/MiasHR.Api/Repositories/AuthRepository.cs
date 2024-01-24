@@ -220,17 +220,6 @@ namespace MiasHR.Api.Repositories
             }
             else
             {
-                // Check whether there is any employee history with the given email
-                var emailCheck = await _miasHRDbContext.HrEmployees
-                    .AsNoTrackingWithIdentityResolution()
-                    .FirstAsync(e => e.ComEmail == username && e.Status != 3);
-
-                if (emailCheck is null)
-                {
-                    // Employee email not found, return appropriate message
-                    return new UpdateMessageDTO { msg = "EMPLOYEE EMAIL NOT FOUND" };
-                }
-
                 // Check whether there is any employee detail with the given birthdate
                 var birthDateCheck = await _miasHRDbContext.HrEmployeeDetails
                     .AsNoTrackingWithIdentityResolution()
@@ -243,7 +232,7 @@ namespace MiasHR.Api.Repositories
                 }
 
                 // User, email, and birthdate all exist, return success message with additional information
-                return new UpdateMessageDTO { msg = "SUCCESS", com_email = username, empl_code = emailCheck.EmplCode };
+                return new UpdateMessageDTO { msg = "SUCCESS", com_email = username, empl_code = birthDateCheck.EmplCode };
             }
         }
 

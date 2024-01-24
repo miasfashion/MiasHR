@@ -16,7 +16,6 @@
 @inject ISnackbar Snackbar
 @inject ISessionStorageService sessionStorage
 
-
 <PageTitle>Change Password</PageTitle>
 
 <MudPaper Class="pa-5 m-5">
@@ -24,20 +23,20 @@
         <MudPaper Class="d-flex" Elevation="0">
             @*TODO: Current Password to check validation?*@
 
-            <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @bind-Value="password"
+            <MudTextField T="string" Label="New Password" HelperText="Choose a strong password" @bind-Value="password"
                           InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-                          OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
+                          OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check New Password"
                           Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                           RequiredError="Type New Password!" />
             <MudIconButton Size="Size.Small" Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
         </MudPaper>
-        <MudTextField T="string" Label="Password" HelperText="Repeat the password"@bind-Value="repeat"
+        <MudTextField T="string" Label="Confirm New Password" HelperText="Repeat the password"@bind-Value="repeat"
                       InputType="@PasswordCheckInput" Adornment="Adornment.End" AdornmentIcon="@PasswordCheckIcon"
                       OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
                       Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
                       RequiredError="Type your New Password Again" />
         <div class="d-flex align-center justify-space-between">
-            <MudButton OnClick="HandleChangePW" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Confirm</MudButton>
+            <MudButton OnClick="HandleChangePW" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Change Password</MudButton>
         </div>
     </MudForm>
     @*To Show Requirements for strong password*@
@@ -136,6 +135,7 @@
     // Changing Password
     private async Task HandleChangePW()
     {
+
         try
         {
             // When you try to change password while logged in, needs to clean out token after changing password
@@ -146,7 +146,7 @@
                 var result = await AuthService.UpdateUserPassword(empl, password);
                 await AuthService.Logout();
             }
-            
+
             // When you access through forgot my password, will clean session storage
             else
             {
@@ -156,6 +156,7 @@
                 await sessionStorage.RemoveItemAsync("empl");
             }
             NavigationManager.NavigateTo("/");
+            Snackbar.Add("Successfully changed password.");
 
         }
         catch(Exception ex)
@@ -181,5 +182,4 @@
             }
         }
     }
-
 }
