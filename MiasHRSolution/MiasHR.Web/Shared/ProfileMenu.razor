@@ -1,4 +1,6 @@
-﻿@using MiasHR.Web.Services.Contracts;
+﻿@attribute [Authorize]
+
+@using MiasHR.Web.Services.Contracts;
 
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
@@ -32,23 +34,12 @@
         AuthService.Logout();
 
         // Redirect the user to the login page
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/login");
     }
 
     private void ShowPopupMessage(string message)
     {
         // TODO: Display a pop-up message using a suitable method from your UI library
         // Replace the following placeholder with the actual pop-up imp
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var name = await AuthService.GetUserName();
-
-        if (name != null)
-        {
-            userName = name;
-        }
-
     }
 }
