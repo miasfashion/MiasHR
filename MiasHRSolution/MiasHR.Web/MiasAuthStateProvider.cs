@@ -4,6 +4,8 @@ using System.Text.Json;
 
 namespace MiasHR.Web
 {
+
+
     public class MiasAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ISessionStorageService _sessionStorage;
