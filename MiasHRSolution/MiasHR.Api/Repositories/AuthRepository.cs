@@ -137,7 +137,7 @@ namespace MiasHR.Api.Repositories
             return new RequestResultDTO("SUCCESS", data);
         }
 
-        public Task<RequestResultDTO> UpdateUserPassword(string username, string oldPasswordHash, string newPasswordHash)
+        public async Task<RequestResultDTO> UpdateUserPassword(string username, string oldPasswordHash, string newPasswordHash)
         {
             throw new NotImplementedException();
 
