@@ -3,7 +3,6 @@ using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace MiasHR.Api.Repositories
 {
@@ -11,7 +10,6 @@ namespace MiasHR.Api.Repositories
     {
         private readonly MiasHRDbContext _miasHRDbContext;
         private readonly IConfiguration _configuration;
-        private static readonly Encoding SafeUTF8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 
         public AuthRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration)
         {

@@ -1,10 +1,7 @@
 using MiasHR.Api.Repositories.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
 using MiasHR.Api.Entities;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace MiasHR.Api.Controllers
 {
@@ -12,6 +9,7 @@ namespace MiasHR.Api.Controllers
     public class DayTimeOffRequestController : ControllerBase
     {
         private readonly IDayTimeOffRequestRepository _dayTimeOffRequestRepository;
+
         public DayTimeOffRequestController(IDayTimeOffRequestRepository dayTimeOffRequestRepository)
         {
             _dayTimeOffRequestRepository = dayTimeOffRequestRepository;

@@ -2,11 +2,8 @@
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using System.Data;
-using MiasHR.Api.Entities;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Dapper;
-using System.Diagnostics;
-using System.Numerics;
 
 namespace MiasHR.Api.Repositories
 {
