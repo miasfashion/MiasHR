@@ -10,13 +10,15 @@ namespace MiasHR.Web
     public class MiasAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ISessionStorageService _sessionStorage;
+        private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private const string _expectedIssuer = "MiasIT";
         private const string _expectedAudience = "MiasUser";
 
-        public MiasAuthStateProvider(ISessionStorageService sessionStorage, HttpClient httpClient)
+        public MiasAuthStateProvider(ISessionStorageService sessionStorage, IConfiguration configuration, HttpClient httpClient)
         {
             _sessionStorage = sessionStorage;
+            _configuration = configuration;
             _httpClient = httpClient;
         }
 

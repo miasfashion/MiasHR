@@ -1,27 +1,28 @@
-﻿using Azure.Core;
+using Azure.Core;
 using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace MiasHR.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+        private readonly IJwtAuthenticationService _jwtAuthenticationService;
 
-        public AuthController(IAuthRepository authRepository, IConfiguration configuration)
+        public AuthController(IAuthRepository authRepository, IConfiguration configuration, IJwtAuthenticationService jwtAuthenticationService)
         {
             _authRepository = authRepository;
             _configuration = configuration;
+            _jwtAuthenticationService = jwtAuthenticationService;
         }
 
+        
         [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<string>> Login(UserDTO request)
         {
@@ -29,7 +30,7 @@ namespace MiasHR.Api.Controllers
             {
                 var employee = await _authRepository.Login(request.Username, request.Password);
 
-                return employee is null ? Unauthorized() : CreateToken(employee);
+                return employee is null ? Unauthorized() : _jwtAuthenticationService.CreateToken(employee);
             }
             catch (Exception)
             {
@@ -122,35 +123,6 @@ namespace MiasHR.Api.Controllers
                 // Handle exceptions and return a 500 Internal Server Error status
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
-        }
-
-        private string CreateToken(HrEmployee employee)
-        {
-            var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
-            var emplCode = employee.EmplCode;
-            string role = "Employee";
-
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, name),
-                new Claim(ClaimTypes.Role, role),
-                new Claim(ClaimTypes.SerialNumber, emplCode)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                issuer: "MiasIT",
-                audience: "MiasUser", 
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-            );
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
         }
     }
 }

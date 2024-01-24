@@ -1,13 +1,10 @@
 ﻿using Dapper;
 using MiasHR.Api.Data;
-using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace MiasHR.Api.Repositories
 {

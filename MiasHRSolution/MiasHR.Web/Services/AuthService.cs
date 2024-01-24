@@ -1,9 +1,8 @@
-﻿using Azure.Identity;
 using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using Telerik.SvgIcons;
 
 namespace MiasHR.Web.Services
 {
@@ -136,6 +135,22 @@ namespace MiasHR.Web.Services
                 throw ex;
             }
         }
-
+        public async Task<string?> TestApi(string emplCode)
+        {
+            var year = 2023;
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<EmployeeDayTimeOffRemainingDTO>($"/api/DayTimeOffRequest/GetDayTimeOffRemainingByEmployee/{emplCode}/{year}");
+                if (response != null)
+                {
+                    return "success";
+                }
+                return "failed";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MiasHR.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     public class EvaluationController : ControllerBase
     {
