@@ -1,5 +1,3 @@
-using Azure.Core;
-using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;

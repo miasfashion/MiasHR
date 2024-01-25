@@ -1,9 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace MiasHR.Models.DTOs
+﻿namespace MiasHR.Models.DTOs
 {
     public class EmployeeDayTimeOffHistoryDTO
     {

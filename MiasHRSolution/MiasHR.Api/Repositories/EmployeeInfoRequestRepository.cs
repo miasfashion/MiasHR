@@ -1,4 +1,4 @@
-﻿ using Dapper;
+﻿using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MiasHR.Api.Data;
 using MiasHR.Api.Entities;

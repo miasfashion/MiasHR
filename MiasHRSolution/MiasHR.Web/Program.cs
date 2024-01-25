@@ -2,7 +2,6 @@ global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
 global using Blazored.SessionStorage;
 
-
 using MiasHR.Web;
 using MiasHR.Web.Services;
 using MiasHR.Web.Services.Contracts;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 

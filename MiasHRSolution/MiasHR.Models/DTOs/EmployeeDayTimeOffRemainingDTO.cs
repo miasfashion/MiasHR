@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MiasHR.Models.DTOs
+﻿namespace MiasHR.Models.DTOs
 {
     public class EmployeeDayTimeOffRemainingDTO
     {
