@@ -1,6 +1,5 @@
 using MiasHR.Api.Entities;
 using MiasHR.Models.DTOs;
-using System.Collections.Generic;
 
 namespace MiasHR.Api.Repositories.Contracts
 {

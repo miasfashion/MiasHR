@@ -1,5 +1,4 @@
 ﻿using MiasHR.Api.Entities;
-using MiasHR.Models;
 using MiasHR.Models.DTOs;
 
 namespace MiasHR.Api.Repositories.Contracts

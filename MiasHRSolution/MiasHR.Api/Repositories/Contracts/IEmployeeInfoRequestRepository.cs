@@ -1,5 +1,6 @@
 ﻿using MiasHR.Api.Entities;
 using MiasHR.Models.DTOs;
+
 namespace MiasHR.Api.Repositories.Contracts
 {
     public interface IEmployeeInfoRequestRepository

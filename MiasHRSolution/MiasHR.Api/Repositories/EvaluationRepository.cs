@@ -6,7 +6,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-
 namespace MiasHR.Api.Repositories
 {
     public class EvaluationRepository : IEvaluationRepository
