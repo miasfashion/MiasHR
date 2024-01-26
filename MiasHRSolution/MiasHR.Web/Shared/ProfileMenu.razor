@@ -27,19 +27,20 @@
 
     private void HandleLogout()
     {
-        // Display a pop-up message indicating successful logout
-        ShowPopupMessage("You have been logged out.");
-
-        // Remove JWT from session storage
+        // Remove JWT from session storage & http bearer
         AuthService.Logout();
 
         // Redirect the user to the login page
         NavigationManager.NavigateTo("/login");
     }
 
-    private void ShowPopupMessage(string message)
+    protected override async Task OnInitializedAsync()
     {
-        // TODO: Display a pop-up message using a suitable method from your UI library
-        // Replace the following placeholder with the actual pop-up imp
+        var curUserName = await AuthService.GetUserName();
+
+        if (curUserName != null)
+        {
+            userName = curUserName;
+        }
     }
 }
