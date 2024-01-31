@@ -1,3 +1,4 @@
+using Azure;
 using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
 using System.Net.Http.Json;
@@ -123,12 +124,13 @@ namespace MiasHR.Web.Services
             }
         }
 
-        public async Task<HttpResponseMessage> UpdateUserPassword(string emplCode, string newPassword)
+        public async Task<string?> UpdateUserPassword(PassUpdateDTO request)
         {
             try
             {
-                var resposne = await _httpClient.PutAsJsonAsync("api/Auth/UpdateUserPassword", new { EmplCode = emplCode, NewPassword = newPassword });
-                return resposne;
+                var response = await _httpClient.PutAsJsonAsync("api/Auth/UpdateUserPassword", request);
+                var message =  await response.Content.ReadAsStringAsync();
+                return message;
             }
             catch(Exception ex)
             {

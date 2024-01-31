@@ -103,15 +103,15 @@ namespace MiasHR.Api.Controllers
         /// <param name="model">A dynamic object containing the required parameters, including 'NewPassword' and 'EmplCode'.</param>
         /// <returns>An ActionResult with a string representing the status of the password update.</returns>
         [HttpPut("api/[controller]/[action]")]
-        public async Task<ActionResult<string>> UpdateUserPassword([FromBody] dynamic model)
+        public async Task<ActionResult<string>> UpdateUserPassword(PassUpdateDTO request)
         {
             try
             {
                 // Hash the new password using BCrypt
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword((string)model.NewPassword);
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
 
                 // Update the user password in the repository
-                var update = await _authRepository.UpdateUserPassword((string)model.EmplCode, hashedPassword);
+                var update = await _authRepository.UpdateUserPassword(request.EmplCode, hashedPassword);
 
                 // Return the status of the password update
                 return update.status;
