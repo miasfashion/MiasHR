@@ -60,6 +60,20 @@
     string[] errors = { };
     MudForm? form;
 
+    //Used to check if there's value for empl code when changing password
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        string token = await sessionStorage.GetItemAsStringAsync("token");
+        string empl = await sessionStorage.GetItemAsStringAsync("empl");
+        if (token == null && empl == null)
+        {
+            NavigationManager.NavigateTo("/forgotPW");
+        }
+    }
+
+
+    //Password Rules to create 
     private IEnumerable<string> PasswordStrength(string pw)
     {
         if (string.IsNullOrWhiteSpace(pw))
