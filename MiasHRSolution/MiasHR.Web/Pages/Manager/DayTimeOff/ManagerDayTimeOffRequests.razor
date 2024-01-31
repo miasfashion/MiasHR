@@ -1,8 +1,12 @@
 ﻿@page "/manager/daytimeoff/requests"
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Manager")]
+
+@using MiasHR.Web.Services.Contracts;
 
 @inject NavigationManager NavigationManager
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
 @inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
@@ -110,6 +114,16 @@
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            var approvalHistory = await DayTimeOffRequestService.GetHrDayTimeOffApprovalHistory(managerEmplCode);
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿using MiasHR.Api.Data;
+﻿using Dapper;
+using MiasHR.Api.Data;
 using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace MiasHR.Api.Repositories
 {
@@ -17,7 +20,7 @@ namespace MiasHR.Api.Repositories
             _configuration = configuration;
         }
 
-        public async Task<HrEmployee>? Login(string username, string passwordHash)
+        public async Task<Tuple<HrEmployee, bool>>? Login(string username, string passwordHash)
         {
             var userCred = await _miasHRDbContext.HrUserCreds
                 .AsNoTrackingWithIdentityResolution()
@@ -58,7 +61,31 @@ namespace MiasHR.Api.Repositories
                 .AsNoTrackingWithIdentityResolution()
                 .FirstAsync(x => x.EmplCode == userCred.EmplCode);
 
-            return employee;
+            // check if user is manager
+            var isManager = false;
+
+            var parameters = new
+            {
+                pEmplCode = employee.EmplCode
+            };
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+
+                var result = await connection.QueryAsync<ManagerEmployeeListDTO>(
+                    "sp_HR_ManagerEmployeeList",
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+                var list = result.ToList();
+
+                if (list.Count != 0)
+                {
+                    isManager = true;
+                }
+            }
+            
+            return new Tuple<HrEmployee, bool>(employee, isManager);
         }
 
         /// <summary>
@@ -140,11 +167,11 @@ namespace MiasHR.Api.Repositories
 
             // Prepare data for the success result
             var data = new Dictionary<string, dynamic>
-    {
-        { "username", username },
-        { "passwordHash", passwordHash },
-        { "birthDate", birthDate }
-    };
+            {
+                { "username", username },
+                { "passwordHash", passwordHash },
+                { "birthDate", birthDate }
+            };
 
             // Return success result with additional information
             return new RequestResultDTO("SUCCESS", data);

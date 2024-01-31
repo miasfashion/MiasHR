@@ -1,6 +1,6 @@
 ﻿@* @page "/manager/evaluation" *@
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Manager")]
 
 <PageTitle>Manage Evaluations</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />

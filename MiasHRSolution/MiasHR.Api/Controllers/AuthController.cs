@@ -26,9 +26,20 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employee = await _authRepository.Login(request.Username, request.Password);
+                var result = await _authRepository.Login(request.Username, request.Password);
 
-                return employee is null ? Unauthorized() : _jwtAuthenticationService.CreateToken(employee);
+                if (result == null)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    var employee = result.Item1;
+                    var isManager = result.Item2;
+
+                    return _jwtAuthenticationService.CreateToken(employee, isManager);
+                }
+               
             }
             catch (Exception)
             {
@@ -108,10 +119,10 @@ namespace MiasHR.Api.Controllers
             try
             {
                 // Hash the new password using BCrypt
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword((string)model.NewPassword);
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword((string)model.newPassword);
 
                 // Update the user password in the repository
-                var update = await _authRepository.UpdateUserPassword((string)model.EmplCode, hashedPassword);
+                var update = await _authRepository.UpdateUserPassword((string)model.emplCode, hashedPassword);
 
                 // Return the status of the password update
                 return update.status;

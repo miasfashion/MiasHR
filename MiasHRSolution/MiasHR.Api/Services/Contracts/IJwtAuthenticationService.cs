@@ -2,5 +2,5 @@
 
 public interface IJwtAuthenticationService
 {
-    string CreateToken(HrEmployee employee);
+    string CreateToken(HrEmployee employee, bool isManager);
 }

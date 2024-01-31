@@ -10,6 +10,7 @@ namespace MiasHR.Web.Services.Contracts
         Task<HttpResponseMessage> UpdateUserPassword(string emplCode, string newPassword);
         Task Logout();
         Task<bool> IsLoggedIn();
+        Task<bool> IsUserManager();
         Task<string?> GetUserEmplCode();
         Task<string?> GetUserName();
         Task<string?> TestApi(string emplCode);
