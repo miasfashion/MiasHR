@@ -53,12 +53,27 @@
 </MudPaper>
 
 @code {
+    private PassUpdateDTO updateInfo = new PassUpdateDTO();
     bool success;
     string? password;
     string? repeat;
     string[] errors = { };
     MudForm? form;
 
+    //Used to check if there's value for empl code when changing password
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        string token = await sessionStorage.GetItemAsStringAsync("token");
+        string empl = await sessionStorage.GetItemAsStringAsync("empl");
+        if (token == null && empl == null)
+        {
+            NavigationManager.NavigateTo("/forgotPW");
+        }
+    }
+
+
+    //Password Rules to create 
     private IEnumerable<string> PasswordStrength(string pw)
     {
         if (string.IsNullOrWhiteSpace(pw))
@@ -136,33 +151,42 @@
     // Changing Password
     private async Task HandleChangePW()
     {
-
+        updateInfo.NewPassword = password;
+        string? status;
         try
         {
             // When you try to change password while logged in, needs to clean out token after changing password
             if (await AuthService.IsLoggedIn())
             {
-                var empl = await AuthService.GetUserEmplCode();
-
-                var result = await AuthService.UpdateUserPassword(empl, password);
-                await AuthService.Logout();
+                updateInfo.EmplCode = await AuthService.GetUserEmplCode();
+                status = await AuthService.UpdateUserPassword(updateInfo);
             }
 
             // When you access through forgot my password, will clean session storage
             else
             {
-                var empl = await sessionStorage.GetItemAsStringAsync("empl");
+                updateInfo.EmplCode = await sessionStorage.GetItemAsStringAsync("empl");
+                status = await AuthService.UpdateUserPassword(updateInfo);
+            }           
 
-                var result = await AuthService.UpdateUserPassword(empl, password);
-                await sessionStorage.RemoveItemAsync("empl");
+            if (string.Equals(status, "success", StringComparison.OrdinalIgnoreCase))
+            {
+                NavigationManager.NavigateTo("/");
+                Snackbar.Add("Successfully Changed Password.");
+                if (await AuthService.IsLoggedIn()){
+                    await AuthService.Logout();             
+                }
             }
-            NavigationManager.NavigateTo("/");
-            Snackbar.Add("Successfully changed password.");
+            else
+            {
+                Snackbar.Add(status);
+            }
 
         }
         catch(Exception ex)
         {
-            
+            Console.WriteLine($"Error during registration: {ex.Message}");
+            Snackbar.Add("An error occurred during registration.");
         }
     }
     public void Enter(KeyboardEventArgs e)
