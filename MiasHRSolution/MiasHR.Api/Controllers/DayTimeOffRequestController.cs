@@ -11,7 +11,6 @@ namespace MiasHR.Api.Controllers
     public class DayTimeOffRequestController : ControllerBase
     {
         private readonly IDayTimeOffRequestRepository _dayTimeOffRequestRepository;
-
         public DayTimeOffRequestController(IDayTimeOffRequestRepository dayTimeOffRequestRepository)
         {
             _dayTimeOffRequestRepository = dayTimeOffRequestRepository;
@@ -19,14 +18,15 @@ namespace MiasHR.Api.Controllers
 
         // Getting for specific Employee
 
-        [HttpGet("api/[controller]/[action]/{emplCode}")]
-        public async Task<ActionResult<IReadOnlyList<HrWebRequest>>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
+        [HttpPost("api/[controller]/[action]/{emplCode}")]
+        public async Task<ActionResult<IReadOnlyList<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
         {
             try
             {
                 var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode);
-
-                return dayTimeOffRequests is null ? NotFound() : Ok(dayTimeOffRequests);
+                var test =  dayTimeOffRequests.ToList();
+                return test;
+                //return dayTimeOffRequests is null ? NotFound() : Ok(dayTimeOffRequests);
             }
             catch (Exception)
             {
@@ -55,7 +55,7 @@ namespace MiasHR.Api.Controllers
                 var requestResult = await _dayTimeOffRequestRepository.CreateDayTimeOffRequest(emplCode, type, subType, fromDate,
                                                                                                toDate, title, content, ip, user,
                                                                                                hours, daysCnt, time, sickDayYn);
-                
+
                 return (requestResult is null || requestResult.status == "FAILURE") ? NotFound() : Ok(requestResult);
             }
             catch (Exception)

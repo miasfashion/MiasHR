@@ -2,8 +2,16 @@
 
 @attribute [Authorize]
 
+@using MiasHR.Models.DTOs
+@using Microsoft.AspNetCore.Components
+@using MiasHR.Web.Services.Contracts
+@using System.Text.RegularExpressions   
+
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject IAuthService AuthService
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject ISessionStorageService SessionStorage
 
 <PageTitle>Day Time Off Requests</PageTitle>
 <MudStack Row="true">
@@ -33,7 +41,7 @@
         </MudHidden>
         <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
             <MudPaper Class="mt-4 ma-2" Elevation="0">
-                <MudTable Items="@employeeDayTimeOffRequests">
+                <MudTable Items="TimeOffLists">
                     <HeaderContent>
                         <MudTh>Date</MudTh>
                         <MudTh>Type</MudTh>
@@ -43,12 +51,12 @@
                         <MudTh>To</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Date">@context.Date</MudTd>
-                        <MudTd DataLabel="Type">@context.Type</MudTd>
-                        <MudTd DataLabel="UsedDays">@context.UsedDays</MudTd>
-                        <MudTd DataLabel="Remark">@context.Remark</MudTd>
-                        <MudTd DataLabel="From">@context.From</MudTd>
-                        <MudTd DataLabel="To">@context.To</MudTd>
+                        <MudTd DataLabel="Date">@context.ReqDate</MudTd>
+                        <MudTd DataLabel="Type">@context.ReqType</MudTd>
+                        <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
+                        <MudTd DataLabel="Remark">@context.ReqContent</MudTd>
+                        <MudTd DataLabel="From">@context.PeriodFrom</MudTd>
+                        <MudTd DataLabel="To">@context.PeriodTo</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
@@ -57,6 +65,9 @@
 </MudContainer>
     @code {
 
+    private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
+    string? employee; 
+
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
@@ -64,22 +75,13 @@
         new BreadcrumbItem("Request List", href: null, disabled: true)
     };
 
-    public class employeeDayTimeOffRequest
+    //When the page loads, it will be displaying data accordingly
+    protected override async Task OnInitializedAsync()
     {
-        public DateOnly Date { get; set; }
-        public string? Type { get; set; }
-        public decimal UsedDays { get; set; }
-        public string? Remark { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        base.OnInitialized();
+        employee = await AuthService.GetUserEmplCode();
+        TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee);
     }
-
-    List<employeeDayTimeOffRequest> employeeDayTimeOffRequests = new List<employeeDayTimeOffRequest>
-    {
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,9,11), Type="Business Related", UsedDays=5.25M, Remark="Remote work", From = new DateTime(2023,12,22,8,0,0), To = new DateTime(2023,12,30,10,0,0)},
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,22), Type="VAC", UsedDays= 1, Remark="Vacation", From = new DateTime(2023,12,24,0,0,0), To = new DateTime(2023,12,25,0,0,0)},
-        new employeeDayTimeOffRequest { Date=new DateOnly(2023,11,30), Type="Business Related", UsedDays=0.25M, Remark="Remote work", From = new DateTime(2023,12,31,13,0,0), To = new DateTime(2023,12,31,15,0,0)}
-    };
 
     // Navigation Tab
     int activeIndex = 1;

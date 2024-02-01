@@ -26,6 +26,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
     {

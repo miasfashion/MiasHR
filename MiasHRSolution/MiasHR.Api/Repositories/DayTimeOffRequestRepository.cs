@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Text.RegularExpressions;
+using AutoMapper;
+using System.Collections.ObjectModel;
+
 
 namespace MiasHR.Api.Repositories
 {
@@ -14,11 +17,14 @@ namespace MiasHR.Api.Repositories
     {
         private readonly MiasHRDbContext _miasHRDbContext;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration)
+
+        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration, IMapper mapper)
         {
             _miasHRDbContext = miasHRDbContext;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -26,7 +32,7 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="emplCode">The employee code.</param>
         /// <returns>A list of day time off requests.</returns>
-        public async Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
+        public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
         {
             var results = await _miasHRDbContext.HrWebRequests
                 .Where(r => r.EmplCode == emplCode
@@ -34,9 +40,17 @@ namespace MiasHR.Api.Repositories
                             && r.Status != 3)
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
-            return results;
+            var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
+
+            return DTOList.AsReadOnly();
         }
 
+        private DayTimeOffRequestDTO MapToDTOOff(HrWebRequest hrWebReq)
+        {
+            return new DayTimeOffRequestDTO(
+                );
+
+        }
         public async Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                                     string type,
                                                                     string subType,
@@ -132,7 +146,7 @@ namespace MiasHR.Api.Repositories
         /// <returns>The number of state entries written to the database.</returns>
         public async Task<RequestResultDTO> DeleteDayTimeOffRequest(int id)
         {
-            var dayTimeOffRequest =  await _miasHRDbContext.HrWebRequests
+            var dayTimeOffRequest = await _miasHRDbContext.HrWebRequests
                 .FirstAsync(r => r.Seq == id);
             if (dayTimeOffRequest != null)
             {
