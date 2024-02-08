@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using MiasHR.Models.DTOs;
 using System.Net;
 using AutoMapper;
+using Azure;
 
 
 namespace MiasHR.Web.Services
@@ -14,11 +15,12 @@ namespace MiasHR.Web.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
+        public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync($"api/DayTimeOffRequest/GetAllEmployeeDayTimeOffRequestList/{emplCode}", emplCode);
+                
+                var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetAllEmployeeDayTimeOffRequestList/{emplCode}/{year}");
                 if (response.IsSuccessStatusCode)
                 {
                     var DayOffList = await response.Content.ReadFromJsonAsync<IReadOnlyList<DayTimeOffRequestDTO>>();
@@ -38,18 +40,20 @@ namespace MiasHR.Web.Services
         {
             return null;
         }
-        public async Task<HttpResponseMessage> GetDayTimeOffRemainingByEmployee(string emplCode, string year)
+
+        public async Task<HttpResponseMessage> CancelDayTimeOffRequest(int id, string emplCode)
         {
-            return null;
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync($"api/DayTimeOffRequest/CancelDayTimeOffRequest/{id}/{emplCode}",new { });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public async Task<HttpResponseMessage> GetEmployeeDayTimeOffHistoryList(string emplCode, string year)
-        {
-            return null;
-        }
-        public async Task<HttpResponseMessage> GetDayTimeOffRequestResultList(string emplCode, string year)
-        {
-            return null;
-        }
+
 
     }
 }
