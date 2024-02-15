@@ -2,6 +2,7 @@
 
 @attribute [Authorize(Roles = "Manager")]
 
+@using MiasHR.Models.DTOs;
 @using MiasHR.Web.Services.Contracts;
 
 @inject NavigationManager NavigationManager
@@ -29,9 +30,9 @@
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-grow-1" Elevation="0">
-            <MudTable Items="@PendingRequests">
+            <MudTable Items="@pendingRequests">
                 <HeaderContent>
-                    <MudTh>Request Time</MudTh>
+                    <MudTh>Request Date</MudTh>
                     <MudTh>Name</MudTh>
                     <MudTh>Type</MudTh>
                     <MudTh>From</MudTh>
@@ -41,13 +42,13 @@
                     <MudTh></MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Type">@context.Type</MudTd>
-                    <MudTd DataLabel="From">@context.From</MudTd>
-                    <MudTd DataLabel="To">@context.To</MudTd>
-                    <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
-                    <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
+                    <MudTd DataLabel="ReqDate">@context.req_date</MudTd>
+                    <MudTd DataLabel="Name">@context.empl_name</MudTd>
+                    <MudTd DataLabel="Type">@context.req_type</MudTd>
+                    <MudTd DataLabel="From">@context.period_from</MudTd>
+                    <MudTd DataLabel="To">@context.period_to</MudTd>
+                    <MudTd DataLabel="FirstApproval">@context.approve_1st_yn</MudTd>
+                    <MudTd DataLabel="SecondApproval">@context.approve_2nd_yn</MudTd>
                     <MudTd>
                         <MudButton OnClick="View" Class="mud-theme-primary">View</MudButton>
                     </MudTd>
@@ -61,6 +62,7 @@
     private bool dense = false;
     private bool hover = true;
     private bool strip = true;
+    private IReadOnlyList<PendingDayTimeOffApprovalDTO> pendingRequests = new List<PendingDayTimeOffApprovalDTO>();
 
     public class PendingRequest
     {
@@ -73,15 +75,15 @@
         public bool SecondApproval { get; set; }
     }
 
-    public List<PendingRequest> PendingRequests = new List<PendingRequest>()
-    {
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
-                            From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
-                            From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
-                             From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
-    };
+    // public List<PendingRequest> PendingRequests = new List<PendingRequest>()
+    // {
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
+    //                         From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
+    //                         From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
+    //                          From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
+    // };
 
     //DayTimeOff View
     private void View()
@@ -106,11 +108,12 @@
     // Navigation Tab
     int activeIndex = 0;
     private void navPage()
+
     {
         if (activeIndex == 0)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/requests");
-        }
+        } 
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
@@ -123,7 +126,7 @@
 
         if (managerEmplCode != null)
         {
-            var approvalHistory = await DayTimeOffRequestService.GetHrDayTimeOffApprovalHistory(managerEmplCode);
+            pendingRequests = await DayTimeOffRequestService.GetPendingDayTimeOffRequestList(managerEmplCode);
         }
     }
 }

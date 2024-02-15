@@ -21,7 +21,7 @@ namespace MiasHR.Web.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/Manager/DayTimeOffRequest/GetPendingDayTimeOffRequestList/{managerEmplCode}");
+                var response = await _httpClient.GetAsync($"/api/Manager/DayTimeOffRequest/GetHrDayTimeOffApprovalHistory/{managerEmplCode}");
 
                 response.EnsureSuccessStatusCode();
                 
@@ -35,9 +35,22 @@ namespace MiasHR.Web.Services
             }
         }
 
-        public Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode)
+        public async Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/Manager/DayTimeOffRequest/GetPendingDayTimeOffRequestList/{managerEmplCode}");
+
+                response.EnsureSuccessStatusCode();
+
+                var data = await response.Content.ReadFromJsonAsync<IReadOnlyList<PendingDayTimeOffApprovalDTO>>();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

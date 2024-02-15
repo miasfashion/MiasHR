@@ -123,7 +123,7 @@ namespace MiasHR.Web.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var dto = await response.Content.ReadFromJsonAsync<UpdateMessageDTO>();
-                    await _sessionStorage.SetItemAsync("empl", dto?.empl_code);
+                    await _sessionStorage.SetItemAsStringAsync("empl", dto?.empl_code);
                     return dto; 
                 }
                 else

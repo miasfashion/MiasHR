@@ -18,7 +18,6 @@ namespace MiasHR.Api.Controllers
         }
 
         // Getting for specific Employee
-
         [HttpGet("api/[controller]/[action]/{emplCode}")]
         public async Task<ActionResult<IReadOnlyList<HrWebRequest>>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
         {
@@ -175,7 +174,6 @@ namespace MiasHR.Api.Controllers
 
         //
         [HttpGet]
-
         [Route("api/Manager/[controller]/[action]/{managerEmplCode}")]
         public async Task<ActionResult<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode)
         {

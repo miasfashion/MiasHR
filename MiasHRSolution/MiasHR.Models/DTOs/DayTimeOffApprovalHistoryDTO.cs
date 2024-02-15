@@ -6,7 +6,7 @@
 
         public string? req_date { get; }
 
-        public string? req_trpe { get; }
+        public string? req_type { get; }
 
         public string? req_sub_type { get; }
 
