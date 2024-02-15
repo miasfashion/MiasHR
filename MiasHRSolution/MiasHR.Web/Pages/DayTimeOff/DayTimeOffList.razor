@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components
 @using MiasHR.Web.Services.Contracts
 @using System.Text.RegularExpressions   
+@using System.Globalization
 
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
@@ -39,48 +40,55 @@
                     <MudTabPanel OnClick="navPage" Text="Request List" />
                 </MudTabs>
             </MudPaper>
-        </MudHidden>
-        <MudPaper Class="d-flex" Elevation="0">
-            <MudTextField @bind-Value="@year" Label="Year" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" OnAdornmentClick="@HandleYearInput" />
-        </MudPaper>
-        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
-            <MudPaper Class="mt-4 ma-2" Elevation="0">
-                <MudTable Items="@TimeOffLists">
+
+        </MudHidden> 
+              
+        <MudPaper Class="d-block" Elevation="0" >
+            <MudTextField @bind-Value="@year" Class="mt-2" Style="width: 200px;" Label="Year" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" OnAdornmentClick="@HandleYearInput" />
+
+                <MudTable Class="m-4 flex-grow-1" Items="@TimeOffLists">
                     <HeaderContent>
-                        <MudTh>Date</MudTh>
+                        <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
                         <MudTh>Type</MudTh>
                         <MudTh>Used Days</MudTh>
                         <MudTh>Remark</MudTh>
                         <MudTh>From</MudTh>
                         <MudTh>To</MudTh>
+                        <MudTh>1st Approved</MudTh>
+                        <MudTh>2nd Approved</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Date">@context.ReqDate</MudTd>
+                        @if(@context.Status != 3 && context.Status != 0)
+                        {                        
+                        <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                         <MudTd DataLabel="Type">@context.ReqType</MudTd>
                         <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
                         <MudTd DataLabel="Remark">@context.ReqContent</MudTd>
-                        <MudTd DataLabel="From">@context.PeriodFrom</MudTd>
-                        <MudTd DataLabel="To">@context.PeriodTo</MudTd>
+                        <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                        <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                        <MudTd DataLabel="Approve1st">@context.Approve1stYn</MudTd>
+                        <MudTd DataLabel="Approve2nd">@context.Approve2ndYn</MudTd>
                         <MudTd>
-                            @if (@context.Status == 1)
-                        {
-                            <MudChip Color="Color.Info">Open</MudChip>
-                            <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancel(context.Seq))" />
-                        }
-                        else if (@context.Status == 4)
-                        {
-                            <MudChip Disabled="true" Color="Color.Error" >Rejected</MudChip>
-                        }
-                        else if (@context.Status == 2)
-                        {
-                            <MudChip Disabled="true" >Approved</MudChip>
-                        }
+                                @if (@context.Status == 1)
+                            {
+                                <MudChip Color="Color.Info">Open</MudChip>
+                                <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancel(context.Seq))" />
+                            }
+                            else if (@context.Status == 4)
+                            {
+                                <MudChip Disabled="true" Color="Color.Error">Rejected</MudChip>
+                            }
+                            else if (@context.Status == 2)
+                            {
+                                <MudChip Disabled="true">Approved</MudChip>
+                            }
                         </MudTd>
+                        }
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
-        </MudPaper>
     </MudContainer>
+
 </MudContainer>
 @code {
 
@@ -102,6 +110,7 @@
         employee = await AuthService.GetUserEmplCode();
         TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, year);
     }
+    
     //Change status of D.T.O Request to Cancel
     private async Task HandleCancel(int id)
     {
