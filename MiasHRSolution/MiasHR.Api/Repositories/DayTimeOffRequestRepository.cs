@@ -7,13 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Text.RegularExpressions;
-using AutoMapper;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System;
-using static MudBlazor.Colors;
-using Telerik.SvgIcons;
-
 
 namespace MiasHR.Api.Repositories
 {
@@ -21,14 +14,11 @@ namespace MiasHR.Api.Repositories
     {
         private readonly MiasHRDbContext _miasHRDbContext;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
 
-
-        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration, IMapper mapper)
+        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration)
         {
             _miasHRDbContext = miasHRDbContext;
             _configuration = configuration;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -36,31 +26,17 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="emplCode">The employee code.</param>
         /// <returns>A list of day time off requests.</returns>
-        public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
+        public async Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string emplCode)
         {
-            int targetYear = int.Parse(year);
-
             var results = await _miasHRDbContext.HrWebRequests
                 .Where(r => r.EmplCode == emplCode
                             && r.ReqType != "CHANGE"
-                            && r.Status != 3
-                            && (Convert.ToInt32(r.PeriodTo.Substring(0, 4)) == targetYear
-                            || Convert.ToInt32(r.PeriodFrom.Substring(0, 4)) == targetYear)
-                            )
+                            && r.Status != 3)
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
-            var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
-
-            return DTOList.AsReadOnly();
+            return results;
         }
 
-        //Used?
-        private DayTimeOffRequestDTO MapToDTOOff(HrWebRequest hrWebReq)
-        {
-            return new DayTimeOffRequestDTO(
-                );
-
-        }
         public async Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                                     string type,
                                                                     string subType,
@@ -94,8 +70,6 @@ namespace MiasHR.Api.Repositories
                 pTime = timeString,
                 @pSickDayYn = sickDayYn
             };
-
-            //TODO:Need to implement function that sends email. Needed for new request + approval 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
@@ -136,7 +110,6 @@ namespace MiasHR.Api.Repositories
                 .FirstAsync(r => r.Seq == id);
         }
 
-        /*Do not need to update if we only have option to cancel request
         public Task<int> UpdateDayTimeOffRequest(int id, HrWebRequest entity)
         {
             var dayTimeOffRequest = _miasHRDbContext.HrWebRequests
@@ -152,77 +125,64 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        */
-
-        //TODO: Change to cancel instead of delete (status = 0)
-        //      There is already existing Stored Procedure handling Cancel Request
         /// <summary>
         /// Deletes a day time off request by its ID.
         /// </summary>
         /// <param name="id">The ID of the day time off request.</param>
         /// <returns>The number of state entries written to the database.</returns>
-        public async Task<string> CancelDayTimeOffRequest(int id, string emplCode)
+        public async Task<RequestResultDTO> DeleteDayTimeOffRequest(int id)
         {
-
-            var param = new DynamicParameters();
-            param.Add("@pseq", id);
-            param.Add("@puser", emplCode);
-            param.Add("@pStatusType", "CANCEL");
-            param.Add("@pRejectReason", "");           
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            var dayTimeOffRequest =  await _miasHRDbContext.HrWebRequests
+                .FirstAsync(r => r.Seq == id);
+            if (dayTimeOffRequest != null)
             {
-                await connection.OpenAsync();
-                var result = await connection.QueryFirstOrDefaultAsync(
-                    "sp_HR_WebRequestStatusChange",
-                    param,
-                    commandType: CommandType.StoredProcedure
-                );
-
-                //Retrieve the output 
-                string resultMessage = result.result_message;
-                return resultMessage;
+                dayTimeOffRequest.Status = 3;
+                var result = await _miasHRDbContext.SaveChangesAsync();
+                if (result > 0)
+                    return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "id", id } });
+                else
+                    return new RequestResultDTO("FAILURE", null);
+            }
+            else
+            {
+                return new RequestResultDTO("FAILURE", null);
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of all day time off requests for a given employee.
+        /// </summary>
+        /// <param name="emplCode">The employee code.</param>
+        /// <param name="year">The year for which the employee's day time off history is requested.</param>
+        /// <returns>A read-only list of day time off requests.</returns>
+        public async Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>> GetEmployeeDayTimeOffHistoryList(string emplCode, string year)
+        {
+            var param = new
+            {
+                pOrgCode = "WEB",
+                pEmplCode = emplCode,
+                pYYYY = year,
+                pType = "DAYS-WEB"
+            };
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryAsync<EmployeeDayTimeOffHistoryDTO>(
+                    "sp_HR_EmployeeVacation",
+                    param,
+                    commandType: CommandType.StoredProcedure
+                );
+                return result.ToList().AsReadOnly();
+            }
+        }
 
-            /*      2/2/2024 
-             *      Do not need as we will not have different tables for approved records and ones that are not
-                    /// <summary>
-                    /// Retrieves a list of all day time off requests for a given employee.
-                    /// </summary>
-                    /// <param name="emplCode">The employee code.</param>
-                    /// <param name="year">The year for which the employee's day time off history is requested.</param>
-                    /// <returns>A read-only list of day time off requests.</returns>
-                    public async Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>> GetEmployeeDayTimeOffHistoryList(string emplCode, string year)
-                    {
-                        var param = new
-                        {
-                            pOrgCode = "WEB",
-                            pEmplCode = emplCode,
-                            pYYYY = year,
-                            pType = "DAYS-WEB"
-                        };
-                        using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                        {
-                            await connection.OpenAsync();
-                            var result = await connection.QueryAsync<EmployeeDayTimeOffHistoryDTO>(
-                                "sp_HR_EmployeeVacation",
-                                param,
-                                commandType: CommandType.StoredProcedure
-                            );
-                            return result.ToList().AsReadOnly();
-                        }
-                    }
-            */
-
-            /// <summary>
-            /// Retrieves the remaining day time off for a given employee for a specific year.
-            /// </summary>
-            /// <param name="emplCode">The employee code.</param>
-            /// <param name="year">The year for which the employee's day time off is requested.</param>
-            /// <returns>The remaining day time off for the employee.</returns>
-            public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year)
+        /// <summary>
+        /// Retrieves the remaining day time off for a given employee for a specific year.
+        /// </summary>
+        /// <param name="emplCode">The employee code.</param>
+        /// <param name="year">The year for which the employee's day time off is requested.</param>
+        /// <returns>The remaining day time off for the employee.</returns>
+        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year)
         {
             var param = new
             {
@@ -243,9 +203,6 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        /* 2/2/2024
-         * Do not need as 
-         * 
         /// <summary>
         /// Retrieves a list of day time off requests for a given employee for a specific year.
         /// </summary>
@@ -272,7 +229,7 @@ namespace MiasHR.Api.Repositories
                 return result.ToList().AsReadOnly();
             }
         }
-        */
+
         /// <summary>
         /// Retrieves a list of pending day time off requests for a given manager.
         /// </summary>
