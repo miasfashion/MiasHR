@@ -1,6 +1,5 @@
 using MiasHR.Api.Entities;
 using MiasHR.Models.DTOs;
-using System.Collections.ObjectModel;
 
 namespace MiasHR.Api.Repositories.Contracts
 {
@@ -22,17 +21,17 @@ namespace MiasHR.Api.Repositories.Contracts
 
         Task<HrWebRequest>? GetDayTimeOffRequest(int id);
 
-        Task<string> CancelDayTimeOffRequest(int id, string emplCode);
+        Task<RequestResultDTO> DeleteDayTimeOffRequest(int id);
 
-//      Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year);
+        Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year);
 
         Task<EmployeeDayTimeOffRemainingDTO>? GetDayTimeOffRemainingByEmployee(string emplCode, string year);
 
-//      Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string emplCode, string year);
+        Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string emplCode, string year);
 
         Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
 
-        Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year);
+        Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string emplCode);
 
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
 
