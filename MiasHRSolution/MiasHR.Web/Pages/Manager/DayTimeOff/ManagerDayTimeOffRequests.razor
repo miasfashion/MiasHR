@@ -25,7 +25,7 @@
                 <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
                 @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                     <MudTabPanel OnClick="navPage" Text="Requests" />
-                    <MudTabPanel OnClick="navPage" Text="Approval History" />
+                    <MudTabPanel OnClick="navPage" Text="History" />
                 </MudTabs>
             </MudPaper>
         </MudHidden>
@@ -53,6 +53,11 @@
                         <MudButton OnClick="View" Class="mud-theme-primary">View</MudButton>
                     </MudTd>
                 </RowTemplate>
+                <NoRecordsContent>
+                    <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
+                        <MudText>No approvals yet</MudText>
+                    </MudPaper>
+                </NoRecordsContent>
             </MudTable>
         </MudPaper>
     </MudContainer>

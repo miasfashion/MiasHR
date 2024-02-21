@@ -34,7 +34,7 @@ namespace MiasHR.Web.Services
                 throw ex;
             }
         }
-
+        
         public async Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode)
         {
             try

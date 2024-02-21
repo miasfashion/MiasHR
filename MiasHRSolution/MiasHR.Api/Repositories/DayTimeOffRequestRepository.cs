@@ -302,7 +302,7 @@ namespace MiasHR.Api.Repositories
             var param = new
             {
                 pEmplCode = "",
-                pYYYY = "",
+                pYYYY = DateTime.Now.Year,
                 pType = "PTO",
                 pSeq = 0,
                 pApprover = managerEmplCode
