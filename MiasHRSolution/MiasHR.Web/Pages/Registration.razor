@@ -132,17 +132,26 @@
             if (result.IsSuccessStatusCode && string.Equals(msg, "success", StringComparison.OrdinalIgnoreCase))
             {
                 NavigationManager.NavigateTo("/");
-                Snackbar.Add("Account has been successfully created.");
+                Snackbar.Add("Account has been successfully created.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
             }
             else
             {
-                Snackbar.Add(msg);
+                Snackbar.Add(msg, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error during registration: {ex.Message}");
-            Snackbar.Add("An error occurred during registration.");
+            Snackbar.Add("An error occurred during registration.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
         }
     }
 
@@ -159,7 +168,10 @@
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error during user validation: {ex.Message}");
-                    Snackbar.Add("An error occurred during user validation.");
+                    Snackbar.Add("An error occurred during user validation.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
                 }
             }
         }

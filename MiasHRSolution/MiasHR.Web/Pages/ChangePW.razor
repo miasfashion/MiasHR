@@ -64,7 +64,7 @@
     protected override async void OnInitialized()
     {
         base.OnInitialized();
-        string token = await sessionStorage.GetItemAsStringAsync("token");
+        string token = await sessionStorage.GetItemAsStringAsync("authToken");
         string empl = await sessionStorage.GetItemAsStringAsync("empl");
         if (token == null && empl == null)
         {
@@ -167,26 +167,35 @@
             {
                 updateInfo.EmplCode = await sessionStorage.GetItemAsStringAsync("empl");
                 status = await AuthService.UpdateUserPassword(updateInfo);
-            }           
+            }
 
             if (string.Equals(status, "success", StringComparison.OrdinalIgnoreCase))
             {
                 NavigationManager.NavigateTo("/");
-                Snackbar.Add("Successfully Changed Password.");
-                if (await AuthService.IsLoggedIn()){
-                    await AuthService.Logout();             
+                Snackbar.Add("Successfully Changed Password.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                if (await AuthService.IsLoggedIn()) {
+                    await AuthService.Logout();
                 }
             }
             else
             {
-                Snackbar.Add(status);
-            }
+                Snackbar.Add(status, Severity.Normal ,(options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+        }
 
         }
         catch(Exception ex)
         {
             Console.WriteLine($"Error during registration: {ex.Message}");
-            Snackbar.Add("An error occurred during registration.");
+            Snackbar.Add("An error occurred during registration.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
         }
     }
     public void Enter(KeyboardEventArgs e)
@@ -202,7 +211,10 @@
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error during user validation: {ex.Message}");
-                    Snackbar.Add("An error occurred during user validation.");
+                    Snackbar.Add("An error occurred during user validation.", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
                 }
             }
         }
