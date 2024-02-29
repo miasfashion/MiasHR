@@ -19,7 +19,7 @@ namespace MiasHR.Web.Services
         {
             try
             {
-                
+
                 var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetAllEmployeeDayTimeOffRequestList/{emplCode}/{year}");
                 if (response.IsSuccessStatusCode)
                 {
@@ -36,9 +36,60 @@ namespace MiasHR.Web.Services
                 throw ex;
             }
         }
+
+        public async Task<HttpResponseMessage> CreateDayTimeOffRequest(CreateRequestDTO request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/CreateDayTimeOffRequest", request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<HttpResponseMessage> GetDayTimeOffRequest(int id)
         {
-            return null;
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetDayTimeOffReqeust/{id}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<string> GetSickDaysRemaining(string emplCode)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/GetSickDaysRemaining", emplCode);
+                // Deserialize the response content to a decimal
+                var remainDayDecimal = await response.Content.ReadAsStringAsync();
+                return remainDayDecimal;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<string> GetVacationRemaining(string emplCode)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/GetVacationRemaining", emplCode);
+                // Deserialize the response content to a decimal
+                var remainDayDecimal = await response.Content.ReadAsStringAsync();
+                return remainDayDecimal;               
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<HttpResponseMessage> CancelDayTimeOffRequest(int id, string emplCode)

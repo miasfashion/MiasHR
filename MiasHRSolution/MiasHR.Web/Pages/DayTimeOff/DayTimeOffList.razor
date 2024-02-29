@@ -7,6 +7,8 @@
 @using MiasHR.Web.Services.Contracts
 @using System.Text.RegularExpressions
 @using System.Globalization
+@inject IJSRuntime JSRuntime
+
 
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
@@ -74,7 +76,7 @@
                         <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                         <MudTd DataLabel="Type">@context.ReqType</MudTd>
                         <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                        <MudTd DataLabel="Remark">@context.ReqContent</MudTd>
+                        <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
                         <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                         <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                         <MudTd DataLabel="Approve1st">@context.Approve1stYn</MudTd>
@@ -85,7 +87,7 @@
                                 <MudChip Color="Color.Info">Open</MudChip>
                             </MudTd>
                             <MudTd>
-                                <MudButton EndIcon="@Icons.Material.Filled.Edit" />
+                                <MudButton EndIcon="@Icons.Material.Filled.Edit" OnClick="@(() => HandleEdit(context.Seq))" />
                             </MudTd>
                             <MudTd>
                                 <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancel(context.Seq))" />
@@ -118,7 +120,7 @@
 @code {
 
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
-    private string selectedYear = String.Empty;
+    private string selectedYear = DateTime.Now.Year.ToString();
 
     string? employee;
     List<string> years = new List<string>();
@@ -137,21 +139,17 @@
     {
         base.OnInitialized();
         int currentYear = DateTime.Now.Year;
-        for (int y = 2017; y <= currentYear; y++)
+        for (int y = 2020; y <= currentYear; y++)
         {
             years.Add(y.ToString());
         }
         employee = await AuthService.GetUserEmplCode();
-        if (string.IsNullOrEmpty(selectedYear))
-        {
-            TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, currentYear.ToString());
+        TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, selectedYear);
 
-        }
-        else
-        {
-            TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, selectedYear);
-        }
-        
+
+        //Instead of refreshing whole page, just render values again
+        StateHasChanged();
+
     }
 
     //Change status of D.T.O Request to Cancel
@@ -184,7 +182,9 @@
 
     }
 
-    //When user search year, it will pull D.T.O. History of user for the year.
+    /// <summary>
+    /// Handles the input of the selected year to retrieve the Day Time Off (DTO) history of the user for the year.
+    /// </summary>
     private async Task HandleYearInput()
     {
         try
@@ -213,8 +213,8 @@
         }
     }
 
-    //DayTimeOff Request
-    private void Request()
+    //Toggles when user clicks Create Request
+    private async void Request()
     {
         var parameters = new DialogParameters<DayTimeOffRequest>();
         parameters.Add(x => x.ContentText, "New Time Off Request");
@@ -223,7 +223,41 @@
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
+        var dialog = DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
+
+        //Wait for the dialog to close
+        var result = await dialog.Result;
+
+        //Render again if Dialog was not cancelled
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+
     }
+
+    //Toggles when user clicks Edit Button
+    private async void HandleEdit(int id)
+    {
+        var parameters = new DialogParameters<DayTimeOffEdit>();
+        parameters.Add(x => x.ContentText, "Edit Time Off Request");
+        parameters.Add(x => x.ButtonText, "Confirm Edit");
+        parameters.Add(x => x.Color, Color.Success);
+        parameters.Add(x => x.seq, id);
+
+        var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+
+        var dialog = DialogService.Show<DayTimeOffEdit>("Edit Time Off Request", parameters, options);
+
+        //Wait for the dialog to close
+        var result = await dialog.Result;
+
+        //Render again if Dialog was not cancelled
+        if (!result.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+
 
 }

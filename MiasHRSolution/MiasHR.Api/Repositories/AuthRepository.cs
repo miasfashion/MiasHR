@@ -49,6 +49,7 @@ namespace MiasHR.Api.Repositories
             }
 
             // log login success
+            // 2/27/24 MAKE SURE TO CHECK IF IDENTITY PROPERTY IS SET TO SEQ
             logEntry.AcceptYn = "Y";
             await _miasHRDbContext.AddAsync(logEntry);
             await _miasHRDbContext.SaveChangesAsync();

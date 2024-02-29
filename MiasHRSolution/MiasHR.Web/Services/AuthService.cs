@@ -136,23 +136,6 @@ namespace MiasHR.Web.Services
             {
                 throw ex;
             }
-        }
-        public async Task<string?> TestApi(string emplCode)
-        {
-            var year = 2023;
-            try
-            {
-                var response = await _httpClient.GetFromJsonAsync<EmployeeDayTimeOffRemainingDTO>($"/api/DayTimeOffRequest/GetDayTimeOffRemainingByEmployee/{emplCode}/{year}");
-                if (response != null)
-                {
-                    return "success";
-                }
-                return "failed";
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        }       
     }
 }

@@ -1,0 +1,311 @@
+﻿@attribute [Authorize]
+
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using MiasHR.Web.Services.Contracts
+@using MiasHR.Models.DTOs
+
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudPaper Class="pa-2" Elevation="0">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                            <MudSelectItem T="string" Value="@("Vacation")" />
+                            <MudSelectItem T="string" Value="@("Sick Day")" />
+                            <MudSelectItem T="string" Value="@("Absence")" />
+                        </MudSelect>
+
+                        <MudContainer Class="d-flex flex-grow-1 mt-4 mb-4">
+                            <MudRadioGroup T="string" SelectedOption="@PTOOption" SelectedOptionChanged="OnPTOOptionChanged">
+                                <MudRadio Option="@("DAY")" Color="Color.Primary" UnCheckedColor="Color.Default">DAY OFF</MudRadio>
+                                <MudRadio Option="@("AMPM")" Color="Color.Primary" UnCheckedColor="Color.Default">AM/PM</MudRadio>
+                                <MudRadio Option="@("HOUR")" Color="Color.Primary" UnCheckedColor="Color.Default">HOUR</MudRadio>
+                            </MudRadioGroup>
+                        </MudContainer>
+                        <MudContainer Class="d-flex mt-4 mb-4">
+                            @switch (PTOOption)
+                            {
+                                case "AMPM":
+                                    <MudRadioGroup T="string" SelectedOption="@timeOption" SelectedOptionChanged="OnTimeOptionChanged">
+                                        <MudRadio Option="@("AM")">AM</MudRadio>
+                                        <MudRadio Option="@("PM")">PM</MudRadio>
+                                    </MudRadioGroup>
+                                    break;
+
+                                case "HOUR":
+                                    <MudRadioGroup T="string" SelectedOption="@timeOption" SelectedOptionChanged="OnTimeOptionChanged">
+                                        <MudRadio Option="@("2Hrs")" Color="Color.Secondary" UnCheckedColor="Color.Default">2 Hrs</MudRadio>
+                                        <MudRadio Option="@("4Hrs")" Color="Color.Secondary" UnCheckedColor="Color.Default">4 Hrs</MudRadio>
+                                        <MudRadio Option="@("6Hrs")" Color="Color.Secondary" UnCheckedColor="Color.Default">6 Hrs</MudRadio>
+                                    </MudRadioGroup>
+                                    <MudTimePicker Label="Start Time" AmPm="true" TimeFormat="h:mm tt" MinuteSelectionStep="30" Time="startTime" TimeChanged="HandleStartTimeChange" />
+
+                                    break;
+
+                                default:
+                                    <MudNumericField HideSpinButtons="true" @bind-Value="@dayCnt" Label="Day Count" Variant="Variant.Outlined" />
+                                    break;
+                            }
+                        </MudContainer>
+                        <MudPaper Class="d-flex m-2" Elevation="0">
+                            <MudDatePicker Class="m-1" Label="Start Date" Editable="true" @bind-Date="@startDate" Placeholder="Select Date" />
+                            @if (PTOOption != "DAY")
+                            {
+                                @* Bind endDate to startDate when PTOOption is not "DAY" *@
+                                <MudDatePicker Class="m-1" Label="End Date" Editable="true" @bind-Date="@startDate" Placeholder="Select Date" />
+                                endDate = startDate;
+                            }
+                            else
+                            {
+                                @* Otherwise, allow selecting a different end date *@
+                                <MudDatePicker Class="m-1" Label="End Date" Editable="true" @bind-Date="@endDate" Placeholder="Select Date" />
+                            }
+                        </MudPaper>
+                        <MudSelect @bind-Value="reasonValue" T="string" Label="Reason" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                            @switch (typeValue)
+                            {
+                                case "Absence":
+                                    <MudSelectItem Value="@("Absence Report")" />
+                                    break;
+                                case "Sick Day":
+                                    <MudSelectItem Value="@("Sick Day")" />
+                                    break;
+                                default:
+                                    @foreach (var reason in commonReasons)
+                                    {
+                                        <MudSelectItem Value="@reason" />
+                                    }
+                                    break;
+                            }
+                        </MudSelect>
+                        <MudTextField T="string" @bind-Value="remark" Label="More Information" AutoGrow Lines="3" HelperText="Include information for approver" HelperTextOnFocus="true" Variant="Variant.Outlined" Class="ma-4" />
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="6">
+                <MudContainer Class="d-flex flex-grow-1 flex-column">
+                    <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
+                        <MudText Class="mb-2">Vacation Available</MudText>
+                        <MudTable Items="@remainingDays">
+                            <HeaderContent>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Days</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Type">@context.Type</MudTd>
+                                    <MudTd DataLabel="Days">@context.Days</MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </MudPaper>
+                        <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
+                            <MudText Class="m-2">Using @typeValue</MudText>
+                            <MudText Class="m-2">For @dayCnt Days</MudText>
+                        <MudText Class="m-2">Checking Hour @hour</MudText>
+                            <MudText Class="m-2">Checking Time @startTime</MudText>
+                            <MudText Class="m-2">Checking start Date @startDate</MudText>
+                            <MudText Class="m-2">Checking end Date @endDate</MudText>
+                        </MudPaper>
+                    </MudContainer>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        </DialogActions>                                                         
+    </MudDialog>
+
+    @code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string ContentText { get; set; }
+    [Parameter] public string ButtonText { get; set; }
+    [Parameter] public Color Color { get; set; }
+    [Parameter] public int seq { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    //Information needed for Creating Request 
+    public string timeOption { get; set; } = "DAY OFF";
+    public string typeValue { get; set; }
+    public decimal dayCnt { get; set; }
+    public string ptoType = string.Empty;
+    public string sickYN = "N";
+    public TimeSpan endOfWork = new TimeSpan(17, 0, 0);
+    public TimeSpan begOfWork = new TimeSpan(8, 0, 0);
+
+    private string remark = string.Empty;
+    private string PTOOption = string.Empty;
+    private string reasonValue;
+    private TimeSpan? startTime = new TimeSpan(08, 00, 00);
+    private DateTime? startDate = DateTime.Today;
+    private DateTime? endDate = DateTime.Today;
+    private int hour = 0;
+    private CreateRequestDTO newRequest;
+    private string emailApprov;
+
+    private bool success;
+    string[] errors = { };
+    MudForm form;
+
+    /*
+    private async Task Submit()
+    {
+        try
+        {
+            //Convert NullTS Time to NonNull Value
+            TimeSpan nonnullTS = startTime.Value;
+
+            //Validate Time
+            TimeSpan endTime = nonnullTS.Add(TimeSpan.FromHours(hour));
+
+            if (endTime > endOfWork || nonnullTS < begOfWork)
+            {
+                Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+
+            //Create Request
+            newRequest = new CreateRequestDTO();
+
+            //Type is either SICK DAY or PTO (vacation, absence)
+            if (typeValue.Equals("Sick Day"))
+            {
+                newRequest.type = "SICK DAY";
+                newRequest.sickDayYn = "Y";
+            }
+            else
+            {
+                newRequest.type = "PTO";
+                newRequest.sickDayYn = "N";
+            }
+
+            newRequest.emplCode = await AuthService.GetUserEmplCode();
+            newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
+            newRequest.fromDate = Convert.ToDateTime(startDate);
+            newRequest.toDate = Convert.ToDateTime(endDate);
+            newRequest.content = remark;
+            newRequest.user = await AuthService.GetUserName();
+            newRequest.hours = hour;
+            newRequest.daysCnt = dayCnt;
+            newRequest.time = nonnullTS;
+
+            var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
+            emailApprov = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+            }
+
+        }
+
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    */
+    //Initiate with Current Available PTO List
+    protected override async Task OnInitializedAsync()
+    {
+        string empl = await AuthService.GetUserEmplCode();
+
+        //Calculate each PTO days
+        var vacationDays = await DayTimeOffRequestService.GetVacationRemaining(empl);
+        var sickDays = await DayTimeOffRequestService.GetSickDaysRemaining(empl);
+
+        remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
+        remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
+    }
+
+    private void HandleStartTimeChange(TimeSpan? newStartTime)
+    {
+        // Check if the new start time is not null and the minute is in the range 45-59
+        if (newStartTime.HasValue && newStartTime.Value.Minutes >= 45 && newStartTime.Value.Minutes <= 59)
+        {
+            // Increment the hour component by one
+            startTime = newStartTime.Value.Add(TimeSpan.FromHours(1));
+        }
+        else
+        {
+            // Set the start time as it is
+            startTime = newStartTime;
+        }
+    }
+
+    //Used to set Hour and Day Cnt values when Specific AMPM or HOUR option chosen
+    private void OnTimeOptionChanged(string value)
+    {
+        timeOption = value;
+        switch (timeOption)
+        {
+            case "AM":
+                dayCnt = 0.5M;
+                startTime = new TimeSpan(08, 00, 00);
+                break;
+            case "PM":
+                dayCnt = 0.5M;
+                startTime = new TimeSpan(13, 00, 00);
+                break;
+            case "2Hrs":
+                dayCnt = 0.25M;
+                hour = 2;
+                break;
+            case "4Hrs":
+                dayCnt = 0.5M;
+                hour = 4;
+                break;
+            case "6Hrs":
+                dayCnt = 0.75M;
+                hour = 6;
+                break;
+            default:
+                dayCnt = 0;
+                hour = 0;
+                break;
+        }
+    }
+
+    //When User decides between Hour, Day, AMPM, Associated Values reset to default
+    private void OnPTOOptionChanged(string value)
+    {
+        PTOOption = value;
+        dayCnt = 0;
+        hour = 0;
+        startTime = new TimeSpan(08, 00, 00);
+
+    }
+
+
+    // Use for PTO Request Reasons
+    List<string> commonReasons = new List<string>
+    {
+        "Vacation", "Personal Matters", "Sick Day", "Business Related",
+        "Death in Family", "Jury Duty / Witness", "Maternity / Paternity", "Other"
+    };
+
+    //Used to Show PTO Information for user
+    public class vacDays
+    {
+        public string? Type { get; set; }
+        public string Days { get; set; }
+    }
+    private List<vacDays> remainingDays = new List<vacDays>();
+    private List<vacDays> selectedDays = new List<vacDays>();
+
+
+}

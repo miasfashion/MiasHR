@@ -50,14 +50,7 @@
             <MudGrid>
                 <MudItem xs="12">
                     <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
-                        @if (api_success)
-                        {
-                            <MudText>Api call success</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Api call failed</MudText>
-                        }
+                      
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12">
@@ -110,11 +103,6 @@
         if (await AuthService.IsLoggedIn())
         {
             var emplCode = await AuthService.GetUserEmplCode();
-            var response = await AuthService.TestApi(emplCode);
-            if (response == "success")
-            {
-                api_success = true;
-            }
         }
     }
 }
