@@ -50,12 +50,20 @@ namespace MiasHR.Web.Services
             }
         }
 
-        public async Task<HttpResponseMessage> GetDayTimeOffRequest(int id)
+        public async Task<DayTimeOffRequestDTO> GetDayTimeOffRequest(int id)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetDayTimeOffReqeust/{id}");
-                return response;
+                var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetDayTimeOffRequest/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var offRequest = await response.Content.ReadFromJsonAsync<DayTimeOffRequestDTO>();
+                    return offRequest;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {

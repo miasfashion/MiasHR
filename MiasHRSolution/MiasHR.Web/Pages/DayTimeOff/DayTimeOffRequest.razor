@@ -253,11 +253,13 @@
         {
             case "AM":
                 dayCnt = 0.5M;
+                hour = 0;
                 startTime = new TimeSpan(08, 00, 00);
                 break;
             case "PM":
                 dayCnt = 0.5M;
                 startTime = new TimeSpan(13, 00, 00);
+                hour = 0;
                 break;
             case "2Hrs":
                 dayCnt = 0.25M;

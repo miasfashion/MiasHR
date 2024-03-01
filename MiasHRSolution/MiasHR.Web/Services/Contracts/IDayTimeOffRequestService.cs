@@ -5,7 +5,7 @@ namespace MiasHR.Web.Services.Contracts
     public interface IDayTimeOffRequestService
     {
         Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year);
-        Task<HttpResponseMessage> GetDayTimeOffRequest(int id);
+        Task<DayTimeOffRequestDTO> GetDayTimeOffRequest(int id);
         Task<HttpResponseMessage> CreateDayTimeOffRequest(CreateRequestDTO request);
         
         Task<HttpResponseMessage> CancelDayTimeOffRequest(int id, string emplCode);

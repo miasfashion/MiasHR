@@ -4,6 +4,7 @@
 @using System.ComponentModel.DataAnnotations
 @using MiasHR.Web.Services.Contracts
 @using MiasHR.Models.DTOs
+@using System.Globalization
 
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
@@ -34,7 +35,7 @@
                             {
                                 case "AMPM":
                                     <MudRadioGroup T="string" SelectedOption="@timeOption" SelectedOptionChanged="OnTimeOptionChanged">
-                                        <MudRadio Option="@("AM")">AM</MudRadio>
+                                        <MudRadio Option="@("AM")" >AM</MudRadio>
                                         <MudRadio Option="@("PM")">PM</MudRadio>
                                     </MudRadioGroup>
                                     break;
@@ -111,6 +112,8 @@
                             <MudText Class="m-2">Checking Time @startTime</MudText>
                             <MudText Class="m-2">Checking start Date @startDate</MudText>
                             <MudText Class="m-2">Checking end Date @endDate</MudText>
+                            <MudText Class="m-2">Show Radio timeopt @timeOption</MudText>
+                            <MudText Class="m-2">Show Radio ptoopt @PTOOption</MudText>
                         </MudPaper>
                     </MudContainer>
                 </MudItem>
@@ -119,7 +122,7 @@
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
             <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
-        </DialogActions>                                                         
+        </DialogActions>
     </MudDialog>
 
     @code {
@@ -131,7 +134,7 @@
 
     void Cancel() => MudDialog.Cancel();
 
-    //Information needed for Creating Request 
+    //Information needed for Creating Request
     public string timeOption { get; set; } = "DAY OFF";
     public string typeValue { get; set; }
     public decimal dayCnt { get; set; }
@@ -140,8 +143,9 @@
     public TimeSpan endOfWork = new TimeSpan(17, 0, 0);
     public TimeSpan begOfWork = new TimeSpan(8, 0, 0);
 
+    private DayTimeOffRequestDTO currInfo;
     private string remark = string.Empty;
-    private string PTOOption = string.Empty;
+    private string PTOOption;
     private string reasonValue;
     private TimeSpan? startTime = new TimeSpan(08, 00, 00);
     private DateTime? startDate = DateTime.Today;
@@ -154,71 +158,12 @@
     string[] errors = { };
     MudForm form;
 
-    /*
+
     private async Task Submit()
-    {
-        try
-        {
-            //Convert NullTS Time to NonNull Value
-            TimeSpan nonnullTS = startTime.Value;
-
-            //Validate Time
-            TimeSpan endTime = nonnullTS.Add(TimeSpan.FromHours(hour));
-
-            if (endTime > endOfWork || nonnullTS < begOfWork)
-            {
-                Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
-                {
-                    options.CloseAfterNavigation = true;
-                });
-                return;
-            }
-
-            //Create Request
-            newRequest = new CreateRequestDTO();
-
-            //Type is either SICK DAY or PTO (vacation, absence)
-            if (typeValue.Equals("Sick Day"))
-            {
-                newRequest.type = "SICK DAY";
-                newRequest.sickDayYn = "Y";
-            }
-            else
-            {
-                newRequest.type = "PTO";
-                newRequest.sickDayYn = "N";
-            }
-
-            newRequest.emplCode = await AuthService.GetUserEmplCode();
-            newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
-            newRequest.fromDate = Convert.ToDateTime(startDate);
-            newRequest.toDate = Convert.ToDateTime(endDate);
-            newRequest.content = remark;
-            newRequest.user = await AuthService.GetUserName();
-            newRequest.hours = hour;
-            newRequest.daysCnt = dayCnt;
-            newRequest.time = nonnullTS;
-
-            var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
-            emailApprov = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
-                {
-                    options.CloseAfterNavigation = true;
-                });
-            }
-
-        }
-
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+    {    
     }
-    */
+
+
     //Initiate with Current Available PTO List
     protected override async Task OnInitializedAsync()
     {
@@ -230,6 +175,61 @@
 
         remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
         remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
+
+        currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
+
+        //Fill the Form with existing Data        
+        dayCnt = currInfo.DaysCnt.Value;
+        startTime = currInfo.StartTime;
+        hour = currInfo.HoursCnt.Value;
+        remark = currInfo.ReqContent;
+
+        // Parse the string into DateTime nullable object
+        // Can remove the error checking
+        if (DateTime.TryParseExact(currInfo.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedstart))
+        {
+            // Parsing succeeded, assign the parsed value to the nullable DateTime object
+            startDate = parsedstart;
+        }
+        else
+        {
+            // Parsing failed, handle the error or use a default value
+            Console.WriteLine("Invalid date format");
+        }
+
+        if (DateTime.TryParseExact(currInfo.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedend))
+        {
+            // Parsing succeeded, assign the parsed value to the nullable DateTime object
+            endDate = parsedend;
+        }
+        else
+        {
+            // Parsing failed, handle the error or use a default value
+            Console.WriteLine("Invalid date format");
+        }       
+
+        //Splitting Merged SubType 
+        string subTp = currInfo.ReqSubType;
+
+        string[] parts = subTp.Split(':');
+        typeValue = parts[0].Trim();
+        parts = parts[1].Split('[');
+        reasonValue = parts[0].Trim();
+        timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
+
+        //Find which PTOOption was selected 
+        if (timeOption == "AM" || timeOption == "PM")
+        {
+            PTOOption = "AMPM";
+        }
+        else if (timeOption == "DAY OFF")
+        {
+            PTOOption = "DAY";
+        }
+        else
+        {
+            PTOOption = "HOUR";
+        }       
     }
 
     private void HandleStartTimeChange(TimeSpan? newStartTime)
@@ -245,6 +245,7 @@
             // Set the start time as it is
             startTime = newStartTime;
         }
+        StateHasChanged();
     }
 
     //Used to set Hour and Day Cnt values when Specific AMPM or HOUR option chosen
@@ -255,10 +256,12 @@
         {
             case "AM":
                 dayCnt = 0.5M;
+                hour = 0;
                 startTime = new TimeSpan(08, 00, 00);
                 break;
             case "PM":
                 dayCnt = 0.5M;
+                hour = 0;
                 startTime = new TimeSpan(13, 00, 00);
                 break;
             case "2Hrs":
@@ -281,12 +284,13 @@
     }
 
     //When User decides between Hour, Day, AMPM, Associated Values reset to default
+    //Edit: commented out as they are forcing pulled data to set default.
     private void OnPTOOptionChanged(string value)
     {
         PTOOption = value;
-        dayCnt = 0;
-        hour = 0;
-        startTime = new TimeSpan(08, 00, 00);
+        //dayCnt = 0;
+        //hour = 0;
+        //startTime = new TimeSpan(08, 00, 00);
 
     }
 

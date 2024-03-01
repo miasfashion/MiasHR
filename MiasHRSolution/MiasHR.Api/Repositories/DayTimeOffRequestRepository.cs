@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Text.RegularExpressions;
+using Telerik.SvgIcons;
 
 
 namespace MiasHR.Api.Repositories
@@ -84,8 +85,9 @@ namespace MiasHR.Api.Repositories
                 pUser = user,
                 pNewType = "NEW",
                 pDaysCnt = daysCnt,
+                pHours = hours,
                 pTime = timeString,
-                @pSickDayYn = sickDayYn
+                pSickDayYn = sickDayYn
             };
 
             //TODO:Need to implement function that sends email. Needed for new request + approval 
@@ -122,11 +124,14 @@ namespace MiasHR.Api.Repositories
         /// </summary>
         /// <param name="id">The ID of the day time off request.</param>
         /// <returns>The day time off request.</returns>
-        public async Task<HrWebRequest>? GetDayTimeOffRequest(int id)
+        public async Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id)
         {
-            return await _miasHRDbContext.HrWebRequests
+            var result = await _miasHRDbContext.HrWebRequests
                 .AsNoTrackingWithIdentityResolution()
                 .FirstAsync(r => r.Seq == id);
+            var resultMap = _mapper.Map<DayTimeOffRequestDTO>(result);
+
+            return resultMap;
         }
 
         /*Do not need to update if we only have option to cancel request

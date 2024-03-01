@@ -19,7 +19,7 @@ namespace MiasHR.Api.Repositories.Contracts
                                                        TimeSpan time,
                                                        string sickDayYn);
 
-        Task<HrWebRequest>? GetDayTimeOffRequest(int id);
+        Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id);
 
         Task<string> CancelDayTimeOffRequest(int id, string emplCode);
 

@@ -26,7 +26,6 @@ namespace MiasHR.Api.Controllers
                 var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode, year);
                 var test = dayTimeOffRequests.ToList();
                 return test;
-                //return dayTimeOffRequests is null ? NotFound() : Ok(dayTimeOffRequests);
             }
             catch (Exception)
             {
@@ -54,14 +53,13 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpGet("api/[controller]/[action]/{id}")]
-        public async Task<ActionResult<HrWebRequest>> GetDayTimeOffRequest(int id)
+        public async Task<ActionResult<DayTimeOffRequestDTO>> GetDayTimeOffRequest(int id)
 
         {
             try
             {
                 var dayTimeOffRequest = await _dayTimeOffRequestRepository.GetDayTimeOffRequest(id);
-
-                return dayTimeOffRequest is null ? NotFound() : Ok(dayTimeOffRequest);
+                return dayTimeOffRequest;
             }
             catch (Exception)
             {
