@@ -30,7 +30,7 @@
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-grow-1" Elevation="0">
-            <MudTable Items="@pendingRequests">
+            <MudTable Items="@pendingRequests" @ref="requestTable">
                 <HeaderContent>
                     <MudTh>Request Date</MudTh>
                     <MudTh>Name</MudTh>
@@ -68,6 +68,7 @@
     private bool hover = true;
     private bool strip = true;
     private IReadOnlyList<PendingDayTimeOffApprovalDTO> pendingRequests = new List<PendingDayTimeOffApprovalDTO>();
+    private MudTable<PendingDayTimeOffApprovalDTO> requestTable;
 
     // public class PendingRequest
     // {
@@ -91,14 +92,33 @@
     // };
 
     //DayTimeOff View
-    private void Review(PendingDayTimeOffApprovalDTO dto)
+    private async Task RefreshRequestsList()
+    {
+        // Code to refresh the list, e.g., fetching updated list from the backend or updating the local list
+    }
+
+    private async void Review(PendingDayTimeOffApprovalDTO dto)
     {
         var parameters = new DialogParameters<ManagerDayTimeOffRequest>();
         parameters.Add(x => x.Dto, dto);
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        DialogService.Show<ManagerDayTimeOffRequest>("Review Time Off Request", parameters, options);
+        var dialog = DialogService.Show<ManagerDayTimeOffRequest>("Review Time Off Request", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var managerEmplCode = await AuthService.GetUserEmplCode();
+
+            if (managerEmplCode != null)
+            {
+                pendingRequests = await DayTimeOffRequestService.GetPendingDayTimeOffRequestList(managerEmplCode);
+            }
+
+            StateHasChanged();
+        }
     }
 
     // Breadcrumbs
