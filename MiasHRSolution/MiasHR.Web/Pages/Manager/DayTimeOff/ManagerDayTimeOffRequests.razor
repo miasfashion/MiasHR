@@ -11,7 +11,7 @@
 @inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
+<MudBreadcrumbs Items="_breadcrumbs" /> 
 <MudContainer Class="d-block">
     <MudContainer Class="d-flex">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -50,7 +50,7 @@
                     <MudTd DataLabel="FirstApproval">@context.approve_1st_yn</MudTd>
                     <MudTd DataLabel="SecondApproval">@context.approve_2nd_yn</MudTd>
                     <MudTd>
-                        <MudButton OnClick="View" Class="mud-theme-primary">View</MudButton>
+                        <MudButton OnClick="@(() => Review(context))" Class="mud-theme-primary">Review</MudButton>
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>
@@ -69,16 +69,16 @@
     private bool strip = true;
     private IReadOnlyList<PendingDayTimeOffApprovalDTO> pendingRequests = new List<PendingDayTimeOffApprovalDTO>();
 
-    public class PendingRequest
-    {
-        public DateTime DateTime { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public bool FirstApproval { get; set; }
-        public bool SecondApproval { get; set; }
-    }
+    // public class PendingRequest
+    // {
+    //     public DateTime DateTime { get; set; }
+    //     public string Name { get; set; }
+    //     public string Type { get; set; }
+    //     public DateTime From { get; set; }
+    //     public DateTime To { get; set; }
+    //     public bool FirstApproval { get; set; }
+    //     public bool SecondApproval { get; set; }
+    // }
 
     // public List<PendingRequest> PendingRequests = new List<PendingRequest>()
     // {
@@ -91,15 +91,14 @@
     // };
 
     //DayTimeOff View
-    private void View()
+    private void Review(PendingDayTimeOffApprovalDTO dto)
     {
         var parameters = new DialogParameters<ManagerDayTimeOffRequest>();
-        parameters.Add(x => x.ContentText, "View Time Off Request");
-        parameters.Add(x => x.ButtonText, "Close");
+        parameters.Add(x => x.Dto, dto);
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        DialogService.Show<ManagerDayTimeOffRequest>("View Time Off Request", parameters, options);
+        DialogService.Show<ManagerDayTimeOffRequest>("Review Time Off Request", parameters, options);
     }
 
     // Breadcrumbs
@@ -109,11 +108,10 @@
         new BreadcrumbItem("Manager", href: "/manager/home"),
         new BreadcrumbItem("Day Time Off Requests", href: null, disabled: true)
     };
-
+    
     // Navigation Tab
     int activeIndex = 0;
     private void navPage()
-
     {
         if (activeIndex == 0)
         {

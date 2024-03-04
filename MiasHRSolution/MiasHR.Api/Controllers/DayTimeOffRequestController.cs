@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MiasHR.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class DayTimeOffRequestController : ControllerBase
     {
@@ -182,6 +182,35 @@ namespace MiasHR.Api.Controllers
                 var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetHrDayTimeOffApprovalHistory(managerEmplCode);
 
                 return pendingDayTimeOffRequests is null ? NotFound() : Ok(pendingDayTimeOffRequests);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                                     "Error retrieving data from database");
+            }
+        }
+
+        //
+        [HttpPost]
+        [Route("api/Manager/[controller]/[action]")]
+        public async Task<ActionResult<RequestStatusChangeResultDTO>> ChangeRequestStatus(RequestStatusChangeDTO request)
+        {
+            try
+            {
+                var requestStatusChangeResult = await _dayTimeOffRequestRepository.ChangeRequestStatus(request.id, request.statusType, request.managerEmplCode, request.rejectReason);
+
+                if (requestStatusChangeResult is null) 
+                { 
+                    return NotFound(); 
+                }
+                else if (requestStatusChangeResult.result_message == "Already approved. Contact HR, Please.") 
+                { 
+                    return BadRequest(requestStatusChangeResult); 
+                }
+                else
+                {
+                    return Ok(requestStatusChangeResult); 
+                }
             }
             catch (Exception)
             {

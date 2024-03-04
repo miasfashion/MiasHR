@@ -1,6 +1,8 @@
 ﻿using MiasHR.Web.Services.Contracts;
 using MiasHR.Models.DTOs;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace MiasHR.Web.Services
 {
@@ -44,6 +46,24 @@ namespace MiasHR.Web.Services
                 response.EnsureSuccessStatusCode();
 
                 var data = await response.Content.ReadFromJsonAsync<IReadOnlyList<PendingDayTimeOffApprovalDTO>>();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<RequestStatusChangeResultDTO> ChangeRequestStatus(RequestStatusChangeDTO request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/api/Manager/DayTimeOffRequest/ChangeRequestStatus", request);
+                
+                response.EnsureSuccessStatusCode();
+
+                var data = await response.Content.ReadFromJsonAsync<RequestStatusChangeResultDTO>();
 
                 return data;
             }
