@@ -105,12 +105,13 @@
                             </MudTable>
                         </MudPaper>
                         <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
-                            <MudText Class="m-2">Using @typeValue</MudText>
-                            <MudText Class="m-2">For @dayCnt Days</MudText>
-                        <MudText Class="m-2">Checking Hour @hour</MudText>
-                            <MudText Class="m-2">Checking Time @startTime</MudText>
-                            <MudText Class="m-2">Checking start Date @startDate</MudText>
-                            <MudText Class="m-2">Checking end Date @endDate</MudText>
+                            <MudText Class="m-2">You are requesting @typeValue</MudText>
+                            <MudText Class="m-2">For @dayCnt Days</MudText>                        
+                            <MudText Class="m-2">Starting at @startTime</MudText>
+                            <MudText Class="m-2">From @startDate.Value.Date</MudText>
+                            <MudText Class="m-2">To @endDate.Value.Date</MudText>
+                            <MudText Class="m-2">For @reasonValue</MudText>
+                            <MudText Class="m-2">Checking Hour @hour</MudText>
                         </MudPaper>
                     </MudContainer>
                 </MudItem>
@@ -187,18 +188,28 @@
                 newRequest.sickDayYn = "N";
             }
 
+            //Making sure hour changed
+            if (!PTOOption.Equals("HOUR"))
+            {
+                newRequest.hours = 0;
+            }
+            else
+            {
+                newRequest.hours = hour;
+            }
+
+
             newRequest.emplCode = await AuthService.GetUserEmplCode();
             newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
             newRequest.fromDate = Convert.ToDateTime(startDate);
             newRequest.toDate = Convert.ToDateTime(endDate);
             newRequest.content = remark;
-            newRequest.user = await AuthService.GetUserName();
-            newRequest.hours = hour;
-            newRequest.daysCnt = dayCnt;
-            newRequest.time = nonnullTS;
-
             var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
             emailApprov = await response.Content.ReadAsStringAsync();
+
+            newRequest.user = await AuthService.GetUserName();   
+            newRequest.daysCnt = dayCnt;
+            newRequest.time = nonnullTS;
 
             if (response.IsSuccessStatusCode)
             {

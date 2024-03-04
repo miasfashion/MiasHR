@@ -47,7 +47,6 @@
         <MudPaper Class="d-block" Elevation="0">
             <MudGrid>
                 <MudItem xs="12" sm="6" md="4">
-
                     <MudSelect T="string" Label="Select Year" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
                         @foreach (var yr in years)
                         {
@@ -143,7 +142,7 @@
     private string selectedYear = DateTime.Now.Year.ToString();
 
     string? employee;
-    List<string> years = new List<string>();
+    List<string> years;
 
 
     private bool showConfirmationDialog = false;
@@ -161,6 +160,7 @@
     {
         base.OnInitialized();
         int currentYear = DateTime.Now.Year;
+        years = new List<string>();
         for (int y = 2020; y <= currentYear; y++)
         {
             years.Add(y.ToString());

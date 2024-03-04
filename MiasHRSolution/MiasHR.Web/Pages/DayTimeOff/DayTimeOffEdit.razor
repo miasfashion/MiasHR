@@ -160,9 +160,54 @@
 
 
     private async Task Submit()
-    {    
-    }
+    {
+        //Need to make sure values are correctly changed
+        //Same input test as when submiting request 
+        //Convert NullTS Time to NonNull Value
+        TimeSpan nonnullTS = startTime.Value;
 
+        //Validate Time
+        TimeSpan endTime = nonnullTS.Add(TimeSpan.FromHours(hour));
+
+        if (endTime > endOfWork || nonnullTS < begOfWork)
+        {
+            Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+            return;
+        }
+
+        //Making sure hour changed
+        if (!PTOOption.Equals("HOUR"))
+        {
+            newRequest.hours = 0;
+        }
+        else
+        {
+            newRequest.hours = hour;
+        }
+
+        if(typeValue.Equals("Sick Day"))
+        {
+            newRequest.type = "SICK DAY";
+            newRequest.sickDayYn = "Y";
+        }
+        else
+        {
+            newRequest.type = "PTO";
+            newRequest.sickDayYn = "N";
+       }
+        newRequest.emplCode = await AuthService.GetUserEmplCode();
+        newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
+        newRequest.fromDate = Convert.ToDateTime(startDate);
+        newRequest.toDate = Convert.ToDateTime(endDate);
+        newRequest.content = remark;
+        newRequest.user = await AuthService.GetUserName();
+        newRequest.daysCnt = dayCnt;
+        newRequest.time = nonnullTS;
+
+    }
 
     //Initiate with Current Available PTO List
     protected override async Task OnInitializedAsync()
@@ -180,8 +225,7 @@
 
         //Fill the Form with existing Data        
         dayCnt = currInfo.DaysCnt.Value;
-        startTime = currInfo.StartTime;
-        hour = currInfo.HoursCnt.Value;
+        startTime = currInfo.StartTime;              
         remark = currInfo.ReqContent;
 
         // Parse the string into DateTime nullable object
