@@ -204,13 +204,12 @@
             newRequest.fromDate = Convert.ToDateTime(startDate);
             newRequest.toDate = Convert.ToDateTime(endDate);
             newRequest.content = remark;
-            var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
-            emailApprov = await response.Content.ReadAsStringAsync();
-
             newRequest.user = await AuthService.GetUserName();   
             newRequest.daysCnt = dayCnt;
             newRequest.time = nonnullTS;
 
+            var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
+            emailApprov = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
                 MudDialog.Close(DialogResult.Ok(true));
@@ -298,7 +297,7 @@
         dayCnt = 0;
         hour = 0;
         startTime = new TimeSpan(08, 00, 00);
-
+        timeOption = "DAY OFF";
     }
 
 
