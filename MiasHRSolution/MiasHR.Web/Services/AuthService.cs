@@ -34,6 +34,19 @@ namespace MiasHR.Web.Services
             // Additional logic can be added here to validate the token's expiration.
         }
 
+        public async Task<bool> IsUserManager()
+        {
+            var authState = await _authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user != null)
+            {
+                return user.IsInRole("Manager");
+            }
+
+            return false;
+        }
+
         public async Task<string?> GetUserName()
         {
             var authState = await _authStateProvider.GetAuthenticationStateAsync();
@@ -110,7 +123,7 @@ namespace MiasHR.Web.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var dto = await response.Content.ReadFromJsonAsync<UpdateMessageDTO>();
-                    await _sessionStorage.SetItemAsync("empl", dto?.empl_code);
+                    await _sessionStorage.SetItemAsStringAsync("empl", dto?.empl_code);
                     return dto; 
                 }
                 else

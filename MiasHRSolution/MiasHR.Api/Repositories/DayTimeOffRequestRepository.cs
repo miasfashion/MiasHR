@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 
 namespace MiasHR.Api.Repositories
 {
@@ -302,7 +303,7 @@ namespace MiasHR.Api.Repositories
             var param = new
             {
                 pEmplCode = "",
-                pYYYY = "",
+                pYYYY = DateTime.Now.Year,
                 pType = "PTO",
                 pSeq = 0,
                 pApprover = managerEmplCode
@@ -316,6 +317,34 @@ namespace MiasHR.Api.Repositories
                     commandType: CommandType.StoredProcedure
                 );
                 return result.ToList().AsReadOnly();
+            }
+        }
+
+        public async Task<RequestStatusChangeResultDTO> ChangeRequestStatus(int id, string statusType, string managerEmplCode, string rejectReason)
+        {
+            if (statusType != "REJECT" && statusType != "APPROVAL")
+            {
+                // If statusType is neither "REJECT" nor "APPROVE", throw an exception
+                throw new BadHttpRequestException("Invalid rejectReason value");
+            }
+
+            var param = new
+            {
+                pSeq = id,
+                pStatusType = statusType,
+                pUser = managerEmplCode,
+                pRejectReason = rejectReason == "REJECT" ? rejectReason : string.Empty // Conditional assignment
+            };
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryFirstAsync<RequestStatusChangeResultDTO>(
+                    "sp_HR_WebRequestStatusChange",
+                    param,
+                    commandType: CommandType.StoredProcedure
+                );
+                return result;
             }
         }
     }

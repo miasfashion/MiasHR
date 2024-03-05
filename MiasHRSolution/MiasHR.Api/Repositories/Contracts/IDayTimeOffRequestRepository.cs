@@ -35,5 +35,6 @@ namespace MiasHR.Api.Repositories.Contracts
 
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
 
+        Task<RequestStatusChangeResultDTO> ChangeRequestStatus(int id, string statusType, string managerEmplCode, string rejectReason);
     }
 }

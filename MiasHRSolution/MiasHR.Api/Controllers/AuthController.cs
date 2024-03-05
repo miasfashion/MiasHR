@@ -26,9 +26,20 @@ namespace MiasHR.Api.Controllers
         {
             try
             {
-                var employee = await _authRepository.Login(request.Username, request.Password);
+                var result = await _authRepository.Login(request.Username, request.Password);
 
-                return employee is null ? Unauthorized() : _jwtAuthenticationService.CreateToken(employee);
+                if (result == null)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    var employee = result.Item1;
+                    var isManager = result.Item2;
+
+                    return _jwtAuthenticationService.CreateToken(employee, isManager);
+                }
+               
             }
             catch (Exception)
             {

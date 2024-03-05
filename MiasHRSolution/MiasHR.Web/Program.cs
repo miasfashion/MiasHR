@@ -19,6 +19,8 @@ builder.Services.AddMudServices();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, MiasAuthStateProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDayTimeOffRequestService, DayTimeOffRequestService>();
+builder.Services.AddScoped<IEmployeeInfoRequestService, EmployeeInfoRequestService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
