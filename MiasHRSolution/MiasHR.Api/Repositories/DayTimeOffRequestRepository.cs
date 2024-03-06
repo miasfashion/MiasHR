@@ -1,14 +1,12 @@
 using AutoMapper;
 using Dapper;
 using MiasHR.Api.Data;
-using MiasHR.Api.Entities;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
 
 namespace MiasHR.Api.Repositories
 {
@@ -16,35 +14,39 @@ namespace MiasHR.Api.Repositories
     {
         private readonly MiasHRDbContext _miasHRDbContext;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration)
+
+        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration, IMapper mapper)
         {
             _miasHRDbContext = miasHRDbContext;
             _configuration = configuration;
+            _mapper = mapper;
+
         }
 
-         /// <summary>
- /// Retrieves a list of all day time off requests for a given employee.
- /// </summary>
- /// <param name="emplCode">The employee code.</param>
- /// <returns>A list of day time off requests.</returns>
- public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
- {
-     int targetYear = int.Parse(year);
+        /// <summary>
+        /// Retrieves a list of all day time off requests for a given employee.
+        /// </summary>
+        /// <param name="emplCode">The employee code.</param>
+        /// <returns>A list of day time off requests.</returns>
+        public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
+        {
+            int targetYear = int.Parse(year);
 
-     var results = await _miasHRDbContext.HrWebRequests
-         .Where(r => r.EmplCode == emplCode
-                     && r.ReqType != "CHANGE"
-                     && r.Status != 3
-                     && (Convert.ToInt32(r.PeriodTo.Substring(0, 4)) == targetYear
-                     || Convert.ToInt32(r.PeriodFrom.Substring(0, 4)) == targetYear)
-                     )
-         .AsNoTrackingWithIdentityResolution()
-         .ToListAsync();
-     var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
+            var results = await _miasHRDbContext.HrWebRequests
+                .Where(r => r.EmplCode == emplCode
+                            && r.ReqType != "CHANGE"
+                            && r.Status != 3
+                            && (Convert.ToInt32(r.PeriodTo.Substring(0, 4)) == targetYear
+                            || Convert.ToInt32(r.PeriodFrom.Substring(0, 4)) == targetYear)
+                            )
+                .AsNoTrackingWithIdentityResolution()
+                .ToListAsync();
+            var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
 
-     return DTOList.AsReadOnly();
- }
+            return DTOList.AsReadOnly();
+        }
 
         public async Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                                     string type,
@@ -185,34 +187,34 @@ namespace MiasHR.Api.Repositories
             return resultMap;
         }
 
-/// <summary>
-/// Cancel a day time off request by its ID.
-/// </summary>
-/// <param name="id">The ID of the day time off request.</param>
-/// <returns>The number of state entries written to the database.</returns>
-public async Task<string> CancelDayTimeOffRequest(int id, string emplCode)
-{
+        /// <summary>
+        /// Cancel a day time off request by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the day time off request.</param>
+        /// <returns>The number of state entries written to the database.</returns>
+        public async Task<string> CancelDayTimeOffRequest(int id, string emplCode)
+        {
 
-    var param = new DynamicParameters();
-    param.Add("@pseq", id);
-    param.Add("@puser", emplCode);
-    param.Add("@pStatusType", "CANCEL");
-    param.Add("@pRejectReason", "");
+            var param = new DynamicParameters();
+            param.Add("@pseq", id);
+            param.Add("@puser", emplCode);
+            param.Add("@pStatusType", "CANCEL");
+            param.Add("@pRejectReason", "");
 
-    using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-    {
-        await connection.OpenAsync();
-        var result = await connection.QueryFirstOrDefaultAsync(
-            "sp_HR_WebRequestStatusChange",
-            param,
-            commandType: CommandType.StoredProcedure
-        );
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryFirstOrDefaultAsync(
+                    "sp_HR_WebRequestStatusChange",
+                    param,
+                    commandType: CommandType.StoredProcedure
+                );
 
-        //Retrieve the output 
-        string resultMessage = result.result_message;
-        return resultMessage;
-    }
-}
+                //Retrieve the output 
+                string resultMessage = result.result_message;
+                return resultMessage;
+            }
+        }
 
         /// <summary>
         /// Retrieves the remaining day time off for a given employee for a specific year.
@@ -269,7 +271,7 @@ public async Task<string> CancelDayTimeOffRequest(int id, string emplCode)
 
         public async Task<string> GetVacationRemaining(string emplCode)
         {
-            string result ="";
+            string result = "";
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
