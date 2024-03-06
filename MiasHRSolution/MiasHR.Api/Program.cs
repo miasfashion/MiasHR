@@ -26,12 +26,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContextPool<MiasHRDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        options.LogTo(Console.WriteLine, LogLevel.Information);
-    }
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.LogTo(Console.WriteLine, LogLevel.Information);
+}
 );
 
 builder.Services.AddScoped<IDayTimeOffRequestRepository, DayTimeOffRequestRepository>();
