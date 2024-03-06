@@ -18,6 +18,20 @@ namespace MiasHR.Api.Repositories.Contracts
                                                        decimal daysCnt,
                                                        TimeSpan time,
                                                        string sickDayYn);
+        Task<RequestResultDTO> EditDayTimeOffRequest(string emplCode,
+                                                       string type,
+                                                       string subType,
+                                                       DateTime fromDate,
+                                                       DateTime toDate,
+                                                       decimal daysCnt,
+                                                       string title,
+                                                       string content,
+                                                       string user,
+                                                       int seq,
+                                                       int hours,                                                       
+                                                       TimeSpan time,
+                                                       string sickDayYn);
+
 
         Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id);
 

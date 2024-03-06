@@ -119,6 +119,70 @@ namespace MiasHR.Api.Repositories
             }
         }
 
+        public async Task<RequestResultDTO> EditDayTimeOffRequest(string emplCode,
+                                                       string type,
+                                                       string subType,
+                                                       DateTime fromDate,
+                                                       DateTime toDate,
+                                                       decimal daysCnt,
+                                                       string title,
+                                                       string content,
+                                                       string user,
+                                                       int seq,
+                                                       int hours,
+                                                       TimeSpan time,
+                                                       string sickDayYn)
+        {
+            string fromDateString = fromDate.ToString("yyyyMMdd");
+            string toDateString = toDate.ToString("yyyyMMdd");
+            string timeString = time.ToString(@"hh\:mm\:ss");
+            var param = new
+            {
+                pEmplCode = emplCode,
+                pType = type,
+                pSubType = subType,
+                pFrom = fromDateString,
+                pTo = toDateString,
+                pDaysCnt = daysCnt,
+                pTitle = title,
+                pContent = content,
+                pUser = user,
+                pSeq = seq,
+                pHours = hours,
+                pTime = timeString,
+                pSickDayYn = sickDayYn,
+                pNewType = "VALID"
+            };
+            //TODO:Need to implement function that sends email. Needed for new request + approval 
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                var result = await connection.QueryFirstAsync<UpdateMessageDTO>(
+                    "sp_HR_WebRequest_Edit",
+                    param,
+                    commandType: CommandType.StoredProcedure
+                );
+                // request will return approver email as msg if successful
+                var email = result.com_email;
+                if (!string.IsNullOrWhiteSpace(email))
+                    try
+                    {
+                        if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                            RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
+                            return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "email", email } });
+                        else
+                            return new RequestResultDTO("FAILURE", null);
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        return new RequestResultDTO("FAILURE", null);
+                    }
+                else
+                    return new RequestResultDTO("FAILURE", null);
+            }
+
+        }
+
         /// <summary>
         /// Retrieves a day time off request by its ID.
         /// </summary>

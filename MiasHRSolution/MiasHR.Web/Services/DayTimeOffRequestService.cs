@@ -50,6 +50,20 @@ namespace MiasHR.Web.Services
             }
         }
 
+        public async Task<HttpResponseMessage> EditDayTimeOffRequest(EditRequestDTO request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/EditDayTimeOffRequest", request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public async Task<DayTimeOffRequestDTO> GetDayTimeOffRequest(int id)
         {
             try

@@ -51,6 +51,23 @@ namespace MiasHR.Api.Controllers
                                                      "Error retrieving data from database");
             }
         }
+        [HttpPost("api/[controller]/[action]")]
+        public async Task<ActionResult<RequestResultDTO>> EditDayTimeOffRequest(EditRequestDTO request)
+        {
+            try
+            {
+                var requestResult = await _dayTimeOffRequestRepository.EditDayTimeOffRequest(request.emplCode, request.type, request.subType, request.fromDate,
+                                                                                               request.toDate, request.daysCnt, request.title, request.content, request.user,
+                                                                                               request.seq,request.hours,request.time, request.sickDayYn);
+
+                return (requestResult is null || requestResult.status == "FAILURE") ? NotFound() : Ok(requestResult);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                                     "Error retrieving data from database");
+            }
+        }
 
         [HttpGet("api/[controller]/[action]/{id}")]
         public async Task<ActionResult<DayTimeOffRequestDTO>> GetDayTimeOffRequest(int id)

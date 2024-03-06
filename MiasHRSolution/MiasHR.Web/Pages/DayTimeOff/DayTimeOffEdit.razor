@@ -35,7 +35,7 @@
                             {
                                 case "AMPM":
                                     <MudRadioGroup T="string" SelectedOption="@timeOption" SelectedOptionChanged="OnTimeOptionChanged">
-                                        <MudRadio Option="@("AM")" >AM</MudRadio>
+                                        <MudRadio Option="@("AM")">AM</MudRadio>
                                         <MudRadio Option="@("PM")">PM</MudRadio>
                                     </MudRadioGroup>
                                     break;
@@ -151,7 +151,7 @@
     private DateTime? startDate = DateTime.Today;
     private DateTime? endDate = DateTime.Today;
     private int hour = 0;
-    private CreateRequestDTO newRequest;
+    private EditRequestDTO requestEdit;
     private string emailApprov;
 
     private bool success;
@@ -161,52 +161,72 @@
 
     private async Task Submit()
     {
-        //Need to make sure values are correctly changed
-        //Same input test as when submiting request 
-        //Convert NullTS Time to NonNull Value
-        TimeSpan nonnullTS = startTime.Value;
-
-        //Validate Time
-        TimeSpan endTime = nonnullTS.Add(TimeSpan.FromHours(hour));
-
-        if (endTime > endOfWork || nonnullTS < begOfWork)
+        try
         {
-            Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
+            requestEdit = new EditRequestDTO();
+            //Need to make sure values are correctly changed
+            //Same input test as when submiting request
+            //Convert NullTS Time to NonNull Value
+            TimeSpan nonnullTS = startTime.Value;
+
+            //Validate Time
+            TimeSpan endTime = nonnullTS.Add(TimeSpan.FromHours(hour));
+
+            if (endTime > endOfWork || nonnullTS < begOfWork)
             {
-                options.CloseAfterNavigation = true;
-            });
-            return;
+                Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+
+            //Making sure hour changed
+            if (!PTOOption.Equals("HOUR"))
+            {
+                requestEdit.hours = 0;
+            }
+            else
+            {
+                requestEdit.hours = hour;
+            }
+
+            if (typeValue.Equals("Sick Day"))
+            {
+                requestEdit.type = "SICK DAY";
+                requestEdit.sickDayYn = "Y";
+            }
+            else
+            {
+                requestEdit.type = "PTO";
+                requestEdit.sickDayYn = "N";
+            }
+            requestEdit.emplCode = await AuthService.GetUserEmplCode();
+            requestEdit.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
+            requestEdit.fromDate = Convert.ToDateTime(startDate);
+            requestEdit.toDate = Convert.ToDateTime(endDate);
+            requestEdit.content = remark;
+            requestEdit.user = await AuthService.GetUserName();
+            requestEdit.daysCnt = dayCnt;
+            requestEdit.time = nonnullTS;
+            requestEdit.seq = seq;
+            var response = await DayTimeOffRequestService.EditDayTimeOffRequest(requestEdit);
+            emailApprov = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+            }
+
         }
 
-        //Making sure hour changed
-        if (!PTOOption.Equals("HOUR"))
+        catch (Exception ex)
         {
-            newRequest.hours = 0;
+            throw ex;
         }
-        else
-        {
-            newRequest.hours = hour;
-        }
-
-        if(typeValue.Equals("Sick Day"))
-        {
-            newRequest.type = "SICK DAY";
-            newRequest.sickDayYn = "Y";
-        }
-        else
-        {
-            newRequest.type = "PTO";
-            newRequest.sickDayYn = "N";
-       }
-        newRequest.emplCode = await AuthService.GetUserEmplCode();
-        newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
-        newRequest.fromDate = Convert.ToDateTime(startDate);
-        newRequest.toDate = Convert.ToDateTime(endDate);
-        newRequest.content = remark;
-        newRequest.user = await AuthService.GetUserName();
-        newRequest.daysCnt = dayCnt;
-        newRequest.time = nonnullTS;
-
     }
 
     //Initiate with Current Available PTO List
@@ -223,11 +243,11 @@
 
         currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
 
-        //Fill the Form with existing Data        
+        //Fill the Form with existing Data
         dayCnt = currInfo.DaysCnt.Value;
-        startTime = currInfo.StartTime;              
+        startTime = currInfo.StartTime;
         remark = currInfo.ReqContent;
-
+        hour = currInfo.HoursCnt.Value;
         // Parse the string into DateTime nullable object
         // Can remove the error checking
         if (DateTime.TryParseExact(currInfo.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedstart))
@@ -250,9 +270,9 @@
         {
             // Parsing failed, handle the error or use a default value
             Console.WriteLine("Invalid date format");
-        }       
+        }
 
-        //Splitting Merged SubType 
+        //Splitting Merged SubType
         string subTp = currInfo.ReqSubType;
 
         string[] parts = subTp.Split(':');
@@ -261,7 +281,7 @@
         reasonValue = parts[0].Trim();
         timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
 
-        //Find which PTOOption was selected 
+        //Find which PTOOption was selected
         if (timeOption == "AM" || timeOption == "PM")
         {
             PTOOption = "AMPM";
@@ -273,7 +293,7 @@
         else
         {
             PTOOption = "HOUR";
-        }       
+        }
     }
 
     private void HandleStartTimeChange(TimeSpan? newStartTime)
