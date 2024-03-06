@@ -13,6 +13,5 @@ namespace MiasHR.Web.Services.Contracts
         Task<bool> IsUserManager();
         Task<string?> GetUserEmplCode();
         Task<string?> GetUserName();
-        Task<string?> TestApi(string emplCode);
     }
 }

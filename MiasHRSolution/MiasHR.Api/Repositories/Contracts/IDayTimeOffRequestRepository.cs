@@ -8,31 +8,39 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<RequestResultDTO> CreateDayTimeOffRequest(string emplCode,
                                                        string type,
                                                        string subType,
-                                                       DateOnly fromDate,
-                                                       DateOnly toDate,
+                                                       DateTime fromDate,
+                                                       DateTime toDate,
                                                        string title,
                                                        string content,
-                                                       string ip,
                                                        string user,
                                                        int hours,
                                                        decimal daysCnt,
-                                                       TimeOnly time,
+                                                       TimeSpan time,
+                                                       string sickDayYn);
+        Task<RequestResultDTO> EditDayTimeOffRequest(string emplCode,
+                                                       string type,
+                                                       string subType,
+                                                       DateTime fromDate,
+                                                       DateTime toDate,
+                                                       decimal daysCnt,
+                                                       string title,
+                                                       string content,
+                                                       string user,
+                                                       int seq,
+                                                       int hours,                                                       
+                                                       TimeSpan time,
                                                        string sickDayYn);
 
-        Task<HrWebRequest>? GetDayTimeOffRequest(int id);
+        Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id);
 
-        Task<RequestResultDTO> DeleteDayTimeOffRequest(int id);
+        Task<string> CancelDayTimeOffRequest(int id, string emplCode);
 
-        Task<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year);
+        Task<string> GetSickDaysRemaining(string emplCode);
+        Task<string> GetVacationRemaining(string emplCode);
 
-        Task<EmployeeDayTimeOffRemainingDTO>? GetDayTimeOffRemainingByEmployee(string emplCode, string year);
-
-        Task<IReadOnlyList<DayTimeOffRequestResultDTO>>? GetDayTimeOffRequestResultList(string emplCode, string year);
+        Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year);
 
         Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
-
-        Task<IReadOnlyList<HrWebRequest>> GetAllEmployeeDayTimeOffRequestList(string emplCode);
-
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
 
         Task<RequestStatusChangeResultDTO> ChangeRequestStatus(int id, string statusType, string managerEmplCode, string rejectReason);
