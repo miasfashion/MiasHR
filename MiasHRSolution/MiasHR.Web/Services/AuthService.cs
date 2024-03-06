@@ -34,6 +34,19 @@ namespace MiasHR.Web.Services
             // Additional logic can be added here to validate the token's expiration.
         }
 
+        public async Task<bool> IsUserManager()
+        {
+            var authState = await _authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user != null)
+            {
+                return user.IsInRole("Manager");
+            }
+
+            return false;
+        }
+
         public async Task<string?> GetUserName()
         {
             var authState = await _authStateProvider.GetAuthenticationStateAsync();

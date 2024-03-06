@@ -6,33 +6,33 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MiasHR.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class DayTimeOffRequestController : ControllerBase
     {
         private readonly IDayTimeOffRequestRepository _dayTimeOffRequestRepository;
+
         public DayTimeOffRequestController(IDayTimeOffRequestRepository dayTimeOffRequestRepository)
         {
             _dayTimeOffRequestRepository = dayTimeOffRequestRepository;
         }
 
-        // Getting for specific Employee
-
-        [HttpGet("api/[controller]/[action]/{emplCode}/{year}")]
-        public async Task<ActionResult<IReadOnlyList<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
-        {
-            try
-            {
-                var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode, year);
-                var test = dayTimeOffRequests.ToList();
-                return test;
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                                  "Error retrieving data from database");
-            }
-        }
+  // Getting for specific Employee
+  [HttpGet("api/[controller]/[action]/{emplCode}/{year}")]
+  public async Task<ActionResult<IReadOnlyList<DayTimeOffRequestDTO>>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
+  {
+      try
+      {
+          var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode, year);
+          var test = dayTimeOffRequests.ToList();
+          return test;
+      }
+      catch (Exception)
+      {
+          return StatusCode(StatusCodes.Status500InternalServerError,
+                            "Error retrieving data from database");
+      }
+  }
 
         [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<RequestResultDTO>> CreateDayTimeOffRequest(CreateRequestDTO request)
@@ -84,24 +84,24 @@ namespace MiasHR.Api.Controllers
                                                      "Error retrieving data from database");
             }
         }
+  [HttpPost]
+  [Route("api/[controller]/[action]/{id}/{emplCode}")]
+  public async Task<ActionResult<string>> CancelDayTimeOffRequest(int id, string emplCode)
+  {
+      try
+      {
+          var deleteResult = await _dayTimeOffRequestRepository.CancelDayTimeOffRequest(id, emplCode);
+          return deleteResult;
 
-        [HttpPost]
-        [Route("api/[controller]/[action]/{id}/{emplCode}")]
-        public async Task<ActionResult<string>> CancelDayTimeOffRequest(int id, string emplCode)
-        {
-            try
-            {
-                var deleteResult = await _dayTimeOffRequestRepository.CancelDayTimeOffRequest(id, emplCode);
-                return deleteResult;
+      }
+      catch (Exception)
+      {
+          return StatusCode(StatusCodes.Status500InternalServerError,
+                                               "Error retrieving data from database");
+      }
+  }
 
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                                                     "Error retrieving data from database");
-            }
-        }
-
+      
         [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<string>> GetSickDaysRemaining([FromBody] string emplCode)
         {
@@ -132,45 +132,9 @@ namespace MiasHR.Api.Controllers
             }
         }
 
-        /*
-        [HttpGet]
-        [Route("api/[controller]/[action]/{emplCode}/{year}")]
-        public async Task<ActionResult<IReadOnlyList<EmployeeDayTimeOffHistoryDTO>>>? GetEmployeeDayTimeOffHistoryList(string emplCode, string year)
-        {
-            try
-            {
-                var dayTimeOffHistory = await _dayTimeOffRequestRepository.GetEmployeeDayTimeOffHistoryList(emplCode, year);
 
-                return dayTimeOffHistory is null ? NotFound() : Ok(dayTimeOffHistory);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                                                     "Error retrieving data from database");
-            }
-        }
-        */
-        /*
         //
-        [HttpGet]
-        [Route("api/[controller]/[action]/{emplCode}/{year}")]
-        public async Task<ActionResult<IReadOnlyList<DayTimeOffRequestResultDTO>>>? GetDayTimeOffRequestResultList(string emplCode, string year)
 
-        {
-            try
-            {
-                var dayTimeOffRemaining = await _dayTimeOffRequestRepository.GetDayTimeOffRequestResultList(emplCode, year);
-
-                return dayTimeOffRemaining is null ? NotFound() : Ok(dayTimeOffRemaining);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                                                     "Error retrieving data from database");
-            }
-        }
-        */
-        /*
         [HttpGet]
         [Route("api/Manager/[controller]/[action]/{managerEmplCode}")]
         public async Task<ActionResult<IReadOnlyList<PendingDayTimeOffApprovalDTO>>>? GetPendingDayTimeOffRequestList(string managerEmplCode)
@@ -190,7 +154,6 @@ namespace MiasHR.Api.Controllers
 
         //
         [HttpGet]
-
         [Route("api/Manager/[controller]/[action]/{managerEmplCode}")]
         public async Task<ActionResult<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode)
         {
@@ -205,6 +168,35 @@ namespace MiasHR.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                                                      "Error retrieving data from database");
             }
-        }*/
+        }
+
+        //
+        [HttpPost]
+        [Route("api/Manager/[controller]/[action]")]
+        public async Task<ActionResult<RequestStatusChangeResultDTO>> ChangeRequestStatus(RequestStatusChangeDTO request)
+        {
+            try
+            {
+                var requestStatusChangeResult = await _dayTimeOffRequestRepository.ChangeRequestStatus(request.id, request.statusType, request.managerEmplCode, request.rejectReason);
+
+                if (requestStatusChangeResult is null) 
+                { 
+                    return NotFound(); 
+                }
+                else if (requestStatusChangeResult.result_message == "Already approved. Contact HR, Please.") 
+                { 
+                    return BadRequest(requestStatusChangeResult); 
+                }
+                else
+                {
+                    return Ok(requestStatusChangeResult); 
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                                     "Error retrieving data from database");
+            }
+        }
     }
 }

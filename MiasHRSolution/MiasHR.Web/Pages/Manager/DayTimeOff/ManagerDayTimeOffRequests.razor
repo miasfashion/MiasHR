@@ -1,12 +1,17 @@
 ﻿@page "/manager/daytimeoff/requests"
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Manager")]
+
+@using MiasHR.Models.DTOs;
+@using MiasHR.Web.Services.Contracts;
 
 @inject NavigationManager NavigationManager
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
 @inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" />
+<MudBreadcrumbs Items="_breadcrumbs" /> 
 <MudContainer Class="d-block">
     <MudContainer Class="d-flex">
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -20,14 +25,14 @@
                 <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
                 @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                     <MudTabPanel OnClick="navPage" Text="Requests" />
-                    <MudTabPanel OnClick="navPage" Text="Approval History" />
+                    <MudTabPanel OnClick="navPage" Text="History" />
                 </MudTabs>
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-grow-1" Elevation="0">
-            <MudTable Items="@PendingRequests">
+            <MudTable Items="@pendingRequests" @ref="requestTable">
                 <HeaderContent>
-                    <MudTh>Request Time</MudTh>
+                    <MudTh>Request Date</MudTh>
                     <MudTh>Name</MudTh>
                     <MudTh>Type</MudTh>
                     <MudTh>From</MudTh>
@@ -37,17 +42,22 @@
                     <MudTh></MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Type">@context.Type</MudTd>
-                    <MudTd DataLabel="From">@context.From</MudTd>
-                    <MudTd DataLabel="To">@context.To</MudTd>
-                    <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
-                    <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
+                    <MudTd DataLabel="ReqDate">@context.req_date</MudTd>
+                    <MudTd DataLabel="Name">@context.empl_name</MudTd>
+                    <MudTd DataLabel="Type">@context.req_type</MudTd>
+                    <MudTd DataLabel="From">@context.period_from</MudTd>
+                    <MudTd DataLabel="To">@context.period_to</MudTd>
+                    <MudTd DataLabel="FirstApproval">@context.approve_1st_yn</MudTd>
+                    <MudTd DataLabel="SecondApproval">@context.approve_2nd_yn</MudTd>
                     <MudTd>
-                        <MudButton OnClick="View" Class="mud-theme-primary">View</MudButton>
+                        <MudButton OnClick="@(() => Review(context))" Class="mud-theme-primary">Review</MudButton>
                     </MudTd>
                 </RowTemplate>
+                <NoRecordsContent>
+                    <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
+                        <MudText>No approvals yet</MudText>
+                    </MudPaper>
+                </NoRecordsContent>
             </MudTable>
         </MudPaper>
     </MudContainer>
@@ -57,38 +67,58 @@
     private bool dense = false;
     private bool hover = true;
     private bool strip = true;
+    private IReadOnlyList<PendingDayTimeOffApprovalDTO> pendingRequests = new List<PendingDayTimeOffApprovalDTO>();
+    private MudTable<PendingDayTimeOffApprovalDTO> requestTable;
 
-    public class PendingRequest
-    {
-        public DateTime DateTime { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public bool FirstApproval { get; set; }
-        public bool SecondApproval { get; set; }
-    }
+    // public class PendingRequest
+    // {
+    //     public DateTime DateTime { get; set; }
+    //     public string Name { get; set; }
+    //     public string Type { get; set; }
+    //     public DateTime From { get; set; }
+    //     public DateTime To { get; set; }
+    //     public bool FirstApproval { get; set; }
+    //     public bool SecondApproval { get; set; }
+    // }
 
-    public List<PendingRequest> PendingRequests = new List<PendingRequest>()
-    {
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
-                            From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
-                            From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
-        new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
-                             From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
-    };
+    // public List<PendingRequest> PendingRequests = new List<PendingRequest>()
+    // {
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
+    //                         From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
+    //                         From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
+    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
+    //                          From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
+    // };
 
     //DayTimeOff View
-    private void View()
+    private async Task RefreshRequestsList()
+    {
+        // Code to refresh the list, e.g., fetching updated list from the backend or updating the local list
+    }
+
+    private async void Review(PendingDayTimeOffApprovalDTO dto)
     {
         var parameters = new DialogParameters<ManagerDayTimeOffRequest>();
-        parameters.Add(x => x.ContentText, "View Time Off Request");
-        parameters.Add(x => x.ButtonText, "Close");
+        parameters.Add(x => x.Dto, dto);
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        DialogService.Show<ManagerDayTimeOffRequest>("View Time Off Request", parameters, options);
+        var dialog = DialogService.Show<ManagerDayTimeOffRequest>("Review Time Off Request", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var managerEmplCode = await AuthService.GetUserEmplCode();
+
+            if (managerEmplCode != null)
+            {
+                pendingRequests = await DayTimeOffRequestService.GetPendingDayTimeOffRequestList(managerEmplCode);
+            }
+
+            StateHasChanged();
+        }
     }
 
     // Breadcrumbs
@@ -98,7 +128,7 @@
         new BreadcrumbItem("Manager", href: "/manager/home"),
         new BreadcrumbItem("Day Time Off Requests", href: null, disabled: true)
     };
-
+    
     // Navigation Tab
     int activeIndex = 0;
     private void navPage()
@@ -106,10 +136,20 @@
         if (activeIndex == 0)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/requests");
-        }
+        } 
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            pendingRequests = await DayTimeOffRequestService.GetPendingDayTimeOffRequestList(managerEmplCode);
         }
     }
 }

@@ -1,6 +1,5 @@
 using MiasHR.Api.Entities;
 using MiasHR.Models.DTOs;
-using System.Collections.ObjectModel;
 
 namespace MiasHR.Api.Repositories.Contracts
 {
@@ -32,19 +31,18 @@ namespace MiasHR.Api.Repositories.Contracts
                                                        TimeSpan time,
                                                        string sickDayYn);
 
-
         Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id);
 
         Task<string> CancelDayTimeOffRequest(int id, string emplCode);
-
-        //      Task<EmployeeDayTimeOffRemainingDTO>? 
 
         Task<string> GetSickDaysRemaining(string emplCode);
         Task<string> GetVacationRemaining(string emplCode);
 
         Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year);
 
+        Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
 
+        Task<RequestStatusChangeResultDTO> ChangeRequestStatus(int id, string statusType, string managerEmplCode, string rejectReason);
     }
 }

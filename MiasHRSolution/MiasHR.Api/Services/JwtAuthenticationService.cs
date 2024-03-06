@@ -14,11 +14,20 @@ namespace MiasHR.Api.Services
         {
             _configuration = configuration;
         }
-        public string CreateToken(HrEmployee employee)
+        public string CreateToken(HrEmployee employee, bool isManager)
         {
             var name = $"{employee.FirstName} {employee.MiddleName} {employee.LastName}";
             var emplCode = employee.EmplCode;
-            string role = "Employee";
+            
+            string role;
+            if (isManager)
+            {
+                role = "Manager";
+            }
+            else
+            {
+                role = "Employee";
+            }
 
             List<Claim> claims = new List<Claim>
             {

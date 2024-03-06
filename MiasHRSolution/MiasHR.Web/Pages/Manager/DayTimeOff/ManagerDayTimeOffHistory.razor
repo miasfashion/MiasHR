@@ -1,10 +1,15 @@
 ﻿@page "/manager/daytimeoff/history"
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Manager")]
+
+@using MiasHR.Models.DTOs;
+@using MiasHR.Web.Services.Contracts;
 
 @inject NavigationManager NavigationManager
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
 
-<PageTitle>Manage Day Time Off Approval History</PageTitle>
+<PageTitle>Manage Day Time Off History</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
     <MudContainer Class="d-flex">
@@ -19,14 +24,14 @@
                 <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
                 @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
                     <MudTabPanel OnClick="navPage" Text="Requests" />
-                    <MudTabPanel OnClick="navPage" Text="Approval History" />
+                    <MudTabPanel OnClick="navPage" Text="History" />
                 </MudTabs>
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
-            <MudTable Items="@ApprovalHistory">
+            <MudTable Items="@approvalHistory">
                 <HeaderContent>
-                    <MudTh>Request Time</MudTh>
+                    <MudTh>Request Date</MudTh>
                     <MudTh>Name</MudTh>
                     <MudTh>Type</MudTh>
                     <MudTh>From</MudTh>
@@ -35,14 +40,19 @@
                     <MudTh>Second Approval</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Type">@context.Type</MudTd>
-                    <MudTd DataLabel="From">@context.From</MudTd>
-                    <MudTd DataLabel="To">@context.To</MudTd>
-                    <MudTd DataLabel="FirstApproval">@context.FirstApproval</MudTd>
-                    <MudTd DataLabel="SecondApproval">@context.SecondApproval</MudTd>
+                    <MudTd DataLabel="ReqDate">@context.req_date</MudTd>
+                    <MudTd DataLabel="Name">@context.empl_name</MudTd>
+                    <MudTd DataLabel="Type">@context.req_type</MudTd>
+                    <MudTd DataLabel="From">@context.period_from</MudTd>
+                    <MudTd DataLabel="To">@context.period_to</MudTd>
+                    <MudTd DataLabel="FirstApproval">@context.approve_1st_yn</MudTd>
+                    <MudTd DataLabel="SecondApproval">@context.approve_2nd_yn</MudTd>
                 </RowTemplate>
+                <NoRecordsContent>
+                    <MudPaper Height="100px" Elevation="0">
+                        <MudText>No approvals yet</MudText>
+                    </MudPaper>
+                </NoRecordsContent>
             </MudTable>
         </MudPaper>
     </MudContainer>
@@ -50,26 +60,28 @@
 
 
 @code {
-    public class ApprovalRecord
-    {
-        public DateTime DateTime { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public bool FirstApproval { get; set; }
-        public bool SecondApproval { get; set; }
-    }
+    private IReadOnlyList<DayTimeOffApprovalHistoryDTO> approvalHistory = new List<DayTimeOffApprovalHistoryDTO>();
 
-    List<ApprovalRecord> ApprovalHistory = new List<ApprovalRecord>
-    {
-        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
-                            From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=true},
-        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
-                            From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=true},
-        new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
-                             From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=true}
-    };
+    // public class ApprovalRecord
+    // {
+    //     public DateTime DateTime { get; set; }
+    //     public string Name { get; set; }
+    //     public string Type { get; set; }
+    //     public DateTime From { get; set; }
+    //     public DateTime To { get; set; }
+    //     public bool FirstApproval { get; set; }
+    //     public bool SecondApproval { get; set; }
+    // }
+    
+    // List<ApprovalRecord> ApprovalHistory = new List<ApprovalRecord>
+    // {
+    //     new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
+    //                         From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=true},
+    //     new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
+    //                         From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=true},
+    //     new ApprovalRecord {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
+    //                          From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=true}
+    // };
 
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -90,6 +102,16 @@
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+           approvalHistory = await DayTimeOffRequestService.GetHrDayTimeOffApprovalHistory(managerEmplCode);
         }
     }
 }

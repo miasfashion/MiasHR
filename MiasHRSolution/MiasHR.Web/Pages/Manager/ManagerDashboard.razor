@@ -1,6 +1,6 @@
-﻿@page "/manager/home"
+﻿@* @page "/manager/home" *@
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Manager")]
 
 <PageTitle>Manager Dashboard</PageTitle>
 <MudContainer Class="mt-16 px-8" MaxWidth="MudBlazor.MaxWidth.False">
