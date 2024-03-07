@@ -8,5 +8,6 @@ namespace MiasHR.Web.Services.Contracts
         Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
         Task<RequestStatusChangeResultDTO> ChangeRequestStatus(RequestStatusChangeDTO request);
+        Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year);
     }
 }

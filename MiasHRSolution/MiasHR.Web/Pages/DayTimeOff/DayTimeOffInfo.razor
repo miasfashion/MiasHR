@@ -2,8 +2,13 @@
 
 @attribute [Authorize]
 
+@using MiasHR.Models.DTOs;
+@using MiasHR.Web.Services.Contracts;
+
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
 
 @* https://try.mudblazor.com/snippet/cYwxPcbmCJHzZmCF *@
 
@@ -11,7 +16,7 @@
 <MudStack Row="true">
     <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
     <MudSpacer />
-    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+    <MudButton OnClick="OpenNewRequestDialog" Variant="Variant.Filled" Color="Color.Secondary"
                Style="width: 200px; height: 60px;">
         Request Time Off
     </MudButton>
@@ -33,57 +38,70 @@
                 </MudTabs>
             </MudPaper>
         </MudHidden>
-        <MudPaper Class="d-flex flex-wrap flex-grow-1" Elevation="0">
-            <MudPaper Class="mt-4 ma-2 pa-4" Width="392px" Elevation="1">
-                <MudText Typo="Typo.h6">Vacation</MudText>
-                @* TODO: Make chart size adaptable to small screens *@
-                <TelerikChart Width="360px" Height="250px">
-                    <ChartSeriesItems>
-                        <ChartSeries Type="ChartSeriesType.Donut"
-                                     Data="@vacData"
-                                     HoleSize="80"
-                                     ColorField="@nameof(ModelData.Color)"
-                                     Field="@nameof(ModelData.Value)"
-                                     CategoryField="@nameof(ModelData.Category)">
-                            <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
-                                               Visible="true"
-                                               Background="transparent"
-                                               Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
-                            </ChartSeriesLabels>
-                        </ChartSeries>
-                    </ChartSeriesItems>
-                    <ChartLegend Visible="false">
-                    </ChartLegend>
-                </TelerikChart>
-            </MudPaper>
-            <MudPaper Class="mt-4 ma-2 pa-4" Width="392px" Elevation="1">
-                <MudText Typo="Typo.h6">Sick Days</MudText>
-                @* TODO: Make chart size adaptable to small screens *@
-                <TelerikChart Width="360px" Height="250px">
-                    <ChartSeriesItems>
-                        <ChartSeries Type="ChartSeriesType.Donut"
-                                     Data="@sickData"
-                                     HoleSize="80"
-                                     ColorField="@nameof(ModelData.Color)"
-                                     Field="@nameof(ModelData.Value)"
-                                     CategoryField="@nameof(ModelData.Category)">
-                            <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
-                                               Visible="true"
-                                               Background="transparent"
-                                               Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
-                            </ChartSeriesLabels>
-                        </ChartSeries>
-                    </ChartSeriesItems>
-                    <ChartLegend Visible="false">
-                    </ChartLegend>
-                </TelerikChart>
-            </MudPaper>
-        </MudPaper>
+
+        <MudGrid>
+            <MudItem Class="d-flex justify-center" xs="12" md="6">
+                <MudPaper Class="mt-4 ma-2 pa-4" Width="450px" Height="100%" Elevation="1">
+                    <MudText Typo="Typo.h6">Vacation</MudText>
+                    @* TODO: Make chart size adaptable to small screens *@
+                    <MudPaper Class="d-flex align-content-center" Elevation="0">
+                        <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                            <TelerikChart Width="100%" Height="380px">
+                                <ChartSeriesItems>
+                                    <ChartSeries Type="ChartSeriesType.Donut"
+                                                 Data="@vacData"
+                                                 HoleSize="80"
+                                                 ColorField="@nameof(ModelData.Color)"
+                                                 Field="@nameof(ModelData.Value)"
+                                                 CategoryField="@nameof(ModelData.Category)">
+                                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                           Visible="true"
+                                                           Background="transparent"
+                                                           Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                        </ChartSeriesLabels>
+                                    </ChartSeries>
+                                </ChartSeriesItems>
+                                <ChartLegend Visible="false">
+                                </ChartLegend>
+                            </TelerikChart>
+                        </MudPaper>
+                    </MudPaper>
+                </MudPaper>
+            </MudItem>
+            <MudItem Class="d-flex justify-center" xs="12" md="6">
+                <MudPaper Class="mt-4 ma-2 pa-4" Width="450px" Height="100%" Elevation="1">
+                    <MudText Typo="Typo.h6">Vacation</MudText>
+                    <MudPaper Class="d-flex align-content-center" Elevation="0">
+                        <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                            <TelerikChart Width="100%" Height="380px">
+                                <ChartSeriesItems>
+                                    <ChartSeries Type="ChartSeriesType.Donut"
+                                                 Data="@sickData"
+                                                 HoleSize="80"
+                                                 ColorField="@nameof(ModelData.Color)"
+                                                 Field="@nameof(ModelData.Value)"
+                                                 CategoryField="@nameof(ModelData.Category)">
+                                        <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                           Visible="true"
+                                                           Background="transparent"
+                                                           Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                        </ChartSeriesLabels>
+                                    </ChartSeries>
+                                </ChartSeriesItems>
+                                <ChartLegend Visible="false">
+                                </ChartLegend>
+                            </TelerikChart>
+                        </MudPaper>
+                    </MudPaper>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     </MudContainer>
 </MudContainer>
 
 @code {
-    public class ModelData
+    // binder class for Telerik Chart
+    private class ModelData
     {
         public string? Category { get; set; }
         public double Value { get; set; }
@@ -91,55 +109,70 @@
         public bool ShouldShowInLegend { get; set; } = true;
     }
 
-    public List<ModelData> vacData = new List<ModelData>
+    // default values for vacation data
+    private List<ModelData> vacData = new List<ModelData>
     {
         new ModelData
         {
             Category = "Used",
-            Value = 3,
+            Value = 0,
             Color = "#616161"
         },
         new ModelData
         {
             Category = "Available",
-            Value = 5,
+            Value = 0,
             Color = "#1DE9B6"
         },
         new ModelData
         {
             Category = "Not Accrued",
-            Value = 6,
+            Value = 0,
             Color = "#B0BEC5"
         },
         new ModelData
         {
             Category = "Adjusted",
-            Value = 2,
+            Value = 0,
             Color = "#FF9100"
         }
     };
 
-    public List<ModelData> sickData = new List<ModelData>
+    // default values for sick day data
+    private List<ModelData> sickData = new List<ModelData>
     {
         new ModelData
         {
             Category = "Used",
-            Value = 1,
+            Value = 0,
             Color = "#616161"
         },
         new ModelData
         {
             Category = "Available",
-            Value = 4,
+            Value = 0,
             Color = "#1DE9B6"
         }
     };
 
-    @*TODO: This is probably where all the data collecting before displaying on the screen
-            takes place. How can you use API to gather information?*@
-    protected override void OnInitialized()
+    // Fetch data from DB and populate chart
+    private async Task PopulateChart(List<ModelData> vacData, List<ModelData> sickData)
     {
-        base.OnInitialized();
+        var emplCode = await AuthService.GetUserEmplCode();
+        var dto = new EmployeeDayTimeOffRemainingDTO { };
+
+        if (emplCode != null)
+        {
+            dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(emplCode, "2024");
+        }
+
+        vacData[0].Value = (double)dto.s_used_days;
+        vacData[1].Value = (double)dto.s_available_curr_days;
+        vacData[2].Value = (double)dto.s_year_basic_days - (double)dto.s_curr_basic_days;
+        vacData[3].Value = (double)dto.s_adjust_days;
+
+        sickData[0].Value = (double)dto.s_used_sick_days;
+        sickData[1].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
     }
 
     // Breadcrumbs
@@ -163,8 +196,8 @@
         }
     }
 
-    //DayTimeOff Request
-    private void Request()
+    // New DayTimeOff Request
+    private void OpenNewRequestDialog()
     {
         var parameters = new DialogParameters<DayTimeOffRequest>();
         parameters.Add(x => x.ContentText, "New Time Off Request");
@@ -174,5 +207,11 @@
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
         DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateChart(vacData, sickData);
+        StateHasChanged();
     }
 }
