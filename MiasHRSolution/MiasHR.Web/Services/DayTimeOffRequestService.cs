@@ -11,7 +11,13 @@ namespace MiasHR.Web.Services
         private readonly HttpClient _httpClient;
         private readonly ISessionStorageService _sessionStorage;
         private readonly AuthenticationStateProvider _authStateProvider;
-
+        
+        public DayTimeOffRequestService(HttpClient httpClient, ISessionStorageService sessionStorage, AuthenticationStateProvider authStateProvider)
+        {
+            _httpClient = httpClient;
+            _sessionStorage = sessionStorage;
+            _authStateProvider = authStateProvider;
+        }
         public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
         {
             try
