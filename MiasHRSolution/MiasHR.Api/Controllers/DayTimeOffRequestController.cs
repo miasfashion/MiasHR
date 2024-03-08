@@ -85,6 +85,7 @@ namespace MiasHR.Api.Controllers
                                                      "Error retrieving data from database");
             }
         }
+
         [HttpPost]
         [Route("api/[controller]/[action]/{id}/{emplCode}")]
         public async Task<ActionResult<string>> CancelDayTimeOffRequest(int id, string emplCode)
@@ -102,6 +103,23 @@ namespace MiasHR.Api.Controllers
             }
         }
 
+        //GetDayTimeOffRemainingByEmployee
+        [HttpGet]
+        [Route("api/[controller]/[action]/{emplCode}/{year}")]
+        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRemainingByEmployee(string emplCode, string year)
+        {
+            try
+            {
+                var dayTimeOffRemaining = await _dayTimeOffRequestRepository.GetDayTimeOffRemainingByEmployee(emplCode, year);
+
+                return dayTimeOffRemaining is null ? NotFound() : Ok(dayTimeOffRemaining);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                                     "Error retrieving data from database");
+            }
+        }
 
         [HttpPost("api/[controller]/[action]")]
         public async Task<ActionResult<string>> GetSickDaysRemaining([FromBody] string emplCode)

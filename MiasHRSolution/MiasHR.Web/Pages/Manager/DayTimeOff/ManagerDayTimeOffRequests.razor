@@ -30,7 +30,15 @@
             </MudPaper>
         </MudHidden>
         <MudPaper Class="d-flex flex-grow-1" Elevation="0">
-            <MudTable Items="@pendingRequests" @ref="requestTable">
+            <MudTable Filter="new Func<PendingDayTimeOffApprovalDTO,bool>(FilterFunc1)" Items="@pendingRequests" @ref="requestTable">
+                <ToolBarContent>
+                    <MudSpacer />
+                    <MudSpacer />
+                    <MudSpacer />
+                    <MudSpacer />
+                    <MudSpacer />
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
                 <HeaderContent>
                     <MudTh>Request Date</MudTh>
                     <MudTh>Name</MudTh>
@@ -70,33 +78,6 @@
     private IReadOnlyList<PendingDayTimeOffApprovalDTO> pendingRequests = new List<PendingDayTimeOffApprovalDTO>();
     private MudTable<PendingDayTimeOffApprovalDTO> requestTable;
 
-    // public class PendingRequest
-    // {
-    //     public DateTime DateTime { get; set; }
-    //     public string Name { get; set; }
-    //     public string Type { get; set; }
-    //     public DateTime From { get; set; }
-    //     public DateTime To { get; set; }
-    //     public bool FirstApproval { get; set; }
-    //     public bool SecondApproval { get; set; }
-    // }
-
-    // public List<PendingRequest> PendingRequests = new List<PendingRequest>()
-    // {
-    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Sam Kim", Type="Sick Leave",
-    //                         From=new DateTime(2023,12,22,8,0,0),To=new DateTime(2023,12,30,10,0,0), FirstApproval=true, SecondApproval=false},
-    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Darren Kim", Type="Sick Leave",
-    //                         From= new DateTime(2023,12,24,0,0,0),To=new DateTime(2023,12,25,0,0,0), FirstApproval=true, SecondApproval=false},
-    //     new PendingRequest {DateTime=new DateTime(2023,11,22,11,00,00), Name="Carol Kim", Type="Sick Leave",
-    //                          From=new DateTime(2023,12,31,13,0,0),To=new DateTime(2023,12,31,15,0,0), FirstApproval=true, SecondApproval=false}
-    // };
-
-    //DayTimeOff View
-    private async Task RefreshRequestsList()
-    {
-        // Code to refresh the list, e.g., fetching updated list from the backend or updating the local list
-    }
-
     private async void Review(PendingDayTimeOffApprovalDTO dto)
     {
         var parameters = new DialogParameters<ManagerDayTimeOffRequest>();
@@ -128,7 +109,7 @@
         new BreadcrumbItem("Manager", href: "/manager/home"),
         new BreadcrumbItem("Day Time Off Requests", href: null, disabled: true)
     };
-    
+
     // Navigation Tab
     int activeIndex = 0;
     private void navPage()
@@ -151,5 +132,21 @@
         {
             pendingRequests = await DayTimeOffRequestService.GetPendingDayTimeOffRequestList(managerEmplCode);
         }
+    }
+
+    // handle table search by employee name and request type
+    private string searchString1 = "";
+    
+    private bool FilterFunc1(PendingDayTimeOffApprovalDTO request) => FilterFunc(request, searchString1);
+    
+    private bool FilterFunc(PendingDayTimeOffApprovalDTO request, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (request.empl_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (request.req_type.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

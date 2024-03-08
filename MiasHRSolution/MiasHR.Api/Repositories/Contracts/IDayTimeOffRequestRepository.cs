@@ -30,19 +30,14 @@ namespace MiasHR.Api.Repositories.Contracts
                                                        int hours,                                                       
                                                        TimeSpan time,
                                                        string sickDayYn);
-
         Task<DayTimeOffRequestDTO>? GetDayTimeOffRequest(int id);
-
         Task<string> CancelDayTimeOffRequest(int id, string emplCode);
-
         Task<string> GetSickDaysRemaining(string emplCode);
         Task<string> GetVacationRemaining(string emplCode);
-
         Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year);
-
         Task<IReadOnlyList<PendingDayTimeOffApprovalDTO>>? GetPendingDayTimeOffRequestList(string managerEmplCode);
         Task<IReadOnlyList<DayTimeOffApprovalHistoryDTO>>? GetHrDayTimeOffApprovalHistory(string managerEmplCode);
-
         Task<RequestStatusChangeResultDTO> ChangeRequestStatus(int id, string statusType, string managerEmplCode, string rejectReason);
+        Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year);
     }
 }
