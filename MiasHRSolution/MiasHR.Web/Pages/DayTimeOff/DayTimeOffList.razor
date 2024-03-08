@@ -15,6 +15,7 @@
 @inject IAuthService AuthService
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject ISnackbar Snackbar
+@inject IEmailService EmailService
 
 <PageTitle>Day Time Off Requests</PageTitle>
 <MudStack Row="true">
@@ -139,6 +140,7 @@
 @code {
 
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
+    private EmailDTO emailInfo;
     private string selectedYear = DateTime.Now.Year.ToString();
 
     string? employee;
@@ -203,6 +205,9 @@
 
             if (message == "Canceled Successfully !")
             {
+                emailInfo = new EmailDTO { Body = "Testing Cancel Request", Subject = "Think it worked", To = empl };
+                var email = await EmailService.SendEmail(emailInfo);
+
                 Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
