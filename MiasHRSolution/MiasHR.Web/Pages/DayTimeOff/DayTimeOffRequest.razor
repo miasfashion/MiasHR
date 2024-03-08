@@ -100,28 +100,28 @@
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd DataLabel="Type">@context.Type</MudTd>
-                                    <MudTd DataLabel="Days">@context.Days</MudTd>
-                                </RowTemplate>
-                            </MudTable>
-                        </MudPaper>
-                        <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
-                            <MudText Class="m-2">You are requesting @typeValue</MudText>
-                            <MudText Class="m-2">For @dayCnt Days</MudText>                        
-                            <MudText Class="m-2">Starting at @startTime</MudText>
-                            <MudText Class="m-2">From @startDate.Value.Date</MudText>
-                            <MudText Class="m-2">To @endDate.Value.Date</MudText>
-                            <MudText Class="m-2">For @reasonValue</MudText>
-                            <MudText Class="m-2">Checking Hour @hour</MudText>
-                        </MudPaper>
-                    </MudContainer>
-                </MudItem>
-            </MudGrid>
-        </DialogContent>
-        <DialogActions>
-            <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
-        </DialogActions>
-    </MudDialog>
+                                <MudTd DataLabel="Days">@context.Days</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudPaper>
+                    <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
+                        <MudText Class="m-2">You are requesting @typeValue</MudText>
+                        <MudText Class="m-2">For @dayCnt Days</MudText>                        
+                        <MudText Class="m-2">Starting at @startTime</MudText>
+                        <MudText Class="m-2">From @startDate.Value.Date</MudText>
+                        <MudText Class="m-2">To @endDate.Value.Date</MudText>
+                        <MudText Class="m-2">For @reasonValue</MudText>
+                        <MudText Class="m-2">Checking Hour @hour</MudText>
+                    </MudPaper>
+                </MudContainer>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>
 
     @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
