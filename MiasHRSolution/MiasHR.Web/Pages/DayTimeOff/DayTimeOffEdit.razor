@@ -9,6 +9,7 @@
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
 @inject ISnackbar Snackbar
+@inject IEmailService EmailService
 
 
 <MudDialog>
@@ -133,6 +134,8 @@
     [Parameter] public int seq { get; set; }
 
     void Cancel() => MudDialog.Cancel();
+    //Sending Email
+    private EmailDTO emailInfo;
 
     //Information needed for Creating Request
     public string timeOption { get; set; } = "DAY OFF";
@@ -214,6 +217,14 @@
             emailApprov = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
+                emailInfo = new EmailDTO
+                    {
+                        Body = "eMHRS request has been Edited by " + requestEdit.user + " in eMHRS. Please log into eMHRS to confirm.",
+                        Subject = requestEdit.type + " Edit Notice",
+                        To = requestEdit.emplCode,
+                        ApprovStep = "EDIT"
+                    };
+                var email = await EmailService.SendEmail(emailInfo);
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
                 {

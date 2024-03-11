@@ -201,11 +201,13 @@
             var empl = await AuthService.GetUserEmplCode();
             var result = await DayTimeOffRequestService.CancelDayTimeOffRequest(requestIdToDelete, empl);
 
+            var name = await AuthService.GetUserName();
             string? message = await result.Content.ReadAsStringAsync();
 
             if (message == "Canceled Successfully !")
             {
-                emailInfo = new EmailDTO { Body = "Testing Cancel Request", Subject = "Think it worked", To = empl };
+                emailInfo = new EmailDTO { Body = "eMHRS reqeust has been canceled by " + name + ". Please log into eMHRS to confirm.", 
+                Subject = "eMHRS Request Canceled", To = empl, ApprovStep = "CANCEL"};
                 var email = await EmailService.SendEmail(emailInfo);
 
                 Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>

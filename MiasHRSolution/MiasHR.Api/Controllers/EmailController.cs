@@ -19,12 +19,12 @@ namespace MiasHR.Api.Controllers
         }
 
         [HttpPost("api/[controller]/[action]")]
-        public async Task<ActionResult<string>> SendEmail(EmailDTO request)
+        public async Task<ActionResult<RequestResultDTO>> SendEmail(EmailDTO request)
         {
             try
             {
                 var emailRequest =  await _emailRepository.SendEmail(request);
-                return emailRequest.status;
+                return emailRequest;
             }
             catch (Exception)
             {

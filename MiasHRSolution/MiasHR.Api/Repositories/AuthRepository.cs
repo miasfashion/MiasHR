@@ -85,7 +85,7 @@ namespace MiasHR.Api.Repositories
                     isManager = true;
                 }
             }
-            
+
             return new Tuple<HrEmployee, bool>(employee, isManager);
         }
 
@@ -261,7 +261,21 @@ namespace MiasHR.Api.Repositories
             }
         }
 
+        public async Task<UpdateMessageDTO> GetEmail(string emplCode)
+        {
+            var email = await _miasHRDbContext.HrEmployees
+                .AsNoTrackingWithIdentityResolution()
+                .FirstOrDefaultAsync(x => x.EmplCode == emplCode && x.Status != 3);
+            if (email is null)
+            {
+                //Email not found for the employee
+                return new UpdateMessageDTO { msg = "USER NOT FOUND. PLEASE CONTACT IT" };
+            }
+            else
+            {
+                return new UpdateMessageDTO { msg = "SUCCESS", com_email = email.ComEmail, empl_code = emplCode };
+            }
+        }
 
     }
-
 }
