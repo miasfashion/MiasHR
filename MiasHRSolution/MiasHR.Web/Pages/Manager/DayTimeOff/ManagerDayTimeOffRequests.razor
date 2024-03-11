@@ -4,6 +4,7 @@
 
 @using MiasHR.Models.DTOs;
 @using MiasHR.Web.Services.Contracts;
+@using System.Globalization
 
 @inject NavigationManager NavigationManager
 @inject IDayTimeOffRequestService DayTimeOffRequestService
@@ -50,11 +51,11 @@
                     <MudTh></MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="ReqDate">@context.req_date</MudTd>
+                    <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                     <MudTd DataLabel="Name">@context.empl_name</MudTd>
                     <MudTd DataLabel="Type">@context.req_type</MudTd>
-                    <MudTd DataLabel="From">@context.period_from</MudTd>
-                    <MudTd DataLabel="To">@context.period_to</MudTd>
+                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
                     <MudTd DataLabel="FirstApproval">@context.approve_1st_yn</MudTd>
                     <MudTd DataLabel="SecondApproval">@context.approve_2nd_yn</MudTd>
                     <MudTd>
@@ -146,6 +147,15 @@
         if (request.empl_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (request.req_type.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(request.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(request.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(request.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }
