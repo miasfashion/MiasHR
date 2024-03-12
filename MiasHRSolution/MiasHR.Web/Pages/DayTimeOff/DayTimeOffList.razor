@@ -17,86 +17,71 @@
 @inject ISnackbar Snackbar
 
 <PageTitle>Day Time Off Requests</PageTitle>
-<MudStack Row="true">
-    <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
-    <MudSpacer />
-    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
-               Style="width: 200px; height: 60px;">
-        Request Time Off
-    </MudButton>
-</MudStack>
+<MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
-    <MudContainer Class="d-flex">
-        <MudHidden Breakpoint="Breakpoint.SmAndDown">
-            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
-        </MudHidden>
+    <MudPaper Class="d-flex px-8 justify-space-between align-items-center flex-grow-1" Elevation="0">
         <MudText Class="ml-2" Typo="Typo.h4">Day Time Off Request List</MudText>
-    </MudContainer>
-    <MudContainer Class="d-flex">
-        <MudHidden Breakpoint="Breakpoint.SmAndDown">
-            <MudPaper Elevation="0">
-                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                         @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                    <MudTabPanel OnClick="navPage" Text="Information" />
-                    <MudTabPanel OnClick="navPage" Text="Request List" />
-                </MudTabs>
-            </MudPaper>
-
-        </MudHidden>
-
-        <MudPaper Class="d-block" Elevation="0">
-            <MudGrid Justify="Justify.FlexEnd">
-                <MudItem Class="d-flex justify-end flex-grow-1 mx-8" xs="12" sm="6" md="4">
-                    <MudSelect T="string" Label="Select Year" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
-                        @foreach (var yr in years)
-                        {
-                            <MudSelectItem Value="@yr">@yr</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-            </MudGrid>
-            <MudTable Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1" Items="@TimeOffLists">
-                <ToolBarContent>
-                    <MudSpacer />
-                    <MudSpacer />
-                    <MudSpacer />
-                    <MudSpacer />
-                    <MudSpacer />
-                    <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                </ToolBarContent>
-                <HeaderContent>
-                    <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Used Days</MudTh>
-                    <MudTh>Remark</MudTh>
-                    <MudTh>From</MudTh>
-                    <MudTh>To</MudTh>
-                    <MudTh>1st Approved</MudTh>
-                    <MudTh>2nd Approved</MudTh>
-                    <MudTh>Status</MudTh>
-                    <MudTh></MudTh>
-                    <MudTh></MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    @if (@context.Status != 3 && context.Status != 0)
+        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+                   Style="width: 200px; height: 60px;">
+            Request Time Off
+        </MudButton>
+    </MudPaper>
+    <MudPaper Class="d-block" Elevation="0">
+        <MudTable Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
+                    @foreach (var yr in years)
                     {
-                        <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="Type">@context.ReqType</MudTd>
-                        <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                        <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
-                        <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="1st Approved">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
-                        <MudTd DataLabel="2nd Approved">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
-                        <MudTd DataLabel="Status">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
-                        <MudTd>@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
-                        <MudTd>@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                        <MudSelectItem Value="@yr">@yr</MudSelectItem>
                     }
-                </RowTemplate>
-            </MudTable>
-        </MudPaper>
-    </MudContainer>
-
+                </MudSelect>
+                <MudTextField Class="mt-0 mx-4" @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col style="width: 60px;"/>
+                <col style="width: 60px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Used Days</MudTh>
+                <MudTh>Remark</MudTh>
+                <MudTh>From</MudTh>
+                <MudTh>To</MudTh>
+                <MudTh Style="text-align:center">1st Approved</MudTh>
+                <MudTh Style="text-align:center">2nd Approved</MudTh>
+                <MudTh Style="text-align:center">Status</MudTh>
+                <MudTh></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                @if (@context.Status != 3 && context.Status != 0)
+                {
+                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="Type">@context.ReqType</MudTd>
+                    <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
+                    <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
+                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
+                    <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
+                    <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
+                    <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                    <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
 </MudContainer>
 
 <MudDialog IsVisible="@showConfirmationDialog">
