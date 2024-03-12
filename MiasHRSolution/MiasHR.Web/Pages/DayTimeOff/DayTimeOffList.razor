@@ -18,112 +18,71 @@
 @inject IEmailService EmailService
 
 <PageTitle>Day Time Off Requests</PageTitle>
-<MudStack Row="true">
-    <MudBreadcrumbs Items="_breadcrumbs" Class="justify-start" />
-    <MudSpacer />
-    <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
-               Style="width: 200px; height: 60px;">
-        Request Time Off
-    </MudButton>
-</MudStack>
+<MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
-    <MudContainer Class="d-flex">
-        <MudHidden Breakpoint="Breakpoint.SmAndDown">
-            <MudPaper Elevation=0 MinWidth="195px"> </MudPaper>
-        </MudHidden>
+    <MudPaper Class="d-flex px-8 justify-space-between align-items-center flex-grow-1" Elevation="0">
         <MudText Class="ml-2" Typo="Typo.h4">Day Time Off Request List</MudText>
-    </MudContainer>
-    <MudContainer Class="d-flex">
-        <MudHidden Breakpoint="Breakpoint.SmAndDown">
-            <MudPaper Elevation="0">
-                <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="false"
-                         @bind-ActivePanelIndex="activeIndex" Style="position:sticky; top: 120px;" Class="ma-4">
-                    <MudTabPanel OnClick="navPage" Text="Information" />
-                    <MudTabPanel OnClick="navPage" Text="Request List" />
-                </MudTabs>
-            </MudPaper>
-
-        </MudHidden>
-
-        <MudPaper Class="d-block" Elevation="0">
-            <MudGrid>
-                <MudItem xs="12" sm="6" md="4">
-                    <MudSelect T="string" Label="Select Year" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
-                        @foreach (var yr in years)
-                        {
-                            <MudSelectItem Value="@yr">@yr</MudSelectItem>
-                        }
-
-                    </MudSelect>
-                </MudItem>
-            </MudGrid>
-            <MudTable Class="m-4 flex-grow-1" Items="@TimeOffLists">
-                <HeaderContent>
-                    <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
-                    <MudTh>Type</MudTh>
-                    <MudTh>Used Days</MudTh>
-                    <MudTh>Remark</MudTh>
-                    <MudTh>From</MudTh>
-                    <MudTh>To</MudTh>
-                    <MudTh>1st Approved</MudTh>
-                    <MudTh>2nd Approved</MudTh>
-                    <MudTh>Status</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    @if (@context.Status != 3 && context.Status != 0)
+        <MudButton OnClick="Request" Variant="Variant.Filled" Color="Color.Secondary"
+                   Style="width: 200px; height: 60px;">
+            Request Time Off
+        </MudButton>
+    </MudPaper>
+    <MudPaper Class="d-block" Elevation="0">
+        <MudTable Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
+                    @foreach (var yr in years)
                     {
-                        <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="Type">@context.ReqType</MudTd>
-                        <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                        <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
-                        <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                        <MudTd DataLabel="Approve1st">@context.Approve1stYn</MudTd>
-                        <MudTd DataLabel="Approve2nd">@context.Approve2ndYn</MudTd>
-                        @if (@context.Status == 1 && context.Approve1stYn.Equals("N") && context.Approve2ndYn.Equals("N"))
-                        {
-                            <MudTd>
-                                <MudChip Color="Color.Info">Open</MudChip>
-                            </MudTd>
-                            <MudTd>
-                                <MudButton EndIcon="@Icons.Material.Filled.Edit" OnClick="@(() => HandleEdit(context.Seq))" />
-                            </MudTd>
-                            <MudTd>
-                                <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancelConfirmation(context.Seq))" />
-                            </MudTd>
-                        }
-                        else if (@context.Status == 4)
-                        {
-                            <MudTd>
-                                <MudChip Disabled="true">Rejected</MudChip>
-                            </MudTd>
-                            <MudTd>
-                            </MudTd>
-                        }
-                        else if (@context.Status == 2)
-                        {
-                            <MudTd>
-                                <MudChip Color="Color.Success" Disabled="true">Approved</MudChip>
-                            </MudTd>
-                            <MudTd>
-                                <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove" />
-                            </MudTd>
-                        }
-                        else if (@context.Status == 1)
-                        {
-                            <MudTd>
-                                <MudChip Color="Color.Warning" Disabled="true">Partially Approved</MudChip>
-                            </MudTd>
-                            <MudTd>
-                                <MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove" />
-                            </MudTd>
-                        }
+                        <MudSelectItem Value="@yr">@yr</MudSelectItem>
                     }
-                </RowTemplate>
-            </MudTable>
-        </MudPaper>
-    </MudContainer>
-
+                </MudSelect>
+                <MudTextField Class="mt-0 mx-4" @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Used Days</MudTh>
+                <MudTh>Remark</MudTh>
+                <MudTh>From</MudTh>
+                <MudTh>To</MudTh>
+                <MudTh Style="text-align:center">1st Approved</MudTh>
+                <MudTh Style="text-align:center">2nd Approved</MudTh>
+                <MudTh Style="text-align:center">Status</MudTh>
+                <MudTh></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                @if (@context.Status != 3 && context.Status != 0)
+                {
+                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="Type">@context.ReqType</MudTd>
+                    <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
+                    <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
+                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
+                    <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
+                    <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
+                    <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                    <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
 </MudContainer>
 
 <MudDialog IsVisible="@showConfirmationDialog">
@@ -138,7 +97,6 @@
 
 
 @code {
-
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
     private EmailDTO emailInfo;
     private string selectedYear = DateTime.Now.Year.ToString();
@@ -309,5 +267,110 @@
         }
     }
 
+    // handle table search by employee name and request type
+    private string searchString1 = "";
 
+    private bool FilterFunc1(DayTimeOffRequestDTO history) => FilterFunc(history, searchString1);
+
+    private bool FilterFunc(DayTimeOffRequestDTO history, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (history.ReqType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (history.ReqSubType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(history.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(history.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (DateTime.ParseExact(history.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+            .Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private RenderFragment RenderApprovalIcon(string approvalProperty)
+    {
+        bool isApproved = approvalProperty.Equals("Y");
+        string icon = isApproved ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircle;
+        Color color = isApproved ? Color.Primary : Color.Secondary;
+
+        return@<MudIcon Icon="@icon" Color="@color" />;
+    }
+
+    private RenderFragment RenderStatusChip(int status, string approve1stYn, string approve2ndYn)
+    {
+        bool chipDisabled;
+        Color chipColor;
+        string chipText;
+
+        if (status == 1 && approve1stYn.Equals("N") && approve2ndYn.Equals("N"))
+        {
+            chipDisabled = false;
+            chipColor = Color.Info;
+            chipText = "Open";
+        }
+        else if (status == 4)
+        {
+            chipDisabled = true;
+            chipColor = Color.Primary;
+            chipText = "Rejected";
+        }
+        else if (status == 2)
+        {
+            chipDisabled = true;
+            chipColor = Color.Success;
+            chipText = "Approved";
+        }
+        else if (status == 1)
+        {
+            chipDisabled = true;
+            chipColor = Color.Warning;
+            chipText = "Partially Approved";
+        }
+        else
+        {
+            return null;
+        }
+
+        return@<MudChip Disabled=chipDisabled Color=chipColor>@chipText</MudChip>;
+    }
+
+    private RenderFragment RenderActionButton1(int status, string approve1stYn, string approve2ndYn, int seq)
+    {
+        if (status == 1)
+        {
+            if (approve1stYn.Equals("N") && approve2ndYn.Equals("N"))
+            {
+                return@<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancelConfirmation(seq))"></MudIconButton>;
+            }
+            else
+            {
+                return @<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudIconButton>;
+            }
+        }
+        else if (status == 2)
+        {
+            return@<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudIconButton>;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private RenderFragment RenderActionButton2(int status, string approve1stYn, string approve2ndYn, int seq)
+    {
+        if (status == 1 && approve1stYn.Equals("N") && approve2ndYn.Equals("N"))
+        {
+            return @<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => HandleEdit(seq))"></MudIconButton>;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
