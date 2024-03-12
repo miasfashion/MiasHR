@@ -261,7 +261,7 @@ namespace MiasHR.Api.Repositories
             }
         }
 
-        public async Task<UpdateMessageDTO> GetEmail(string emplCode)
+        public async Task<UpdateMessageDTO> GetUserEmail(string emplCode)
         {
             var email = await _miasHRDbContext.HrEmployees
                 .AsNoTrackingWithIdentityResolution()
