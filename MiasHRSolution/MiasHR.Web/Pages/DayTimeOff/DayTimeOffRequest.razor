@@ -216,8 +216,8 @@
             emailApprov = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                emailInfo = new EmailDTO { Body = "You have a request for " +newRequest.type + " in eMHRS. The request was made by "
-                + newRequest.user + " and is awaiting approval. Thank you.", 
+                emailInfo = new EmailDTO { Body = "You have a request for " +newRequest.type + " in eMHRS. <br>The request was made by "
+                + newRequest.user + " and is awaiting approval. <br>Thank you.", 
                 Subject = newRequest.type + " Approval Request", To = newRequest.emplCode, ApprovStep = "CREATE" };        
                 var email = await EmailService.SendEmail(emailInfo);
                 MudDialog.Close(DialogResult.Ok(true));

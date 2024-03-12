@@ -29,39 +29,42 @@ namespace MiasHR.Api.Repositories
         public async Task<RequestResultDTO> SendEmail(EmailDTO request)
         {
             var toEmail = await _authRepository.GetEmail(request.To);
-            var approvers = await GetApprovers(request.To);
-            var approver1  = await _authRepository.GetEmail(approvers.approver1st);
-            var approver2 = await _authRepository.GetEmail(approvers.approver2nd);
-            var otherManager = await _authRepository.GetEmail(approvers.otherManager);
-            var noticeManager = await _authRepository.GetEmail(approvers.PTONoticeMang);
 
             if (toEmail.msg.Equals("SUCCESS"))
             {
                 var email = new MimeMessage();
-                //Notification Emails for 1st approver
-                if (new[] { "EDIT", "CANCEL", "REJECT1", "CREATE" }.Contains(request.ApprovStep))
+                //Not using the role in token as it prevents managers from using their time off feature
+                if (request.role.Equals("MANAGER"))
                 {
-                    email.Cc.Add(MailboxAddress.Parse(approver1.com_email));
+                    if(request.ApprovStep.Equals("APPROVE") || request.ApprovStep.Equals("REJECT"))
+                    {
+                        email.To.Add(MailboxAddress.Parse(request.managerEmployee));
+                        email.Cc.Add(MailboxAddress.Parse(toEmail.com_email));
+                    }
+                    else
+                    {
+                        email.To.Add(MailboxAddress.Parse(request.managerEmployee));
+                        email.Cc.Add(MailboxAddress.Parse(toEmail.com_email));
+                        email.Cc.Add(MailboxAddress.Parse(request.managerOther));
+                        email.Cc.Add(MailboxAddress.Parse(request.managerNotice));
+                    }
                 }
-                //Notification Emails to 2nd Approver
-                else if (request.ApprovStep.Equals("REJECT2") || request.ApprovStep.Equals("APPROV1"))
+                else
                 {
-                    email.Cc.Add(MailboxAddress.Parse(approver2.com_email));
-                }
-                //Approve Done
-                else if (request.ApprovStep.Equals("DONE"))
-                {
-                    email.Cc.Add(MailboxAddress.Parse(approver1.com_email));
-                    email.Cc.Add(MailboxAddress.Parse(approver2.com_email));
-                    email.Cc.Add(MailboxAddress.Parse(otherManager.com_email));
-                    email.Cc.Add(MailboxAddress.Parse(noticeManager.com_email));
-                }
-                email.To.Add(MailboxAddress.Parse(toEmail.com_email));
-
+                    //Emails on side of Employee
+                    var approvers = await GetApprovers(request.To);
+                    var approver1 = await _authRepository.GetEmail(approvers.approver1st);
+                    //Notification Emails for 1st approver (Only possible when nothing approved)
+                    if (new[] { "EDIT", "CANCEL", "CREATE" }.Contains(request.ApprovStep))
+                    {
+                 //       email.Cc.Add(MailboxAddress.Parse(approver1.com_email));
+                        email.To.Add(MailboxAddress.Parse(toEmail.com_email));
+                    }
+                }                
                 email.From.Add(new MailboxAddress("eMHRS", _configuration.GetSection("SendEmail").Value));
                 email.Subject = request.Subject;
                 email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
-                email.ReplyTo.Add(new MailboxAddress("HR",_configuration.GetSection("HrEmail").Value));
+                email.ReplyTo.Add(new MailboxAddress("HR", _configuration.GetSection("HrEmail").Value));
                 using var smtp = new SmtpClient();
                 smtp.Connect(_configuration.GetSection("EmailHost").Value, 587);
                 smtp.Authenticate(_configuration.GetSection("SendEmail").Value, _configuration.GetSection("EmailPassword").Value);

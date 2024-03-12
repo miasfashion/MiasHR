@@ -206,7 +206,7 @@
 
             if (message == "Canceled Successfully !")
             {
-                emailInfo = new EmailDTO { Body = "eMHRS reqeust has been canceled by " + name + ". Please log into eMHRS to confirm.", 
+                emailInfo = new EmailDTO { Body = "eMHRS reqeust has been canceled by " + name + ". <br>Please log into eMHRS to confirm.", 
                 Subject = "eMHRS Request Canceled", To = empl, ApprovStep = "CANCEL"};
                 var email = await EmailService.SendEmail(emailInfo);
 
