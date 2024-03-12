@@ -28,7 +28,7 @@ namespace MiasHR.Api.Repositories
 
         public async Task<RequestResultDTO> SendEmail(EmailDTO request)
         {
-            var toEmail = await _authRepository.GetEmail(request.To);
+            var toEmail = await _authRepository.GetUserEmail(request.To);
 
             if (toEmail.msg.Equals("SUCCESS"))
             {
@@ -56,7 +56,7 @@ namespace MiasHR.Api.Repositories
                     //Emails on side of Employee
 
                     var approvers = await GetApprovers(request.To);
-                    var approver1 = await _authRepository.GetEmail(approvers.approver1st);
+                    var approver1 = await _authRepository.GetUserEmail(approvers.approver1st);
 
                     //Notification Emails for 1st approver (Only possible when nothing approved)
                     if (new[] { "EDIT", "CANCEL", "CREATE" }.Contains(request.ApprovStep))
