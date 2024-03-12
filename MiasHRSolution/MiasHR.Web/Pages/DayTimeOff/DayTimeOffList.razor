@@ -48,8 +48,8 @@
                 <col />
                 <col />
                 <col />
-                <col style="width: 60px;"/>
-                <col style="width: 60px;" />
+                <col />
+                <col />
             </ColGroup>
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
@@ -338,16 +338,16 @@
         {
             if (approve1stYn.Equals("N") && approve2ndYn.Equals("N"))
             {
-                return @<MudButton EndIcon="@Icons.Material.Filled.Edit" OnClick="@(() => HandleEdit(seq))"></MudButton>;
+                return@<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancelConfirmation(seq))"></MudIconButton>;
             }
             else
             {
-                return @<MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudButton>;
+                return @<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudIconButton>;
             }
         }
         else if (status == 2)
         {
-            return@<MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudButton>;
+            return@<MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="HandleApprove"></MudIconButton>;
         }
         else
         {
@@ -359,7 +359,7 @@
     {
         if (status == 1 && approve1stYn.Equals("N") && approve2ndYn.Equals("N"))
         {
-            return@<MudButton EndIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => HandleCancelConfirmation(seq))"></MudButton>;
+            return @<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => HandleEdit(seq))"></MudIconButton>;
         }
         else
         {
