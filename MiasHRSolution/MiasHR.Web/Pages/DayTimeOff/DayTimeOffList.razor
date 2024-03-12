@@ -15,6 +15,7 @@
 @inject IAuthService AuthService
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject ISnackbar Snackbar
+@inject IEmailService EmailService
 
 <PageTitle>Day Time Off Requests</PageTitle>
 <MudStack Row="true">
@@ -139,6 +140,7 @@
 @code {
 
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
+    private EmailDTO emailInfo;
     private string selectedYear = DateTime.Now.Year.ToString();
 
     string? employee;
@@ -199,10 +201,15 @@
             var empl = await AuthService.GetUserEmplCode();
             var result = await DayTimeOffRequestService.CancelDayTimeOffRequest(requestIdToDelete, empl);
 
+            var name = await AuthService.GetUserName();
             string? message = await result.Content.ReadAsStringAsync();
 
             if (message == "Canceled Successfully !")
             {
+                emailInfo = new EmailDTO { Body = "eMHRS reqeust has been canceled by " + name + ". <br>Please log into eMHRS to confirm.", 
+                Subject = "eMHRS Request Canceled", To = empl, ApprovStep = "CANCEL"};
+                var email = await EmailService.SendEmail(emailInfo);
+
                 Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;

@@ -9,5 +9,6 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<Tuple<HrEmployee, bool>>? Login(string username, string passwordHash);
         Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPasswordHash);
         Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate);
+        Task<UpdateMessageDTO> GetUserEmail(string emplCode);
     }
 }
