@@ -71,7 +71,8 @@
             var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
             if (result.result_message.Contains("Already"))
             {
-                Snackbar.Add(result.result_message, Severity.Normal, (options) =>    {
+                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                {
                     options.CloseAfterNavigation = true;
                 });
                 return;
@@ -138,7 +139,10 @@
             }
             else
             {
-                emailInfo = new EmailDTO { Body = result.email_content, Subject = result.email_title, 
+                emailInfo = new EmailDTO
+                    {
+                        Body = result.email_content,
+                        Subject = result.email_title,
                         To = managerEmplCode,
                         ApprovStep = "REJECT",
                         role = "MANAGER",
@@ -147,6 +151,11 @@
                 var email = await EmailService.SendEmail(emailInfo);
             }
         }
+
         MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Rejected Successfully!", Severity.Normal, (options) =>
+        {
+        options.CloseAfterNavigation = true;
+        });
     }
 }

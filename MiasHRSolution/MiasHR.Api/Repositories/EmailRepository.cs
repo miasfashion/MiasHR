@@ -33,7 +33,9 @@ namespace MiasHR.Api.Repositories
             if (toEmail.msg.Equals("SUCCESS"))
             {
                 var email = new MimeMessage();
+
                 //Not using the role in token as it prevents managers from using their time off feature
+                //Checking if Email is sending on side of Manager pages
                 if (request.role.Equals("MANAGER"))
                 {
                     if(request.ApprovStep.Equals("APPROVE") || request.ApprovStep.Equals("REJECT"))
@@ -52,12 +54,14 @@ namespace MiasHR.Api.Repositories
                 else
                 {
                     //Emails on side of Employee
+
                     var approvers = await GetApprovers(request.To);
                     var approver1 = await _authRepository.GetEmail(approvers.approver1st);
+
                     //Notification Emails for 1st approver (Only possible when nothing approved)
                     if (new[] { "EDIT", "CANCEL", "CREATE" }.Contains(request.ApprovStep))
                     {
-                 //       email.Cc.Add(MailboxAddress.Parse(approver1.com_email));
+                        email.Cc.Add(MailboxAddress.Parse(approver1.com_email));
                         email.To.Add(MailboxAddress.Parse(toEmail.com_email));
                     }
                 }                
