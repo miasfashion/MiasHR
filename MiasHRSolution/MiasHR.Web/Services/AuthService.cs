@@ -1,6 +1,7 @@
 using Azure;
 using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
+using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using Telerik.SvgIcons;
@@ -123,6 +124,10 @@ namespace MiasHR.Web.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var dto = await response.Content.ReadFromJsonAsync<UpdateMessageDTO>();
+                    if (dto.empl_code.IsNullOrEmpty())
+                    {
+                        return dto;
+                    }
                     await _sessionStorage.SetItemAsStringAsync("empl", dto?.empl_code);
                     return dto; 
                 }
