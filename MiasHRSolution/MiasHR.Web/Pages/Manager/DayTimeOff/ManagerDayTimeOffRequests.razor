@@ -39,11 +39,11 @@
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="Name">@context.empl_name</MudTd>
                 <MudTd DataLabel="Type">@context.req_type</MudTd>
-                <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="FirstApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_1st_yn)</MudTd>
                 <MudTd DataLabel="SecondApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_2nd_yn)</MudTd>
                 <MudTd Style="text-align:center">
@@ -135,13 +135,13 @@
             return true;
         if (request.req_type.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(request.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(request.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(request.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(request.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(request.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(request.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;

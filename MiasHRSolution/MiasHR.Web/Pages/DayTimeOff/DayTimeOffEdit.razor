@@ -214,19 +214,18 @@
             requestEdit.time = nonnullTS;
             requestEdit.seq = seq;
             var response = await DayTimeOffRequestService.EditDayTimeOffRequest(requestEdit);
-            emailApprov = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                emailInfo = new EmailDTO
-                    {
-                        Body = "eMHRS request has been Edited by " + requestEdit.user + " in eMHRS. <br>Please log into eMHRS to confirm.",
-                        Subject = requestEdit.type + " Edit Notice",
-                        To = requestEdit.emplCode,
-                        ApprovStep = "EDIT"
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
+
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
+                Snackbar.Add("Edited Successfully !", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+            }
+            else
+            {
+                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });

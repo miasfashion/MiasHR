@@ -77,35 +77,6 @@
                 });
                 return;
             }
-            if (result.email_othernotice.Length > 0 || result.email_othernotice.Length > 0)
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "OTHERNOTICE",
-                        role = "MANAGER",
-                        managerEmployee = result.email,
-                        managerNotice = result.email_ptonotice,
-                        managerOther = result.email_othernotice
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
-            else
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "APPROVE",
-                        role = "MANAGER",
-                        managerEmployee = result.email
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
-
         }
         MudDialog.Close(DialogResult.Ok(true));
         Snackbar.Add("Approved Successfully!", Severity.Normal, (options) =>
@@ -136,19 +107,6 @@
                     options.CloseAfterNavigation = true;
                 });
                 return;
-            }
-            else
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "REJECT",
-                        role = "MANAGER",
-                        managerEmployee = result.email
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
             }
         }
 

@@ -3,8 +3,10 @@ using Dapper;
 using MiasHR.Api.Data;
 using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
+using MiasHR.Web.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text.RegularExpressions;
 
@@ -15,14 +17,17 @@ namespace MiasHR.Api.Repositories
         private readonly MiasHRDbContext _miasHRDbContext;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IEmailRepository _emailRepository;
+        private readonly IAuthRepository _authRepository;
 
 
-        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration, IMapper mapper)
+        public DayTimeOffRequestRepository(MiasHRDbContext miasHRDbContext, IConfiguration configuration, IMapper mapper, IEmailRepository emailRepository, IAuthRepository authRepository)
         {
             _miasHRDbContext = miasHRDbContext;
             _configuration = configuration;
             _mapper = mapper;
-
+            _emailRepository = emailRepository;
+            _authRepository = authRepository;
         }
 
         /// <summary>
@@ -88,23 +93,22 @@ namespace MiasHR.Api.Repositories
                     param,
                     commandType: CommandType.StoredProcedure
                 );
+                if (result.com_email.IsNullOrEmpty())
+                {
+                    return new RequestResultDTO("Could Not Create Request. Please Contact IT Team", null);
+                }
+
                 // request will return approver email as msg if successful
-                var email = result.com_email;
-                if (!string.IsNullOrWhiteSpace(email))
-                    try
-                    {
-                        if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                            RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
-                            return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "email", email } });
-                        else
-                            return new RequestResultDTO("FAILURE", null);
-                    }
-                    catch (RegexMatchTimeoutException)
-                    {
-                        return new RequestResultDTO("FAILURE", null);
-                    }
-                else
-                    return new RequestResultDTO("FAILURE", null);
+                EmailDTO emailDTO = new EmailDTO
+                {
+                    Body = "You have a request for " + type + " " + subType + " in eMHRS. <br>The request was made by "
+                   + user + " and is awaiting approval. <br>Thank you. <br><br> Detail: " + content,
+                    Subject = type + " Approval Request",
+                    To = emplCode,
+                    ApprovStep = "CREATE"
+                };
+                var emailResult = await _emailRepository.SendEmail(emailDTO);
+                return emailResult;
             }
         }
 
@@ -152,22 +156,20 @@ namespace MiasHR.Api.Repositories
                     commandType: CommandType.StoredProcedure
                 );
                 // request will return approver email as msg if successful
-                var email = result.com_email;
-                if (!string.IsNullOrWhiteSpace(email))
-                    try
-                    {
-                        if (Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                            RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))
-                            return new RequestResultDTO("SUCCESS", new Dictionary<string, dynamic> { { "email", email } });
-                        else
-                            return new RequestResultDTO("FAILURE", null);
-                    }
-                    catch (RegexMatchTimeoutException)
-                    {
-                        return new RequestResultDTO("FAILURE", null);
-                    }
-                else
-                    return new RequestResultDTO("FAILURE", null);
+                if (result.com_email.IsNullOrEmpty())
+                {
+                    return new RequestResultDTO("Could Not Edit. Please Contact IT Team", null);
+                }
+                EmailDTO emailDTO = new EmailDTO
+                {
+                    Body = "eMHRS request has been Edited by " + user + " in eMHRS. <br>Please log into eMHRS to confirm.",
+                    Subject = type + " Edit Notice",
+                    To = emplCode,
+                    ApprovStep = "EDIT"
+                };
+                var emailResult = await _emailRepository.SendEmail(emailDTO);
+                return emailResult;
+
             }
 
         }
@@ -199,7 +201,6 @@ namespace MiasHR.Api.Repositories
             param.Add("@pseq", id);
             param.Add("@puser", emplCode);
             param.Add("@pStatusType", "CANCEL");
-            param.Add("@pRejectReason", "");
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -211,9 +212,32 @@ namespace MiasHR.Api.Repositories
                 );
 
                 //Retrieve the output 
-                string resultMessage = result.result_message;
-                return resultMessage;
+                if (result.result_message == "Canceled Successfully !")
+                {
+                    var userEmail = await _authRepository.GetUserEmail(emplCode);
+                    EmailDTO emailInfo = new EmailDTO
+                    {
+                        Body = "eMHRS reqeust has been canceled by " + userEmail.com_email + ". <br>Please log into eMHRS to confirm.",
+                        Subject = "eMHRS Request Canceled",
+                        To = emplCode,
+                        ApprovStep = "CANCEL"
+                    };
+                    var emailResult = await _emailRepository.SendEmail(emailInfo);
+                    if (emailResult.status.Equals("SUCCESS"))
+                    {
+                        return result.result_message;
+                    }
+                    else
+                    {
+                        return emailResult.status;
+                    }
+                }
+
+
+                return result.resultMessage;
             }
+
+
         }
 
         /// <summary>
@@ -408,6 +432,61 @@ namespace MiasHR.Api.Repositories
                     param,
                     commandType: CommandType.StoredProcedure
                 );
+
+                EmailDTO emailInfo;
+                // When Approval or Reject failed, don't send email
+                if (result.result_message.Contains("Already"))
+                {
+                    return result;
+                }
+                else
+                {
+                    if (statusType.Equals("APPROVAL"))
+                    {
+
+                        if (!result.email_othernotice.IsNullOrEmpty() || !result.email_ptonotice.IsNullOrEmpty())
+                        {
+                            emailInfo = new EmailDTO
+                            {
+                                Body = result.email_content,
+                                Subject = result.email_title,
+                                To = managerEmplCode,
+                                ApprovStep = "OTHERNOTICE",
+                                role = "MANAGER",
+                                managerEmployee = result.email,
+                                managerNotice = result.email_ptonotice,
+                                managerOther = result.email_othernotice
+                            };
+                        }
+                        else
+                        {
+                            emailInfo = new EmailDTO
+                            {
+                                Body = result.email_content,
+                                Subject = result.email_title,
+                                To = managerEmplCode,
+                                ApprovStep = "APPROVE",
+                                role = "MANAGER",
+                                managerEmployee = result.email
+                            };
+                        }
+                    }
+                    // REJECT (Only Possible when nothing has been approved)
+                    else
+                    {
+
+                        emailInfo = new EmailDTO
+                        {
+                            Body = result.email_content,
+                            Subject = result.email_title,
+                            To = managerEmplCode,
+                            ApprovStep = "REJECT",
+                            role = "MANAGER",
+                            managerEmployee = result.email
+                        };
+                    }
+                }
+                var email = await _emailRepository.SendEmail(emailInfo);
                 return result;
             }
         }
