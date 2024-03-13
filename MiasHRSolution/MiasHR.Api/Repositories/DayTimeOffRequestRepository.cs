@@ -397,7 +397,7 @@ namespace MiasHR.Api.Repositories
                 pSeq = id,
                 pStatusType = statusType,
                 pUser = managerEmplCode,
-                pRejectReason = rejectReason == "REJECT" ? rejectReason : string.Empty // Conditional assignment
+                pRejectReason = rejectReason
             };
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))

@@ -8,10 +8,8 @@
 
 <MudDialog>
     <DialogContent>
-        <MudForm Class="pa-4">
-            <MudText Class="mb-2">Add Reject Reason</MudText>
-            <MudTextField T="string" Label="Reject Reason" Variant="Variant.Text" Text="@rejectReason" Lines="5" />
-        </MudForm>
+        <MudText Class="mb-2">Add Reject Reason</MudText>
+        <MudTextField @bind-Value="rejectReason" Label="Reject Reason" Variant="Variant.Text" Lines="6" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
