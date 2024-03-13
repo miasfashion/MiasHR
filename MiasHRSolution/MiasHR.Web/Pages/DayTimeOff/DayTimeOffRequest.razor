@@ -131,10 +131,6 @@
 
     void Cancel() => MudDialog.Cancel();
 
-    //Sending Email
-    private EmailDTO emailInfo;
-
-
     //Information needed for Creating Request
     public string timeOption { get; set; } = "DAY OFF";
     public string typeValue { get; set; }
@@ -216,12 +212,15 @@
             emailApprov = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                emailInfo = new EmailDTO { Body = "You have a request for " +newRequest.type + " in eMHRS. <br>The request was made by "
-                + newRequest.user + " and is awaiting approval. <br>Thank you.", 
-                Subject = newRequest.type + " Approval Request", To = newRequest.emplCode, ApprovStep = "CREATE" };        
-                var email = await EmailService.SendEmail(emailInfo);
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+            }
+            else
+            {
+                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
