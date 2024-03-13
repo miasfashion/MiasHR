@@ -1,9 +1,10 @@
 ﻿@attribute [Authorize(Roles = "Manager")]
 
-@using MiasHR.Models.DTOs;
+@using MiasHR.Models.DTOs
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-@using MiasHR.Web.Services.Contracts;
+@using MiasHR.Web.Services.Contracts
+@using System.Globalization
 
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
@@ -13,31 +14,18 @@
 
 <MudDialog>
     <DialogContent>
-        <MudGrid>
-            <MudItem xs="12">
-                <MudText>Type @Dto.req_type</MudText>
-            </MudItem>
-            <MudItem xs="6">
-                <MudPaper Class="d-flex" Elevation="0">
-                    <MudText>Start Date: @Dto.period_from</MudText>
-                </MudPaper>
-            </MudItem>
-            <MudItem xs="6">
-                <MudPaper Class="d-flex" Elevation="0">
-                    <MudText>End Date: @Dto.period_to</MudText>
-                </MudPaper>
-            </MudItem>
-            <MudItem xs="12">
-                <MudPaper Class="d-flex flex-column" Elevation="0">
-                    <MudText>Reason: @Dto.req_sub_type</MudText>
-                </MudPaper>
-            </MudItem>
-            <MudItem xs="12">
-                <MudPaper Class="d-flex flex-column" Elevation="0">
-                    <MudText>About: @Dto.req_content</MudText>
-                </MudPaper>
-            </MudItem>
-        </MudGrid>
+        <MudPaper Class="pa-4" Elevation="0">
+            <MudStack>
+                <MudText>Type: @Dto.req_type</MudText>
+                <MudStack Row="true">
+                    <MudText>Start Date: @DateTime.ParseExact(Dto.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudText>
+                    <MudDivider Vertical="true" />
+                    <MudText>End Date: @DateTime.ParseExact(Dto.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudText>
+                </MudStack>
+                <MudText>Reason: @Dto.req_sub_type</MudText>
+                <MudText>About: @Dto.req_content</MudText>
+            </MudStack>
+        </MudPaper>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="OpenRejectRequestDialog">Reject</MudButton>
