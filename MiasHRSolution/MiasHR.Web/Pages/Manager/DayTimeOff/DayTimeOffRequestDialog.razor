@@ -9,41 +9,43 @@
 @inject IAuthService AuthService
 @inject ISnackbar Snackbar
 @inject IEmailService EmailService
+@inject IDialogService DialogService
 
 <MudDialog>
     <DialogContent>
         <MudGrid>
             <MudItem xs="12">
                 <MudText>Type @Dto.req_type</MudText>
-                </MudItem>
-                <MudItem xs="6">
-                    <MudPaper Class="d-flex" Elevation="0">
-                        <MudText>Start Date: @Dto.period_from</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="6">
-                    <MudPaper Class="d-flex" Elevation="0">
-                        <MudText>End Date: @Dto.period_to</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudPaper Class="d-flex flex-column" Elevation="0">
-                        <MudText>Reason: @Dto.req_sub_type</MudText>
-                    </MudPaper>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudPaper Class="d-flex flex-column" Elevation="0">
-                        <MudText>About: @Dto.req_content</MudText>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        </DialogContent>
-        <DialogActions>
-            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="RejectRequest">Reject</MudButton>
-            <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">Approve</MudButton>
-        </DialogActions>
-    </MudDialog>
-    @code {
+            </MudItem>
+            <MudItem xs="6">
+                <MudPaper Class="d-flex" Elevation="0">
+                    <MudText>Start Date: @Dto.period_from</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="6">
+                <MudPaper Class="d-flex" Elevation="0">
+                    <MudText>End Date: @Dto.period_to</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-flex flex-column" Elevation="0">
+                    <MudText>Reason: @Dto.req_sub_type</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="d-flex flex-column" Elevation="0">
+                    <MudText>About: @Dto.req_content</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="OpenRejectRequestDialog">Reject</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">Approve</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     [Parameter] public PendingDayTimeOffApprovalDTO Dto { get; set; }
@@ -52,7 +54,6 @@
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
-
 
     private async Task ApproveRequest()
     {
@@ -114,48 +115,28 @@
         });
     }
 
-    private async Task RejectRequest()
+    private async Task OpenRejectRequestDialog()
     {
-        var managerEmplCode = await AuthService.GetUserEmplCode();
+        var parameters = new DialogParameters<DayTimeOffRequestDialog>();
+        parameters.Add(x => x.Dto, Dto);
 
-        if (managerEmplCode != null)
+        var options = new DialogOptions {
+            MaxWidth = MudBlazor.MaxWidth.Medium,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
+
+        var dialog = await DialogService.ShowAsync<RejectRequestDialog>("Reject Request", parameters, options);
+        var result = await dialog.Result;
+
+        if(!result.Canceled)
         {
-            RequestStatusChangeDTO request = new RequestStatusChangeDTO
-                {
-                    id = Dto.seq,
-                    statusType = "REJECT",
-                    managerEmplCode = managerEmplCode,
-                    rejectReason = "TTT"
-                };
-
-            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
-            if (result.result_message.Contains("Already"))
+            MudDialog.Close(DialogResult.Ok(true));
+            Snackbar.Add("Rejected Successfully", Severity.Normal, (options) =>
             {
-                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
-                {
-                    options.CloseAfterNavigation = true;
-                });
-                return;
-            }
-            else
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "REJECT",
-                        role = "MANAGER",
-                        managerEmployee = result.email
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
+                options.CloseAfterNavigation = true;
+            });
         }
 
-        MudDialog.Close(DialogResult.Ok(true));
-        Snackbar.Add("Rejected Successfully!", Severity.Normal, (options) =>
-        {
-        options.CloseAfterNavigation = true;
-        });
     }
 }
