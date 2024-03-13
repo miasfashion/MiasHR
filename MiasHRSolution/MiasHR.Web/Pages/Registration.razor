@@ -28,8 +28,8 @@
                           RequiredError="Type your Password!" />
             <MudIconButton Size="Size.Small" Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
         </MudPaper>
-        <MudTextField T="DateTime" Format="yyyy-MM-dd" Label="Birth Date" InputType="InputType.Date" Required="true" @bind-Value="birth"
-                      RequiredError="Type your Birth Date!" />
+        <MudDatePicker Label="Birth Date" Required="true" Editable="true" @bind-Date="birth" RequiredError="Type your Birth Date!" />
+
         <div class="d-flex m-2 align-center justify-space-between">
             <MudButton OnClick="HandleRegist" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
         </div>
@@ -50,7 +50,7 @@
     private UserDTO userCredentials = new UserDTO();
     bool success;
     string[] errors = { };
-    DateTime birth;
+    DateTime? birth = DateTime.Today;
     MudForm? form;
 
     // Password Visibility Section
@@ -124,7 +124,7 @@
     {
         try
         {
-            DateOnly birthDate = DateOnly.FromDateTime(birth);
+            DateOnly birthDate = DateOnly.FromDateTime(birth.Value);
             var result = await AuthService.Register(userCredentials, birthDate);
 
             // Getting result message stored to show in snackbar
