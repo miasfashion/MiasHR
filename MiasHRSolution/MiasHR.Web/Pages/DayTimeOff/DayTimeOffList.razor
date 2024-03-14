@@ -223,14 +223,14 @@
     //Toggles when user clicks Create Request
     private async void Request()
     {
-        var parameters = new DialogParameters<DayTimeOffRequest>();
+        var parameters = new DialogParameters<NewRequestDialog>();
         parameters.Add(x => x.ContentText, "New Time Off Request");
         parameters.Add(x => x.ButtonText, "Confirm");
         parameters.Add(x => x.Color, Color.Success);
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        var dialog = DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
+        var dialog = DialogService.Show<NewRequestDialog>("New Time Off Request", parameters, options);
 
         //Wait for the dialog to close
         var result = await dialog.Result;
@@ -246,7 +246,7 @@
     //Toggles when user clicks Edit Button
     private async void HandleEdit(int id)
     {
-        var parameters = new DialogParameters<DayTimeOffEdit>();
+        var parameters = new DialogParameters<EditRequestDialog>();
         parameters.Add(x => x.ContentText, "Edit Time Off Request");
         parameters.Add(x => x.ButtonText, "Confirm Edit");
         parameters.Add(x => x.Color, Color.Success);
@@ -254,7 +254,7 @@
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        var dialog = DialogService.Show<DayTimeOffEdit>("Edit Time Off Request", parameters, options);
+        var dialog = DialogService.Show<EditRequestDialog>("Edit Time Off Request", parameters, options);
 
         //Wait for the dialog to close
         var result = await dialog.Result;

@@ -199,14 +199,14 @@
     // New DayTimeOff Request
     private void OpenNewRequestDialog()
     {
-        var parameters = new DialogParameters<DayTimeOffRequest>();
+        var parameters = new DialogParameters<NewRequestDialog>();
         parameters.Add(x => x.ContentText, "New Time Off Request");
         parameters.Add(x => x.ButtonText, "Confirm");
         parameters.Add(x => x.Color, Color.Success);
 
         var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
 
-        DialogService.Show<DayTimeOffRequest>("New Time Off Request", parameters, options);
+        DialogService.Show<NewRequestDialog>("New Time Off Request", parameters, options);
     }
 
     protected override async Task OnInitializedAsync()

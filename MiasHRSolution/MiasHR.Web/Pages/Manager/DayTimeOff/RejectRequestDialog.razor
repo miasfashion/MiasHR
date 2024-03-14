@@ -13,7 +13,17 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="RejectRequest">Reject</MudButton>
+        <MudButton Disabled="@_processing"  Color="Color.Error" Variant="Variant.Filled" OnClick="RejectRequest">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Reject</MudText>
+            }
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -23,11 +33,14 @@
 
     private string rejectReason = "";
     private EmailDTO emailInfo;
+    private bool _processing = false;
 
     void Cancel() => MudDialog.CancelAll();
 
     private async Task RejectRequest()
     {
+        _processing = true;
+
         var managerEmplCode = await AuthService.GetUserEmplCode();
 
         if (managerEmplCode != null)
@@ -37,7 +50,7 @@
                     id = Dto.seq,
                     statusType = "REJECT",
                     managerEmplCode = managerEmplCode,
-                    rejectReason = rejectReason
+                    rejectReason = "TTT"
                 };
 
             var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
@@ -49,20 +62,9 @@
                 });
                 return;
             }
-            else
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "REJECT",
-                        role = "MANAGER",
-                        managerEmployee = result.email
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
         }
+
+        _processing = false;
 
         MudDialog.Close(DialogResult.Ok(true));
     }

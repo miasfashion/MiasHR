@@ -29,7 +29,17 @@
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="OpenRejectRequestDialog">Reject</MudButton>
-        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">Approve</MudButton>
+        <MudButton Disabled="@_processing" Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Approve</MudText>
+            }
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -39,12 +49,15 @@
     [Parameter] public PendingDayTimeOffApprovalDTO Dto { get; set; }
 
     private EmailDTO emailInfo;
+    private bool _processing = false;
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
 
     private async Task ApproveRequest()
     {
+        _processing = true;
+
         var managerEmplCode = await AuthService.GetUserEmplCode();
 
         if (managerEmplCode != null)
@@ -66,37 +79,12 @@
                 });
                 return;
             }
-            if (result.email_othernotice.Length > 0 || result.email_othernotice.Length > 0)
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "OTHERNOTICE",
-                        role = "MANAGER",
-                        managerEmployee = result.email,
-                        managerNotice = result.email_ptonotice,
-                        managerOther = result.email_othernotice
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
-            else
-            {
-                emailInfo = new EmailDTO
-                    {
-                        Body = result.email_content,
-                        Subject = result.email_title,
-                        To = managerEmplCode,
-                        ApprovStep = "APPROVE",
-                        role = "MANAGER",
-                        managerEmployee = result.email
-                    };
-                var email = await EmailService.SendEmail(emailInfo);
-            }
-
         }
+
+        _processing = false;
+
         MudDialog.Close(DialogResult.Ok(true));
+        
         Snackbar.Add("Approved Successfully!", Severity.Normal, (options) =>
         {
             options.CloseAfterNavigation = true;
@@ -105,7 +93,7 @@
 
     private async Task OpenRejectRequestDialog()
     {
-        var parameters = new DialogParameters<DayTimeOffRequestDialog>();
+        var parameters = new DialogParameters<RejectRequestDialog>();
         parameters.Add(x => x.Dto, Dto);
 
         var options = new DialogOptions {

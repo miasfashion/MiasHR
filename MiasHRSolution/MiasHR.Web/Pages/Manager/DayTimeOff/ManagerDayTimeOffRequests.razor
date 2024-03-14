@@ -68,7 +68,7 @@
 
     private async void Review(PendingDayTimeOffApprovalDTO dto)
     {
-        var parameters = new DialogParameters<DayTimeOffRequestDialog>();
+        var parameters = new DialogParameters<ReviewRequestDialog>();
         parameters.Add(x => x.Dto, dto);
 
         var options = new DialogOptions { 
@@ -78,7 +78,7 @@
             CloseButton = true
         };
 
-        var dialog = DialogService.Show<DayTimeOffRequestDialog>("Review Time Off Request", parameters, options);
+        var dialog = DialogService.Show<ReviewRequestDialog>("Review Time Off Request", parameters, options);
 
         var result = await dialog.Result;
 
