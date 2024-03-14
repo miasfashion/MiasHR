@@ -68,12 +68,12 @@
             <RowTemplate>
                 @if (@context.Status != 3 && context.Status != 0)
                 {
-                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Type">@context.ReqType</MudTd>
                     <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
                     <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
-                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
-                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")</MudTd>
+                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
                     <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
                     <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
@@ -98,7 +98,6 @@
 
 @code {
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
-    private EmailDTO emailInfo;
     private string selectedYear = DateTime.Now.Year.ToString();
 
     string? employee;
@@ -142,7 +141,7 @@
             "Your request has been approved already.\nPlease contact HR at hr@miasfashion.com");
     }
 
-    //Used to set Dialog 
+    //Used to set Dialog
     private void HandleCancelConfirmation(int id)
     {
         requestIdToDelete = id;
@@ -164,15 +163,19 @@
 
             if (message == "Canceled Successfully !")
             {
-                emailInfo = new EmailDTO { Body = "eMHRS reqeust has been canceled by " + name + ". <br>Please log into eMHRS to confirm.", 
-                Subject = "eMHRS Request Canceled", To = empl, ApprovStep = "CANCEL"};
-                var email = await EmailService.SendEmail(emailInfo);
-
                 Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
+                showConfirmationDialog = false; // Close the confirmation dialog
                 await OnInitializedAsync(); // Refresh the data
+            }
+            else
+            {
+                Snackbar.Add(message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
             }
         }
         catch (Exception ex)
@@ -182,10 +185,6 @@
             {
                 options.CloseAfterNavigation = true;
             });
-        }
-        finally
-        {
-            showConfirmationDialog = false; // Close the confirmation dialog
         }
     }
 
@@ -280,13 +279,13 @@
             return true;
         if (history.ReqSubType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(history.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(history.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(history.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(history.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (DateTime.ParseExact(history.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")
+        if (DateTime.ParseExact(history.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
             .Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;

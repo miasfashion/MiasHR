@@ -1,0 +1,117 @@
+﻿@attribute [Authorize(Roles = "Manager")]
+
+@using MiasHR.Models.DTOs;
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using MiasHR.Web.Services.Contracts;
+
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+@inject IEmailService EmailService
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText>Type @Dto.req_type</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudPaper Class="d-flex" Elevation="0">
+                        <MudText>Start Date: @Dto.period_from</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudPaper Class="d-flex" Elevation="0">
+                        <MudText>End Date: @Dto.period_to</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudPaper Class="d-flex flex-column" Elevation="0">
+                        <MudText>Reason: @Dto.req_sub_type</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudPaper Class="d-flex flex-column" Elevation="0">
+                        <MudText>About: @Dto.req_content</MudText>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="RejectRequest">Reject</MudButton>
+            <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">Approve</MudButton>
+        </DialogActions>
+    </MudDialog>
+    @code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public PendingDayTimeOffApprovalDTO Dto { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+
+    private async Task ApproveRequest()
+    {
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            RequestStatusChangeDTO request = new RequestStatusChangeDTO
+                {
+                    id = Dto.seq,
+                    statusType = "APPROVAL",
+                    managerEmplCode = managerEmplCode,
+                    rejectReason = null
+                };
+
+            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            if (result.result_message.Contains("Already"))
+            {
+                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+        }
+        MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Approved Successfully!", Severity.Normal, (options) =>
+        {
+            options.CloseAfterNavigation = true;
+        });
+    }
+
+    private async Task RejectRequest()
+    {
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            RequestStatusChangeDTO request = new RequestStatusChangeDTO
+                {
+                    id = Dto.seq,
+                    statusType = "REJECT",
+                    managerEmplCode = managerEmplCode,
+                    rejectReason = "TTT"
+                };
+
+            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            if (result.result_message.Contains("Already"))
+            {
+                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Rejected Successfully!", Severity.Normal, (options) =>
+        {
+        options.CloseAfterNavigation = true;
+        });
+    }
+}
