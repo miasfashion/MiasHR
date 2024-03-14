@@ -24,7 +24,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var emailRequest =  await _emailRepository.SendEmail(request);
-                return emailRequest;
+                return emailRequest is null ? NotFound() : Ok(emailRequest);
             }
             catch (Exception)
             {

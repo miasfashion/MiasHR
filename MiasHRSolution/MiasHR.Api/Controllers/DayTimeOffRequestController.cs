@@ -26,7 +26,7 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode, year);
                 var requests = dayTimeOffRequests.ToList();
-                return requests;
+                return requests is null ? NotFound() : Ok(requests);
             }
             catch (Exception)
             {
@@ -77,7 +77,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var dayTimeOffRequest = await _dayTimeOffRequestRepository.GetDayTimeOffRequest(id);
-                return dayTimeOffRequest;
+                return dayTimeOffRequest is null ? NotFound() : Ok(dayTimeOffRequest);
             }
             catch (Exception)
             {
@@ -93,7 +93,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var deleteResult = await _dayTimeOffRequestRepository.CancelDayTimeOffRequest(id, emplCode);
-                return deleteResult;
+                return deleteResult is null ? NotFound() : Ok(deleteResult);
 
             }
             catch (Exception)
@@ -127,7 +127,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var remainDay = await _dayTimeOffRequestRepository.GetSickDaysRemaining(emplCode);
-                return remainDay;
+                return remainDay is null ? NotFound() : Ok(remainDay);
             }
             catch (Exception)
             {
@@ -142,7 +142,7 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var remainDay = await _dayTimeOffRequestRepository.GetVacationRemaining(emplCode);
-                return remainDay;
+                return remainDay is null ? NotFound() : Ok(remainDay);
             }
             catch (Exception)
             {
