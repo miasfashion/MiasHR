@@ -122,11 +122,21 @@
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+            <MudButton Disabled="@_processing" Color="@Color" Variant="Variant.Filled" OnClick="Submit">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>@ButtonText</MudText>
+                }
+            </MudButton>
         </DialogActions>
     </MudDialog>
 
-    @code {
+@code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string ContentText { get; set; }
     [Parameter] public string ButtonText { get; set; }
@@ -161,9 +171,12 @@
     string[] errors = { };
     MudForm form;
 
+    // for disabling submit button while processing
+    private bool _processing = false;
 
     private async Task Submit()
     {
+        _processing = true;
         try
         {
             requestEdit = new EditRequestDTO();
@@ -177,6 +190,8 @@
 
             if (endTime > endOfWork || nonnullTS < begOfWork)
             {
+                _processing = false;
+
                 Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
@@ -214,6 +229,9 @@
             requestEdit.time = nonnullTS;
             requestEdit.seq = seq;
             var response = await DayTimeOffRequestService.EditDayTimeOffRequest(requestEdit);
+
+            _processing = false;
+
             if (response.IsSuccessStatusCode)
             {
 
@@ -235,6 +253,7 @@
 
         catch (Exception ex)
         {
+            _processing = false;
             throw ex;
         }
     }

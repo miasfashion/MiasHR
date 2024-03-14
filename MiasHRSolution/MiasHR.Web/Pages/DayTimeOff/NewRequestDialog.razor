@@ -119,11 +119,21 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton Disabled="@_processing" Color="@Color" Variant="Variant.Filled" OnClick="Submit">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>@ButtonText</MudText>
+            }
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
-    @code {
+@code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public string ContentText { get; set; }
     [Parameter] public string ButtonText { get; set; }
@@ -154,8 +164,13 @@
     string[] errors = { };
     MudForm form;
 
+    // for disabling submit button while processing
+    private bool _processing = false;
+
     private async Task Submit()
     {
+        _processing = true;
+
         try
         {            
             //Convert NullTS Time to NonNull Value
@@ -198,7 +213,6 @@
                 newRequest.hours = hour;
             }
 
-
             newRequest.emplCode = await AuthService.GetUserEmplCode();
             newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
             newRequest.fromDate = Convert.ToDateTime(startDate);
@@ -210,6 +224,9 @@
 
             var response = await DayTimeOffRequestService.CreateDayTimeOffRequest(newRequest);
             emailApprov = await response.Content.ReadAsStringAsync();
+
+            _processing = false;
+
             if (response.IsSuccessStatusCode)
             {
                 MudDialog.Close(DialogResult.Ok(true));
@@ -230,6 +247,7 @@
 
         catch (Exception ex)
         {
+            _processing = false;
             throw ex;
         }
     }

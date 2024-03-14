@@ -248,7 +248,9 @@ namespace MiasHR.Api.Repositories
                 // Check whether there is any employee detail with the given birthdate
                 var birthDateCheck = await _miasHRDbContext.HrEmployeeDetails
                     .AsNoTrackingWithIdentityResolution()
-                    .FirstOrDefaultAsync(b => b.EmplCode == existingUserCred.EmplCode && b.BirthDate == birthDate.ToString("yyyyMMdd") && b.Status != 3);
+                    .FirstOrDefaultAsync(b => b.EmplCode == existingUserCred.EmplCode 
+                                         && b.BirthDate == birthDate.ToString("yyyyMMdd") 
+                                         && b.Status != 3);
 
                 if (birthDateCheck is null)
                 {

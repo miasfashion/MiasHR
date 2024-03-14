@@ -1,0 +1,71 @@
+﻿@using MiasHR.Models.DTOs;
+@using MiasHR.Web.Services.Contracts;
+
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+@inject IEmailService EmailService
+
+<MudDialog>
+    <DialogContent>
+        <MudText Class="mb-2">Add Reject Reason</MudText>
+        <MudTextField @bind-Value="rejectReason" Label="Reject Reason" Variant="Variant.Text" Lines="6" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Disabled="@_processing"  Color="Color.Error" Variant="Variant.Filled" OnClick="RejectRequest">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Reject</MudText>
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public PendingDayTimeOffApprovalDTO Dto { get; set; }
+
+    private string rejectReason = "";
+    private EmailDTO emailInfo;
+    private bool _processing = false;
+
+    void Cancel() => MudDialog.CancelAll();
+
+    private async Task RejectRequest()
+    {
+        _processing = true;
+
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            RequestStatusChangeDTO request = new RequestStatusChangeDTO
+                {
+                    id = Dto.seq,
+                    statusType = "REJECT",
+                    managerEmplCode = managerEmplCode,
+                    rejectReason = "TTT"
+                };
+
+            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            if (result.result_message.Contains("Already"))
+            {
+                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+        }
+
+        _processing = false;
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

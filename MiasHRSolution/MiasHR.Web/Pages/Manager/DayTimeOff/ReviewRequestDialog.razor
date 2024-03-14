@@ -1,0 +1,118 @@
+﻿@attribute [Authorize(Roles = "Manager")]
+
+@using MiasHR.Models.DTOs
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using MiasHR.Web.Services.Contracts
+@using System.Globalization
+
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+@inject IEmailService EmailService
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4" Elevation="0">
+            <MudStack>
+                <MudText>Type: @Dto.req_type</MudText>
+                <MudStack Row="true">
+                    <MudText>Start Date: @DateTime.ParseExact(Dto.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudText>
+                    <MudDivider Vertical="true" />
+                    <MudText>End Date: @DateTime.ParseExact(Dto.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudText>
+                </MudStack>
+                <MudText>Reason: @Dto.req_sub_type</MudText>
+                <MudText>About: @Dto.req_content</MudText>
+            </MudStack>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="OpenRejectRequestDialog">Reject</MudButton>
+        <MudButton Disabled="@_processing" Color="Color.Success" Variant="Variant.Filled" OnClick="ApproveRequest">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Approve</MudText>
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public PendingDayTimeOffApprovalDTO Dto { get; set; }
+
+    private EmailDTO emailInfo;
+    private bool _processing = false;
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    private async Task ApproveRequest()
+    {
+        _processing = true;
+
+        var managerEmplCode = await AuthService.GetUserEmplCode();
+
+        if (managerEmplCode != null)
+        {
+            RequestStatusChangeDTO request = new RequestStatusChangeDTO
+                {
+                    id = Dto.seq,
+                    statusType = "APPROVAL",
+                    managerEmplCode = managerEmplCode,
+                    rejectReason = null
+                };
+
+            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            if (result.result_message.Contains("Already"))
+            {
+                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+        }
+
+        _processing = false;
+
+        MudDialog.Close(DialogResult.Ok(true));
+        
+        Snackbar.Add("Approved Successfully!", Severity.Normal, (options) =>
+        {
+            options.CloseAfterNavigation = true;
+        });
+    }
+
+    private async Task OpenRejectRequestDialog()
+    {
+        var parameters = new DialogParameters<RejectRequestDialog>();
+        parameters.Add(x => x.Dto, Dto);
+
+        var options = new DialogOptions {
+            MaxWidth = MudBlazor.MaxWidth.Medium,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
+
+        var dialog = await DialogService.ShowAsync<RejectRequestDialog>("Reject Request", parameters, options);
+        var result = await dialog.Result;
+
+        if(!result.Canceled)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+            Snackbar.Add("Rejected Successfully", Severity.Normal, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+        }
+
+    }
+}
