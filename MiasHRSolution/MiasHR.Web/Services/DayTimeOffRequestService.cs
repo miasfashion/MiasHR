@@ -25,19 +25,20 @@ namespace MiasHR.Web.Services
             {
 
                 var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetAllEmployeeDayTimeOffRequestList/{emplCode}/{year}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var DayOffList = await response.Content.ReadFromJsonAsync<IReadOnlyList<DayTimeOffRequestDTO>>();
-                    return DayOffList.ToList();
-                }
-                else
-                {
-                    return null;
-                }
+                response.EnsureSuccessStatusCode();
+
+                var DayOffList = await response.Content.ReadFromJsonAsync<IReadOnlyList<DayTimeOffRequestDTO>>();
+                return DayOffList?.ToList() ?? new List<DayTimeOffRequestDTO>();
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                throw ex;
+                // HTTP 요청 실패를 처리합니다.
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                // JSON 역직렬화 실패를 처리합니다.
+                throw;
             }
         }
 
@@ -46,11 +47,13 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/CreateDayTimeOffRequest", request);
+                response.EnsureSuccessStatusCode();
                 return response;
             }
-            catch (Exception ex)
+            catch (HttpRequestException)
             {
-                throw ex;
+                // HTTP 요청 실패를 처리합니다.
+                throw;
             }
         }
 
@@ -59,11 +62,12 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/DayTimeOffRequest/EditDayTimeOffRequest", request);
+                response.EnsureSuccessStatusCode();
                 return response;
             }
-            catch (Exception ex)
+            catch (HttpRequestException)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -73,19 +77,24 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.GetAsync($"api/DayTimeOffRequest/GetDayTimeOffRequest/{id}");
-                if (response.IsSuccessStatusCode)
+                response.EnsureSuccessStatusCode();
+
+                var offRequest = await response.Content.ReadFromJsonAsync<DayTimeOffRequestDTO>();
+                if (offRequest == null)
                 {
-                    var offRequest = await response.Content.ReadFromJsonAsync<DayTimeOffRequestDTO>();
-                    return offRequest;
+                    throw new Exception("DayTimeOffRequest not found");
                 }
-                else
-                {
-                    return null;
-                }
+                return offRequest;
             }
-            catch (Exception ex)
+            catch (HttpRequestException)
             {
-                throw ex;
+                // HTTP 요청 실패를 처리합니다.
+                throw;
+            }
+            catch (JsonException)
+            {
+                // JSON 역직렬화 실패를 처리합니다.
+                throw;
             }
         }
         public async Task<string> GetSickDaysRemaining(string emplCode)
