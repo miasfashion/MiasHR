@@ -73,7 +73,7 @@ namespace MiasHR.Api.Controllers
                 var result = await _authRepository.Register(request.Username, hashedPassword, birthDate);
 
                 // Return the status of the registration
-                return result.status;
+                return result is null ? NotFound() : Ok(result.status);
             }
             catch (Exception)
             {
@@ -99,7 +99,7 @@ namespace MiasHR.Api.Controllers
                 var userCheck = await _authRepository.GetUserExist(request.Username, request.Birthdate);
 
                 // Return the result of the user existence check
-                return userCheck;
+                return userCheck is null ? NotFound() : Ok(userCheck);
             }
             catch (Exception)
             {
@@ -125,7 +125,7 @@ namespace MiasHR.Api.Controllers
                 var update = await _authRepository.UpdateUserPassword(request.EmplCode, hashedPassword);
 
                 // Return the status of the password update
-                return update.status;
+                return update is null ? NotFound() : Ok(update.status);
             }
             catch (Exception)
             {
