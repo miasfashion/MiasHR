@@ -16,37 +16,41 @@
 
 <MudPaper Class="pa-5 m-5">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
+
         @*Check *@
         <MudTextField T="string" Label="User Email" HelperText="Use your Company Email" @bind-Value="userCredentials.Username"
                       InputType="@emailInput" Validation="@(new Func<string, IEnumerable<string>>(EmailValidation))" Required="true"
                       RequiredError="Type your Company Email!" />
-        <MudPaper Class="d-flex" Elevation="0">
+        <MudPaper Class="d-flex align-center justify-end mb-2" Elevation="0">
             <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @bind-Value="userCredentials.Password"
                           InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
                           OnAdornmentClick="PWVisibilityClick" AdornmentAriaLabel="Check Password"
                           Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                           RequiredError="Type your Password!" />
-            <MudIconButton Size="Size.Small" Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
+            <MudIconButton Class="ml-3" OnClick="@ToggleTip" Icon="@Icons.Material.Filled.QuestionMark" />
         </MudPaper>
+
         <MudDatePicker Label="Birth Date" Required="true" Editable="true" @bind-Date="birth" RequiredError="Type your Birth Date!" />
 
-        <div class="d-flex m-2 align-center justify-space-between">
+        <MudPaper Class="d-flex m-2 align-center justify-space-between">
             <MudButton OnClick="HandleRegist" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
-        </div>
+        </MudPaper>
     </MudForm>
+
     @*To Show Requirements for strong password*@
     <MudPopover AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
-        <div class="d-flex flex-column">
+        <MudPaper Class="d-flex flex-column">
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
             <MudButton OnClick="@ToggleTip" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
-        </div>
+        </MudPaper>
     </MudPopover>
 </MudPaper>
 
 @code {
+    // Store and set values for page elements
     private UserDTO userCredentials = new UserDTO();
     bool success;
     string[] errors = { };
@@ -59,15 +63,22 @@
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-    //Checking PW visibility
+    // Toggle Pop Over Setting for Tool Tip
+    public bool _isOpen;
+
+    /// <summary>
+    /// Toggles the visibility of the password input field.
+    /// </summary>
     void PWVisibilityClick()
     {
+        // If the password input is currently hidden, reveal it
         @if (isShow)
         {
             isShow = false;
             PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
             PasswordInput = InputType.Password;
         }
+        // If the password input is currently visible, hide it
         else
         {
             isShow = true;
@@ -75,6 +86,15 @@
             PasswordInput = InputType.Text;
         }
     }
+
+    /// <summary>
+    /// Validates an email address.
+    /// </summary>
+    /// <param name="email">The email address to validate.</param>
+    /// <returns>
+    /// An enumerable collection of error messages indicating validation issues with the email address.
+    /// If the email is valid, an empty collection is returned.
+    /// </returns>
     private IEnumerable<string> EmailValidation(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
@@ -90,7 +110,14 @@
         }
     }
 
-
+    /// <summary>
+    /// Validates the strength of a password.
+    /// </summary>
+    /// <param name="pw">The password to validate.</param>
+    /// <returns>
+    /// An enumerable collection of error messages indicating validation issues with the password.
+    /// If the password is valid, an empty collection is returned.
+    /// </returns>
     private IEnumerable<string> PasswordStrength(string pw)
     {
         if (string.IsNullOrWhiteSpace(pw))
@@ -106,10 +133,7 @@
             yield return "Password must contain at least one lowercase letter";
         if (!Regex.IsMatch(pw, @"[0-9]"))
             yield return "Password must contain at least one digit";
-    }
-
-    // Toggle Pop Over Setting for Tool Tip
-    public bool _isOpen;
+    }    
 
     public void ToggleTip()
     {
