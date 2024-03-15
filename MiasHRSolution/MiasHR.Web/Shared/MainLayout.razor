@@ -10,7 +10,11 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudLink Href="/" Typo="Typo.h5" Class="ml-3" Underline="MudBlazor.Underline.None" Color="Color.Warning">Mias HR</MudLink>
+        <MudContainer Class="d-flex my-0 mx-6 pa-0" Elevation="1">
+            <MudLink Href="/">
+                <MudImage Width="95" Height="40" Src="images/mfm_mias_logo_white.png" />
+            </MudLink>
+        </MudContainer>
         <MudSpacer />
         <ProfileMenu />
     </MudAppBar>
