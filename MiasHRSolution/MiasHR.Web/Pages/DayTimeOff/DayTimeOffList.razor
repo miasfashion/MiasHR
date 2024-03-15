@@ -28,7 +28,7 @@
         </MudButton>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists">
+        <MudTable AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists">
             <ToolBarContent>
                 <MudSpacer />
                 <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
@@ -53,7 +53,7 @@
                 <col />
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel  InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
                 <MudTh>Type</MudTh>
                 <MudTh>Used Days</MudTh>
                 <MudTh>Request Detail</MudTh>
