@@ -22,7 +22,6 @@
 <MudPaper Class="pa-5 m-5">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
         <MudPaper Class="d-flex align-center justify-end" Elevation="0">
-            @*TODO: Current Password to check validation?*@
 
             <MudTextField T="string" Label="New Password" HelperText="Choose a strong password" @bind-Value="password"
                           InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
