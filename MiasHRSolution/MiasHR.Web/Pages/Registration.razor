@@ -14,10 +14,12 @@
 
 <PageTitle>Register new account</PageTitle>
 
-<MudPaper Class="pa-5 m-5">
+<MudPaper Class="d-flex flex-column pa-5 ma-5 justify-center align-center" MinHeight="350px" MinWidth="340px">
+    <MudPaper Class="d-flex justify-center align-content-center my-8" Elevation="0">
+        <MudImage Width="236" Height="100" Src="images/mfm_mias_logo.jpg" />
+    </MudPaper>
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
-
-        @*Check *@
+        @* Check *@
         <MudTextField T="string" Label="User Email" HelperText="Use your Company Email" @bind-Value="userCredentials.Username"
                       InputType="@emailInput" Validation="@(new Func<string, IEnumerable<string>>(EmailValidation))" Required="true"
                       RequiredError="Type your Company Email!" />
