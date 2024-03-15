@@ -21,7 +21,7 @@
 
 <MudPaper Class="pa-5 m-5">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
-        <MudPaper Class="d-flex" Elevation="0">
+        <MudPaper Class="d-flex align-center justify-end" Elevation="0">
             @*TODO: Current Password to check validation?*@
 
             <MudTextField T="string" Label="New Password" HelperText="Choose a strong password" @bind-Value="password"
@@ -36,19 +36,19 @@
                       OnAdornmentClick="PWCheckVisibilityClick" AdornmentAriaLabel="Check Password"
                       Validation="@(new Func<string, string>(PasswordMatch))" Required="true"
                       RequiredError="Type your New Password Again" />
-        <div class="d-flex align-center justify-space-between">
+        <MudPaper Class="d-flex align-center justify-space-between" Elevation="0">
             <MudButton OnClick="HandleChangePW" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Change Password</MudButton>
-        </div>
+        </MudPaper>
     </MudForm>
     @*To Show Requirements for strong password*@
     <MudPopover AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
-        <div class="d-flex flex-column">
+        <MudPaper Class="d-flex flex-column" Elevation="0">
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
             <MudButton OnClick="@ToggleTip" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
-        </div>
+        </MudPaper>
     </MudPopover>
 </MudPaper>
 

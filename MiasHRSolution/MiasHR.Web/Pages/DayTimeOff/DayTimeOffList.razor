@@ -53,10 +53,10 @@
                 <col />
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel  InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
                 <MudTh>Type</MudTh>
                 <MudTh>Used Days</MudTh>
-                <MudTh>Remark</MudTh>
+                <MudTh>Request Detail</MudTh>
                 <MudTh>From</MudTh>
                 <MudTh>To</MudTh>
                 <MudTh Style="text-align:center">1st Approved</MudTh>
@@ -71,7 +71,7 @@
                     <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="Type">@context.ReqType</MudTd>
                     <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                    <MudTd DataLabel="Remark">@context.ReqSubType</MudTd>
+                    <MudTd DataLabel="Request Detail">@context.ReqSubType</MudTd>
                     <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                     <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>

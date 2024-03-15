@@ -32,14 +32,14 @@
 
         <MudDatePicker Label="Birth Date" Required="true" Editable="true" @bind-Date="birth" RequiredError="Type your Birth Date!" />
 
-        <MudPaper Class="d-flex m-2 align-center justify-space-between">
+        <MudPaper Class="d-flex m-2 align-center justify-space-between" Elevation="0">
             <MudButton OnClick="HandleRegist" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
         </MudPaper>
     </MudForm>
 
     @*To Show Requirements for strong password*@
     <MudPopover AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
-        <MudPaper Class="d-flex flex-column">
+        <MudPaper Class="d-flex flex-column" Elevation="0">
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />

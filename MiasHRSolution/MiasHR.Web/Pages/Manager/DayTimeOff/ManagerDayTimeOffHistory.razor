@@ -28,7 +28,8 @@
                 <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <HeaderContent>
-                <MudTh>Request Date</MudTh>
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffApprovalHistoryDTO, object>(x=>x.req_date)">Request Date</MudTableSortLabel></MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Type</MudTh>
                 <MudTh>From</MudTh>
