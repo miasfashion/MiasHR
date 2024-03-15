@@ -14,10 +14,12 @@
 
 <PageTitle>Register new account</PageTitle>
 
-<MudPaper Class="pa-5 m-5">
+<MudPaper Class="d-flex flex-column pa-5 ma-5 justify-center align-center" MinHeight="350px" MinWidth="340px">
+    <MudPaper Class="d-flex justify-center align-content-center my-8" Elevation="0">
+        <MudImage Width="236" Height="100" Src="images/mfm_mias_logo.jpg" />
+    </MudPaper>
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" @onkeydown="@Enter">
-
-        @*Check *@
+        @* Check *@
         <MudTextField T="string" Label="User Email" HelperText="Use your Company Email" @bind-Value="userCredentials.Username"
                       InputType="@emailInput" Validation="@(new Func<string, IEnumerable<string>>(EmailValidation))" Required="true"
                       RequiredError="Type your Company Email!" />
@@ -38,13 +40,14 @@
     </MudForm>
 
     @*To Show Requirements for strong password*@
-    <MudPopover AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 pt-4">
+
+    <MudPopover AnchorOrigin="Origin.CenterRight" TransformOrigin="Origin.CenterLeft" Open="@_isOpen" Fixed="true" Class="d-flex m-5 px-4 py-2">
         <MudPaper Class="d-flex flex-column" Elevation="0">
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must be at least of length 8" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one capital letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one lowercase letter" />
             <MudListItem Icon="@Icons.Material.Filled.Info" Text="Must contain at least one digit" />
-            <MudButton OnClick="@ToggleTip" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+            <MudButton OnClick="@ToggleTip" Class="ml-auto" Color="Color.Error">Close</MudButton>
         </MudPaper>
     </MudPopover>
 </MudPaper>
