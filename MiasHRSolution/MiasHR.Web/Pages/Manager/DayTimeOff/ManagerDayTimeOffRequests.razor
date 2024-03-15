@@ -19,7 +19,7 @@
         <MudPaper Elevation="0" Style="width: 200px; height: 60px;"></MudPaper>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable Filter="new Func<PendingDayTimeOffApprovalDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@pendingRequests" @ref="requestTable">
+        <MudTable AllowUnsorted="false" Filter="new Func<PendingDayTimeOffApprovalDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@pendingRequests" @ref="requestTable">
             <ToolBarContent>
                 <MudSpacer />
                 <MudSpacer />
@@ -29,7 +29,7 @@
                 <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <HeaderContent>
-                <MudTh>Request Date</MudTh>
+                <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<PendingDayTimeOffApprovalDTO, object>(x=>x.req_date)">Request Dat</MudTableSortLabel></MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Type</MudTh>
                 <MudTh>From</MudTh>
