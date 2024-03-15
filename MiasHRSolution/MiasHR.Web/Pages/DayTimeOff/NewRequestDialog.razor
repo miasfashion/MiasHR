@@ -104,14 +104,13 @@
                             </RowTemplate>
                         </MudTable>
                     </MudPaper>
-                    <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
-                        <MudText Class="m-2">You are requesting @typeValue</MudText>
-                        <MudText Class="m-2">For @dayCnt Days</MudText>                        
-                        <MudText Class="m-2">Starting at @startTime</MudText>
-                        <MudText Class="m-2">From @startDate.Value.Date</MudText>
-                        <MudText Class="m-2">To @endDate.Value.Date</MudText>
-                        <MudText Class="m-2">For @reasonValue</MudText>
-                        <MudText Class="m-2">Checking Hour @hour</MudText>
+                    <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">                  
+                        <MudText Class="m-2">You are requesting <strong><u>@typeValue</u></strong></MudText>
+                        <MudText Class="m-2">For <strong><u>@timeOption</u></strong></MudText>
+                        <MudText Class="m-2">Using <strong><u>@dayCnt</u></strong> Day(s)</MudText>
+                        <MudText Class="m-2">From <strong><u>@startDate.Value.ToShortDateString() <MudIcon Size="Size.Large" Icon="@Icons.Filled.ArrowRight" /> @endDate.Value.ToShortDateString()</u></strong></MudText>
+                        <MudText Class="m-2">Starting at <strong><u>@startTime</u></strong></MudText>
+                        <MudText Class="m-2">For <strong><u>@reasonValue</u></strong></MudText>
                     </MudPaper>
                 </MudContainer>
             </MudItem>

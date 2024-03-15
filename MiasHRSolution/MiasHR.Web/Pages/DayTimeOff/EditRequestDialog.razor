@@ -107,34 +107,33 @@
                             </MudTable>
                         </MudPaper>
                         <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
-                            <MudText Class="m-2">Using @typeValue</MudText>
-                            <MudText Class="m-2">For @dayCnt Days</MudText>
-                        <MudText Class="m-2">Checking Hour @hour</MudText>
-                            <MudText Class="m-2">Checking Time @startTime</MudText>
-                            <MudText Class="m-2">Checking start Date @startDate</MudText>
-                            <MudText Class="m-2">Checking end Date @endDate</MudText>
-                            <MudText Class="m-2">Show Radio timeopt @timeOption</MudText>
-                            <MudText Class="m-2">Show Radio ptoopt @PTOOption</MudText>
-                        </MudPaper>
-                    </MudContainer>
-                </MudItem>
-            </MudGrid>
-        </DialogContent>
-        <DialogActions>
-            <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Disabled="@_processing" Color="@Color" Variant="Variant.Filled" OnClick="Submit">
-                @if (_processing)
-                {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>@ButtonText</MudText>
-                }
-            </MudButton>
-        </DialogActions>
-    </MudDialog>
+                            <MudText Class="m-2">You are requesting <strong><u>@typeValue</u></strong></MudText>
+                        <MudText Class="m-2">For <strong><u>@timeOption</u></strong></MudText>
+                        <MudText Class="m-2">Using <strong><u>@dayCnt</u></strong> Day(s)</MudText>
+                        <MudText Class="m-2">From <strong><u>@startDate.Value.ToShortDateString() <MudIcon Size="Size.Large" Icon="@Icons.Filled.ArrowRight" /> @endDate.Value.ToShortDateString()</u></strong></MudText>
+                        <MudText Class="m-2">Starting at <strong><u>@startTime</u></strong></MudText>
+                        <MudText Class="m-2">For <strong><u>@reasonValue</u></strong></MudText>
+                    </MudPaper>
+                </MudContainer>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Disabled="@_processing" Color="@Color" Variant="Variant.Filled" OnClick="Submit">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>@ButtonText</MudText>
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
