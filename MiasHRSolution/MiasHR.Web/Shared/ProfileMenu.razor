@@ -3,15 +3,20 @@
 @using MiasHR.Web.Services.Contracts;
 
 @inject IAuthService AuthService
+@inject IImageService ImageService
 @inject NavigationManager NavigationManager
 
 <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Variant="Variant.Filled" Color="Color.Primary" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
     <ActivatorContent>
-        <MudAvatar Image="@img" />
+        <MudAvatar>
+            <img src="@imgIcon" height="45" width="45"/>
+        </MudAvatar>
     </ActivatorContent>
     <ChildContent>
         <MudContainer Class="d-flex justify-content-center">
-            <MudAvatar Size="Size.Large" Image="@img" Class="mt-2 justify-content-center" />
+            <MudPaper Class="mt-4 rounded" Elevation="1">
+                <img class="cover" src="@imgProfile" height="132" width="100" />
+            </MudPaper>
         </MudContainer>
         <MudText Typo="Typo.body1" Class="m-4 mb-2"><b>Hello, @userName</b></MudText>
 @*         <MudMenuItem Href="/profile" Match="NavLinkMatch.Prefix">Profile</MudMenuItem>
@@ -22,7 +27,8 @@
 </MudMenu>
 
 @code {
-    private string img = "images/happy.jpg";
+    private string imgIcon = "images/happy.jpg";
+    private string imgProfile = "images/happy.jpg";
     private string userName = "Unknown";
 
     private void HandleLogout()
@@ -37,10 +43,24 @@
     protected override async Task OnInitializedAsync()
     {
         var curUserName = await AuthService.GetUserName();
+        var emplCode = await AuthService.GetUserEmplCode();
 
         if (curUserName != null)
         {
             userName = curUserName;
+
+            var imgIconBase64 = await ImageService.GetProfileImageIcon(emplCode);
+            if (imgIconBase64 != null)
+            {
+                imgIcon = string.Format("data:image/jpg;base64,{0}", imgIconBase64);
+            }
+
+            var imgProfileBase64 = await ImageService.GetProfileImage(emplCode);
+            if (imgProfileBase64 != null)
+            {
+                imgProfile = string.Format("data:image/jpg;base64,{0}", imgProfileBase64);
+            }
         }
+        StateHasChanged();
     }
 }

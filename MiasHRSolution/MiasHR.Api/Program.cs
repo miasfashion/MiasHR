@@ -44,6 +44,7 @@ builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IJwtAuthenticationService, JwtAuthenticationService>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

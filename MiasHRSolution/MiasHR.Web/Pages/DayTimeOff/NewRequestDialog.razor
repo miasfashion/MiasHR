@@ -180,10 +180,13 @@
 
             if (endTime > endOfWork || nonnullTS < begOfWork)
             {
+                _processing = false; 
+
                 Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
+
                 return;
             }
 
