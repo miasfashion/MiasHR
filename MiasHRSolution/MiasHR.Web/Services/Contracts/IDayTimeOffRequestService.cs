@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using MiasHR.Models.DTOs;
+﻿using MiasHR.Models.DTOs;
 
 namespace MiasHR.Web.Services.Contracts
 {

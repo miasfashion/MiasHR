@@ -1,9 +1,6 @@
 ﻿using MiasHR.Web.Services.Contracts;
 using MiasHR.Models.DTOs;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using Azure.Core;
 
 namespace MiasHR.Web.Services
 {
@@ -19,6 +16,7 @@ namespace MiasHR.Web.Services
             _sessionStorage = sessionStorage;
             _authStateProvider = authStateProvider;
         }
+
         public async Task<IReadOnlyList<DayTimeOffRequestDTO>> GetAllEmployeeDayTimeOffRequestList(string emplCode, string year)
         {
             try
