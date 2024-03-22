@@ -4,6 +4,7 @@ using MiasHR.Web.Services.Contracts;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text.Json;
 using Telerik.SvgIcons;
 
 namespace MiasHR.Web.Services
@@ -23,55 +24,84 @@ namespace MiasHR.Web.Services
 
         public async Task<bool> IsLoggedIn()
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user != null)
+            try
             {
-                return user.Identity.IsAuthenticated;
-            }
+                var authState = await _authStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
 
-            return false;
-            // Additional logic can be added here to validate the token's expiration.
+                if (user != null)
+                {
+                    return user.Identity.IsAuthenticated;
+                }
+
+                return false;
+                // Additional logic can be added here to validate the token's expiration.            
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
+            }
         }
 
         public async Task<bool> IsUserManager()
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user != null)
+            try
             {
-                return user.IsInRole("Manager");
-            }
+                var authState = await _authStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
 
-            return false;
+                if (user != null)
+                {
+                    return user.IsInRole("Manager");
+                }
+
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
+            }
         }
 
         public async Task<string?> GetUserName()
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            try
             {
-                return user.FindFirst(ClaimTypes.Name)?.Value;
+                var authState = await _authStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+                {
+                    return user.FindFirst(ClaimTypes.Name)?.Value;
+                }
+
+                return null;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
             }
 
-            return null;
         }
 
         public async Task<string?> GetUserEmplCode()
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            try
             {
-                return user.FindFirst(ClaimTypes.SerialNumber)?.Value;
-            }
+                var authState = await _authStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
 
-            return null;
+                if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+                {
+                    return user.FindFirst(ClaimTypes.SerialNumber)?.Value;
+                }
+
+                return null;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
+            }
         }
 
         public async Task<HttpResponseMessage> Login(UserDTO userCredentials)
@@ -89,17 +119,34 @@ namespace MiasHR.Web.Services
 
                 return response;
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                throw ex;
+                // HTTP Request Failed
+                throw new HttpRequestException("Http Request Failed", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization error
+                throw new JsonException("JSON Deserialization Failed", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
             }
         }
 
         public async Task Logout()
         {
+            try { 
             await _sessionStorage.RemoveItemAsync("authToken");
             _httpClient.DefaultRequestHeaders.Authorization = null;
             await _authStateProvider.GetAuthenticationStateAsync();
+               
+                }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
+            }
         }
 
         public async Task<HttpResponseMessage> Register(UserDTO request, DateOnly birthDate)
@@ -109,9 +156,15 @@ namespace MiasHR.Web.Services
                 var response = await _httpClient.PostAsJsonAsync("api/Auth/Register?birthDate=" + birthDate, request);
                 return response;
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                throw ex;
+                // HTTP Request Failed
+                throw new HttpRequestException("Http Request Failed", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization error
+                throw new JsonException("JSON Deserialization Failed", ex);
             }
         }
         public async Task<UpdateMessageDTO> GetUserExist(UserCheckDTO request)
@@ -129,16 +182,26 @@ namespace MiasHR.Web.Services
                         return dto;
                     }
                     await _sessionStorage.SetItemAsStringAsync("empl", dto?.empl_code);
-                    return dto; 
+                    return dto;
                 }
                 else
                 {
                     return null;
                 }
             }
-            catch(Exception ex)
+            catch (HttpRequestException ex)
             {
-                throw ex;
+                // HTTP Request Failed
+                throw new HttpRequestException("Http Request Failed", ex);
+            }
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization error
+                throw new JsonException("JSON Deserialization Failed", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException("Invalid Operation is performed.", ex);
             }
         }
 
@@ -147,13 +210,19 @@ namespace MiasHR.Web.Services
             try
             {
                 var response = await _httpClient.PutAsJsonAsync("api/Auth/UpdateUserPassword", request);
-                var message =  await response.Content.ReadAsStringAsync();
+                var message = await response.Content.ReadAsStringAsync();
                 return message;
             }
-            catch(Exception ex)
+            catch (HttpRequestException ex)
             {
-                throw ex;
+                // HTTP Request Failed
+                throw new HttpRequestException("Http Request Failed", ex);
             }
-        }       
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization error
+                throw new JsonException("JSON Deserialization Failed", ex);
+            }
+        }
     }
 }

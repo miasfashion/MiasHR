@@ -239,7 +239,7 @@
             }
             else
             {
-                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Normal, (options) =>
+                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
@@ -250,21 +250,37 @@
         catch (Exception ex)
         {
             _processing = false;
-            throw ex;
+
+            Snackbar.Add($"An Error occured while creating new Request: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+
         }
     }
 
     //Initiate with Current Available PTO List
     protected override async Task OnInitializedAsync()
     {
-        string empl = await AuthService.GetUserEmplCode();
+        try
+        {
+            string empl = await AuthService.GetUserEmplCode();
 
-        //Calculate each PTO days
-        var vacationDays = await DayTimeOffRequestService.GetVacationRemaining(empl);
-        var sickDays = await DayTimeOffRequestService.GetSickDaysRemaining(empl);
+            //Calculate each PTO days
+            var vacationDays = await DayTimeOffRequestService.GetVacationRemaining(empl);
+            var sickDays = await DayTimeOffRequestService.GetSickDaysRemaining(empl);
 
-        remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
-        remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
+            remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
+            remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while generating Request Window: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+
+        }
     }
 
     private void HandleStartTimeChange(TimeSpan? newStartTime)

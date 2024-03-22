@@ -1,5 +1,6 @@
 ﻿using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
+using System.Text.Json;
 
 namespace MiasHR.Web.Services
 {
@@ -28,10 +29,21 @@ namespace MiasHR.Web.Services
 
                 return new List<ManagerEmployeeListDTO> { };
             }
-            catch (Exception)
-			{
-				throw;
-			}
+            catch (HttpRequestException ex)
+            {
+                // HTTP request failed
+                throw new HttpRequestException("Failed to retrieve manager employee list. HTTP request failed.", ex);
+            }
+            catch (JsonException ex)
+            {
+                // JSON deserialization failed
+                throw new JsonException("Failed to deserialize JSON response. JSON deserialization failed.", ex);
+            }
+            catch (Exception ex)
+            {
+                // Unexpected exception
+                throw new Exception("An error occurred while retrieving manager employee list.", ex);
+            }
         }
     }
 }

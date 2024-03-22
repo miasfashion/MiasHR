@@ -102,12 +102,12 @@
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd DataLabel="Type">@context.Type</MudTd>
-                                    <MudTd DataLabel="Days">@context.Days</MudTd>
-                                </RowTemplate>
-                            </MudTable>
-                        </MudPaper>
-                        <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
-                            <MudText Class="m-2">You are requesting <strong><u>@typeValue</u></strong></MudText>
+                                <MudTd DataLabel="Days">@context.Days</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudPaper>
+                    <MudPaper Class="flex-grow-1 mb-4 pa-2" Elevation="0">
+                        <MudText Class="m-2">You are requesting <strong><u>@typeValue</u></strong></MudText>
                         <MudText Class="m-2">For <strong><u>@timeOption</u></strong></MudText>
                         <MudText Class="m-2">Using <strong><u>@dayCnt</u></strong> Day(s)</MudText>
                         <MudText Class="m-2">From <strong><u>@startDate.Value.ToShortDateString() <MudIcon Size="Size.Large" Icon="@Icons.Filled.ArrowRight" /> @endDate.Value.ToShortDateString()</u></strong></MudText>
@@ -191,7 +191,7 @@
             {
                 _processing = false;
 
-                Snackbar.Add("Check your Start Time!", Severity.Normal, (options) =>
+                Snackbar.Add("Check your Start Time!", Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
@@ -242,7 +242,7 @@
             }
             else
             {
-                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Normal, (options) =>
+                Snackbar.Add("Could Not Edit. Please Contact IT Team", Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
@@ -253,75 +253,92 @@
         catch (Exception ex)
         {
             _processing = false;
-            throw ex;
+
+            Snackbar.Add($"An Error occured while editing Request: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+
         }
     }
 
     //Initiate with Current Available PTO List
     protected override async Task OnInitializedAsync()
     {
-        string empl = await AuthService.GetUserEmplCode();
-
-        //Calculate each PTO days
-        var vacationDays = await DayTimeOffRequestService.GetVacationRemaining(empl);
-        var sickDays = await DayTimeOffRequestService.GetSickDaysRemaining(empl);
-
-        remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
-        remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
-
-        currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
-
-        //Fill the Form with existing Data
-        dayCnt = currInfo.DaysCnt.Value;
-        startTime = currInfo.StartTime;
-        remark = currInfo.ReqContent;
-        hour = currInfo.HoursCnt.Value;
-        // Parse the string into DateTime nullable object
-        // Can remove the error checking
-        if (DateTime.TryParseExact(currInfo.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedstart))
+        try
         {
-            // Parsing succeeded, assign the parsed value to the nullable DateTime object
-            startDate = parsedstart;
+            string empl = await AuthService.GetUserEmplCode();
+
+            //Calculate each PTO days
+            var vacationDays = await DayTimeOffRequestService.GetVacationRemaining(empl);
+            var sickDays = await DayTimeOffRequestService.GetSickDaysRemaining(empl);
+
+            remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
+            remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
+
+            currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
+
+            //Fill the Form with existing Data
+            dayCnt = currInfo.DaysCnt.Value;
+            startTime = currInfo.StartTime;
+            remark = currInfo.ReqContent;
+            hour = currInfo.HoursCnt.Value;
+            // Parse the string into DateTime nullable object
+            // Can remove the error checking
+            if (DateTime.TryParseExact(currInfo.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedstart))
+            {
+                // Parsing succeeded, assign the parsed value to the nullable DateTime object
+                startDate = parsedstart;
+            }
+            else
+            {
+                // Parsing failed, handle the error or use a default value
+                Console.WriteLine("Invalid date format");
+            }
+
+            if (DateTime.TryParseExact(currInfo.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedend))
+            {
+                // Parsing succeeded, assign the parsed value to the nullable DateTime object
+                endDate = parsedend;
+            }
+            else
+            {
+                // Parsing failed, handle the error or use a default value
+                Console.WriteLine("Invalid date format");
+            }
+
+            //Splitting Merged SubType
+            string subTp = currInfo.ReqSubType;
+
+            string[] parts = subTp.Split(':');
+            typeValue = parts[0].Trim();
+            parts = parts[1].Split('[');
+            reasonValue = parts[0].Trim();
+            timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
+
+            //Find which PTOOption was selected
+            if (timeOption == "AM" || timeOption == "PM")
+            {
+                PTOOption = "AMPM";
+            }
+            else if (timeOption == "DAY OFF")
+            {
+                PTOOption = "DAY";
+            }
+            else
+            {
+                PTOOption = "HOUR";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Parsing failed, handle the error or use a default value
-            Console.WriteLine("Invalid date format");
+            Snackbar.Add($"An Error occured while loading Request: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+
         }
 
-        if (DateTime.TryParseExact(currInfo.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedend))
-        {
-            // Parsing succeeded, assign the parsed value to the nullable DateTime object
-            endDate = parsedend;
-        }
-        else
-        {
-            // Parsing failed, handle the error or use a default value
-            Console.WriteLine("Invalid date format");
-        }
-
-        //Splitting Merged SubType
-        string subTp = currInfo.ReqSubType;
-
-        string[] parts = subTp.Split(':');
-        typeValue = parts[0].Trim();
-        parts = parts[1].Split('[');
-        reasonValue = parts[0].Trim();
-        timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
-
-        //Find which PTOOption was selected
-        if (timeOption == "AM" || timeOption == "PM")
-        {
-            PTOOption = "AMPM";
-        }
-        else if (timeOption == "DAY OFF")
-        {
-            PTOOption = "DAY";
-        }
-        else
-        {
-            PTOOption = "HOUR";
-        }
     }
 
     private void HandleStartTimeChange(TimeSpan? newStartTime)

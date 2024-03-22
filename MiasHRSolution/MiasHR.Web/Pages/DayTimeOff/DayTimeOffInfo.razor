@@ -10,6 +10,7 @@
 @inject IDialogService DialogService
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
+@inject ISnackbar Snackbar
 
 <PageTitle>Day Time Off Information</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -159,21 +160,31 @@
     // Fetch data from DB and populate chart
     private async Task PopulateChart(List<ModelData> vacData, List<ModelData> sickData)
     {
-        var emplCode = await AuthService.GetUserEmplCode();
-        var dto = new EmployeeDayTimeOffRemainingDTO { };
-
-        if (emplCode != null)
+        try
         {
-            dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(emplCode, "2024");
+            var emplCode = await AuthService.GetUserEmplCode();
+            var dto = new EmployeeDayTimeOffRemainingDTO { };
+
+            if (emplCode != null)
+            {
+                dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(emplCode, "2024");
+            }
+
+            vacData[0].Value = (double)dto.s_used_days;
+            vacData[1].Value = (double)dto.s_available_curr_days;
+            vacData[2].Value = (double)dto.s_year_basic_days - (double)dto.s_curr_basic_days;
+            vacData[3].Value = (double)dto.s_adjust_days;
+
+            sickData[0].Value = (double)dto.s_used_sick_days;
+            sickData[1].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
         }
-
-        vacData[0].Value = (double)dto.s_used_days;
-        vacData[1].Value = (double)dto.s_available_curr_days;
-        vacData[2].Value = (double)dto.s_year_basic_days - (double)dto.s_curr_basic_days;
-        vacData[3].Value = (double)dto.s_adjust_days;
-
-        sickData[0].Value = (double)dto.s_used_sick_days;
-        sickData[1].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while Populating Chart: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+        }
     }
 
     // Breadcrumbs
