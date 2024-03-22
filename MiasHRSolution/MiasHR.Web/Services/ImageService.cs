@@ -30,9 +30,14 @@ namespace MiasHR.Web.Services
                     return null;
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Failed to retrieve profile image. HTTP request failed.", ex);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                // Can Rethrow the exception for higher-level handling 
+                throw new Exception("An error occurred while retrieving profile image.", ex);
             }
         }
 
@@ -48,12 +53,18 @@ namespace MiasHR.Web.Services
                 }
                 else
                 {
-                    return null;
+                    // Handle other non-success status codes
+                    throw new Exception($"Failed to retrieve profile image icon. Status code: {response.StatusCode}");
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Failed to retrieve profile image icon. HTTP request failed.", ex);
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Rethrow the exception for higher-level handling
+                throw new Exception("An error occurred while retrieving profile image icon.", ex);
             }
         }
     }

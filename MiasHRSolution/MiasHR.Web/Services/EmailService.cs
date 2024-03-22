@@ -1,6 +1,7 @@
 ﻿using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace MiasHR.Web.Services
 {
@@ -19,8 +20,23 @@ namespace MiasHR.Web.Services
 
         public async Task<HttpResponseMessage> SendEmail(EmailDTO emailDTO)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/Email/SendEmail/",emailDTO);
-            return response;
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/api/Email/SendEmail/", emailDTO);
+                return response;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Http Reqeust Failed", ex);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException("Invalid Argument Passed", ex);
+            }
+            catch (JsonException ex)
+            {
+                throw new JsonException("JSON Deserialization Failed", ex);
+            }
 
         }
 

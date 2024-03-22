@@ -117,19 +117,26 @@
     //When the page loads, it will be displaying data accordingly. Default year will be current year.
     protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        int currentYear = DateTime.Now.Year;
-        years = new List<string>();
-        for (int y = 2020; y <= currentYear; y++)
+        try
         {
-            years.Add(y.ToString());
+            base.OnInitialized();
+            int currentYear = DateTime.Now.Year;
+            years = new List<string>();
+            for (int y = 2020; y <= currentYear; y++)
+            {
+                years.Add(y.ToString());
+            }
+            employee = await AuthService.GetUserEmplCode();
+            TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, selectedYear);
+
+
+            //Instead of refreshing whole page, just render values again
+            StateHasChanged();
         }
-        employee = await AuthService.GetUserEmplCode();
-        TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, selectedYear);
-
-
-        //Instead of refreshing whole page, just render values again
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while loading Request List: {ex.Message}", Severity.Warning);
+        }
 
     }
 
@@ -180,8 +187,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during cancellation: {ex.Message}");
-            Snackbar.Add("An error occurred during cancellation.", Severity.Normal, (options) =>
+            Snackbar.Add($"An Error occured while processing Cancellation Request: {ex.Message}", Severity.Warning, (options) =>
             {
                 options.CloseAfterNavigation = true;
             });
@@ -201,7 +207,10 @@
         }
         catch (Exception ex)
         {
-            throw ex;
+            Snackbar.Add($"An Error occured while loading Request History: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
         }
     }
 
@@ -246,23 +255,34 @@
     //Toggles when user clicks Edit Button
     private async void HandleEdit(int id)
     {
-        var parameters = new DialogParameters<EditRequestDialog>();
-        parameters.Add(x => x.ContentText, "Edit Time Off Request");
-        parameters.Add(x => x.ButtonText, "Confirm Edit");
-        parameters.Add(x => x.Color, Color.Success);
-        parameters.Add(x => x.seq, id);
-
-        var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
-
-        var dialog = DialogService.Show<EditRequestDialog>("Edit Time Off Request", parameters, options);
-
-        //Wait for the dialog to close
-        var result = await dialog.Result;
-
-        //Render again if Dialog was not cancelled
-        if (!result.Cancelled)
+        try
         {
-            await OnInitializedAsync();
+            var parameters = new DialogParameters<EditRequestDialog>();
+            parameters.Add(x => x.ContentText, "Edit Time Off Request");
+            parameters.Add(x => x.ButtonText, "Confirm Edit");
+            parameters.Add(x => x.Color, Color.Success);
+            parameters.Add(x => x.seq, id);
+
+            var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true };
+
+            var dialog = DialogService.Show<EditRequestDialog>("Edit Time Off Request", parameters, options);
+
+            //Wait for the dialog to close
+            var result = await dialog.Result;
+
+            //Render again if Dialog was not cancelled
+            if (!result.Cancelled)
+            {
+                await OnInitializedAsync();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while toggling Edit Request: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
         }
     }
 

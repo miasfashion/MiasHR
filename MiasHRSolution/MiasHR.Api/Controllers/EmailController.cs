@@ -4,6 +4,7 @@ using MiasHR.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
+using System.Data.Common;
 
 
 namespace MiasHR.Api.Controllers
@@ -25,6 +26,10 @@ namespace MiasHR.Api.Controllers
             {
                 var emailRequest =  await _emailRepository.SendEmail(request);
                 return emailRequest is null ? NotFound() : Ok(emailRequest);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {

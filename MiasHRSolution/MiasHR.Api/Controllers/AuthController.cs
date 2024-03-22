@@ -2,6 +2,7 @@ using MiasHR.Api.Repositories.Contracts;
 using MiasHR.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Common;
 
 namespace MiasHR.Api.Controllers
 {
@@ -28,18 +29,19 @@ namespace MiasHR.Api.Controllers
             {
                 var result = await _authRepository.Login(request.Username, request.Password);
 
-                if (result == null)
-                {
-                    return Unauthorized();
-                }
-                else
-                {
                     var employee = result.Item1;
                     var isManager = result.Item2;
 
                     return _jwtAuthenticationService.CreateToken(employee, isManager);
-                }
                
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message); // Return 401 Error with specific error message
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -75,6 +77,10 @@ namespace MiasHR.Api.Controllers
                 // Return the status of the registration
                 return result is null ? NotFound() : Ok(result.status);
             }
+            catch (DbException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 // Handle exceptions and return a 500 Internal Server Error status
@@ -101,6 +107,10 @@ namespace MiasHR.Api.Controllers
                 // Return the result of the user existence check
                 return userCheck is null ? NotFound() : Ok(userCheck);
             }
+            catch (DbException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 // Handle exceptions and return a 500 Internal Server Error status
@@ -126,6 +136,10 @@ namespace MiasHR.Api.Controllers
 
                 // Return the status of the password update
                 return update is null ? NotFound() : Ok(update.status);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {

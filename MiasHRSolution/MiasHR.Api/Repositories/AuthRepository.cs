@@ -28,7 +28,7 @@ namespace MiasHR.Api.Repositories
 
             if (userCred is null)
             {
-                return null;
+                throw new UnauthorizedAccessException("User not found");
             }
 
             // set up log entry
@@ -48,7 +48,8 @@ namespace MiasHR.Api.Repositories
                 await _miasHRDbContext.AddAsync(logEntry);
                 await _miasHRDbContext.SaveChangesAsync();
 
-                return null;
+                throw new UnauthorizedAccessException("Incorrect password");
+
             }
 
             // log login success

@@ -73,7 +73,7 @@
             var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
             if (result.result_message.Contains("Already"))
             {
-                Snackbar.Add(result.result_message, Severity.Normal, (options) =>
+                Snackbar.Add(result.result_message, Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });

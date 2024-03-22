@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MiasHR.Models.DTOs;
 using MiasHR.Api.Entities;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.Common;
 
 namespace MiasHR.Api.Controllers
 {
@@ -25,13 +26,23 @@ namespace MiasHR.Api.Controllers
             try
             {
                 var dayTimeOffRequests = await _dayTimeOffRequestRepository.GetAllEmployeeDayTimeOffRequestList(emplCode, year);
+                //Check Null before coverting to list
+                if (dayTimeOffRequests == null)
+                {
+                    return NotFound(); // Return 404 if no data found
+                }
+
                 var requests = dayTimeOffRequests.ToList();
-                return requests is null ? NotFound() : Ok(requests);
+                return Ok(requests);
             }
-            catch (Exception)
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                                  "Error retrieving data from database");
+                                  ex);
             }
         }
 
@@ -45,6 +56,10 @@ namespace MiasHR.Api.Controllers
                                                                                                request.hours, request.daysCnt, request.time, request.sickDayYn);
 
                 return (requestResult is null || requestResult.status == "FAILURE") ? NotFound() : Ok(requestResult);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -63,6 +78,10 @@ namespace MiasHR.Api.Controllers
 
                 return (requestResult is null || requestResult.status == "FAILURE") ? NotFound() : Ok(requestResult);
             }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
@@ -78,6 +97,10 @@ namespace MiasHR.Api.Controllers
             {
                 var dayTimeOffRequest = await _dayTimeOffRequestRepository.GetDayTimeOffRequest(id);
                 return dayTimeOffRequest is null ? NotFound() : Ok(dayTimeOffRequest);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -95,6 +118,10 @@ namespace MiasHR.Api.Controllers
                 var deleteResult = await _dayTimeOffRequestRepository.CancelDayTimeOffRequest(id, emplCode);
                 return deleteResult is null ? NotFound() : Ok(deleteResult);
 
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -114,6 +141,10 @@ namespace MiasHR.Api.Controllers
 
                 return dayTimeOffRemaining is null ? NotFound() : Ok(dayTimeOffRemaining);
             }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
@@ -129,6 +160,10 @@ namespace MiasHR.Api.Controllers
                 var remainDay = await _dayTimeOffRequestRepository.GetSickDaysRemaining(emplCode);
                 return remainDay is null ? NotFound() : Ok(remainDay);
             }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
@@ -143,6 +178,10 @@ namespace MiasHR.Api.Controllers
             {
                 var remainDay = await _dayTimeOffRequestRepository.GetVacationRemaining(emplCode);
                 return remainDay is null ? NotFound() : Ok(remainDay);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -164,6 +203,10 @@ namespace MiasHR.Api.Controllers
 
                 return pendingDayTimeOffRequests is null ? NotFound() : Ok(pendingDayTimeOffRequests);
             }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
@@ -181,6 +224,10 @@ namespace MiasHR.Api.Controllers
                 var pendingDayTimeOffRequests = await _dayTimeOffRequestRepository.GetHrDayTimeOffApprovalHistory(managerEmplCode);
 
                 return pendingDayTimeOffRequests is null ? NotFound() : Ok(pendingDayTimeOffRequests);
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
@@ -210,6 +257,10 @@ namespace MiasHR.Api.Controllers
                 {
                     return Ok(requestStatusChangeResult);
                 }
+            }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
             }
             catch (Exception)
             {
