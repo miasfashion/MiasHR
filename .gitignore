@@ -43,3 +43,6 @@ msbuild.wrn
 bin/
 obj/
 
+# Publish
+dotnet-tools.json
+PublishProfiles/
