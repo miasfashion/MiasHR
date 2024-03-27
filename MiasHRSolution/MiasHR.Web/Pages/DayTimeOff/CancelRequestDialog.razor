@@ -1,0 +1,88 @@
+﻿@attribute [Authorize]
+
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using MiasHR.Web.Services.Contracts
+@using MiasHR.Models.DTOs
+@using System.Globalization
+
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+@inject IEmailService EmailService
+
+<MudDialog>
+    <DialogContent>
+        Are you sure you want to cancel?
+    </DialogContent>
+    <DialogActions>
+        <MudButton Disabled="@_processing" Color="Color.Primary" Variant="Variant.Filled" OnClick="ConfirmCancellation">
+            @if (_processing)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Yes</MudText>
+            }
+        </MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Cancel">No</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string ContentText { get; set; }
+    [Parameter] public string ButtonText { get; set; }
+    [Parameter] public Color Color { get; set; }
+    [Parameter] public int seq { get; set; }
+
+    // for disabling submit button while processing
+    private bool _processing = false;
+
+    void Cancel() => MudDialog.Cancel();
+
+    /// <summary>
+    /// When user confirms cancellation, cancel the request and close dialog
+    /// </summary>
+    private async Task ConfirmCancellation()
+    {
+        _processing = true;
+        try
+        {
+            var empl = await AuthService.GetUserEmplCode();
+            var result = await DayTimeOffRequestService.CancelDayTimeOffRequest(seq, empl);
+
+            var name = await AuthService.GetUserName();
+            string? message = await result.Content.ReadAsStringAsync();
+
+            _processing = true;
+            if (message == "Canceled Successfully !")
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+            else
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add(message, Severity.Normal, (options) =>
+                {
+                    options.CloseAfterNavigation = true;
+                });
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while processing Cancellation Request: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+        }
+    }
+}
