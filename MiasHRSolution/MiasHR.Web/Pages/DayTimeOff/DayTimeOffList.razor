@@ -85,17 +85,6 @@
     </MudPaper>
 </MudContainer>
 
-<MudDialog IsVisible="@showConfirmationDialog">
-    <DialogContent>
-        Are you sure you want to cancel?
-    </DialogContent>
-    <DialogActions>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ConfirmCancellation">Yes</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => showConfirmationDialog = false)">No</MudButton>
-    </DialogActions>
-</MudDialog>
-
-
 @code {
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
     private string selectedYear = DateTime.Now.Year.ToString();
@@ -149,51 +138,38 @@
     }
 
     //Used to set Dialog
-    private void HandleCancelConfirmation(int id)
-    {
-        requestIdToDelete = id;
-        showConfirmationDialog = true;
-    }
-
-    /// <summary>
-    /// When user confirms cancellation, cancel the request and close dialog
-    /// </summary>
-    private async Task ConfirmCancellation()
+    private async void HandleCancelConfirmation(int id)
     {
         try
         {
-            var empl = await AuthService.GetUserEmplCode();
-            var result = await DayTimeOffRequestService.CancelDayTimeOffRequest(requestIdToDelete, empl);
+            var parameters = new DialogParameters<EditRequestDialog>();
+            parameters.Add(x => x.ContentText, "Cancel Time Off Request");
+            parameters.Add(x => x.ButtonText, "Cancel");
+            parameters.Add(x => x.Color, Color.Success);
+            parameters.Add(x => x.seq, id);
 
-            var name = await AuthService.GetUserName();
-            string? message = await result.Content.ReadAsStringAsync();
+            var options = new DialogOptions { MaxWidth = MudBlazor.MaxWidth.Small, DisableBackdropClick = true };
 
-            if (message == "Canceled Successfully !")
+            var dialog = DialogService.Show<CancelRequestDialog>("Cancel Time Off Request", parameters, options);
+
+            //Wait for the dialog to close
+            var result = await dialog.Result;
+
+            //Render again if Dialog was not cancelled
+            if (!result.Cancelled)
             {
-                Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
-                {
-                    options.CloseAfterNavigation = true;
-                });
-                showConfirmationDialog = false; // Close the confirmation dialog
-                await OnInitializedAsync(); // Refresh the data
+                await OnInitializedAsync();
             }
-            else
-            {
-                Snackbar.Add(message, Severity.Normal, (options) =>
-                {
-                    options.CloseAfterNavigation = true;
-                });
-            }
+
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"An Error occured while processing Cancellation Request: {ex.Message}", Severity.Warning, (options) =>
+            Snackbar.Add($"An Error occured while toggling Cancel Request: {ex.Message}", Severity.Warning, (options) =>
             {
                 options.CloseAfterNavigation = true;
             });
         }
     }
-
 
     /// <summary>
     /// Handles the input of the selected year to retrieve the Day Time Off (DTO) history of the user for the year.
