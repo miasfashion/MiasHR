@@ -5,12 +5,14 @@
 
 @using MiasHR.Models.DTOs;
 @using MiasHR.Web.Services.Contracts;
+@using Microsoft.JSInterop;
 
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
 @inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Day Time Off Information</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -22,16 +24,16 @@
             Request Time Off
         </MudButton>
     </MudPaper>
-    <MudGrid>
-        <MudItem Class="d-flex justify-center" xs="12" md="6">
-            <MudPaper Class="mt-4 ma-2 pa-4" Width="450px" Height="100%" Elevation="1">
+    <MudGrid >
+        <MudItem  Class="d-flex justify-center" xs="12" md="6">
+            <MudPaper  Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
                 <MudText Typo="Typo.h6">Vacation</MudText>
                 @* TODO: Make chart size adaptable to small screens *@
                 <MudPaper Class="d-flex align-content-center" Elevation="0">
-                    <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
-                        <TelerikChart Width="100%" Height="380px">
-                            <ChartSeriesItems>
-                                <ChartSeries Type="ChartSeriesType.Donut"
+                    <MudPaper  Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                        <TelerikChart Width="100%" Height="380px" @ref="TotalChart">
+                            <ChartSeriesItems >
+                                <ChartSeries  Type="ChartSeriesType.Donut"
                                              Data="@vacData"
                                              HoleSize="80"
                                              ColorField="@nameof(ModelData.Color)"
@@ -51,22 +53,22 @@
                 </MudPaper>
                 <MudTable Items="@vacData" Elevation="0">
                     <HeaderContent>
-                        <MudTh>Type</MudTh>
-                        <MudTh>Days</MudTh>
+                        <MudTh Style="font-size:large;">Type</MudTh>
+                        <MudTh Style="font-size:large;">Days</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Type">@context.Category</MudTd>
-                        <MudTd DataLabel="Days">@context.Value</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
         </MudItem>
         <MudItem Class="d-flex justify-center" xs="12" md="6">
-            <MudPaper Class="mt-4 ma-2 pa-4" Width="450px" Height="100%" Elevation="1">
+            <MudPaper Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
                 <MudText Typo="Typo.h6">Vacation</MudText>
                 <MudPaper Class="d-flex align-content-center" Elevation="0">
                     <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
-                        <TelerikChart Width="100%" Height="380px">
+                        <TelerikChart Width="100%" Height="380px" @ref="PTOChart">
                             <ChartSeriesItems>
                                 <ChartSeries Type="ChartSeriesType.Donut"
                                              Data="@sickData"
@@ -88,19 +90,26 @@
                 </MudPaper>
                 <MudTable Items="@sickData" Elevation="0">
                     <HeaderContent>
-                        <MudTh>Type</MudTh>
-                        <MudTh>Days</MudTh>
+                        <MudTh Style="font-size:large;">Type</MudTh>
+                        <MudTh Style="font-size:large;">Days</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Type">@context.Category</MudTd>
-                        <MudTd DataLabel="Days">@context.Value</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
+<script>
+    window.windowResizeHandler = function (dotnetHelper) {
+        window.addEventListener('resize', () => {
+            dotnetHelper.invokeMethodAsync('HandleWindowResize');
+        });
+    };
 
+</script>
 @code {
     // binder class for Telerik Chart
     private class ModelData
@@ -226,4 +235,27 @@
         await PopulateChart(vacData, sickData);
         StateHasChanged();
     }
+
+    TelerikChart TotalChart { get; set; }
+    TelerikChart PTOChart { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("window.windowResizeHandler", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task HandleWindowResize()
+    {
+        await Task.Delay(20);
+
+
+        // Call chart refresh method here
+        TotalChart.Refresh();
+        PTOChart.Refresh();
+    }
+
 }
