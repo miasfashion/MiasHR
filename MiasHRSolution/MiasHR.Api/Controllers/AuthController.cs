@@ -147,5 +147,25 @@ namespace MiasHR.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
             }
         }
+
+        [HttpGet("api/[controller]/[action]/{emplCode}")]
+        public async Task<ActionResult<string>> GetUserEmail(string emplCode)
+        {
+            try
+            {
+                var result = await _authRepository.GetUserEmail(emplCode);
+
+                return result is null ? NotFound() : Ok(result.com_email);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
+            catch (Exception)
+            {
+                // Handle exceptions and return a 500 Internal Server Error status
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database");
+            }
+        }
     }
 }
