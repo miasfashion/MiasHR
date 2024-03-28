@@ -63,7 +63,7 @@
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add("Canceled Successfully !", Severity.Normal, (options) =>
                 {
-                    options.CloseAfterNavigation = true;
+                    options.CloseAfterNavigation = false;
                 });
                 return;
             }

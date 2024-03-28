@@ -70,7 +70,8 @@
                     rejectReason = null
                 };
 
-            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            var result = await DayTimeOffRequestService.ChangeRequestStatus(request);   
+            _processing = false;
             if (result.result_message.Contains("Already"))
             {
                 Snackbar.Add(result.result_message, Severity.Warning, (options) =>
@@ -80,14 +81,21 @@
                 return;
             }
         }
+        else
+        {
+            Snackbar.Add("Cannot find your employee ID. Please Contact IT", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+            _processing = false;
+            return;
+        }       
 
-        _processing = false;
 
-        MudDialog.Close(DialogResult.Ok(true));
-        
+        MudDialog.Close(DialogResult.Ok(true));        
         Snackbar.Add("Approved Successfully!", Severity.Normal, (options) =>
         {
-            options.CloseAfterNavigation = true;
+            options.CloseAfterNavigation = false;
         });
     }
 
@@ -110,7 +118,7 @@
             MudDialog.Close(DialogResult.Ok(true));
             Snackbar.Add("Rejected Successfully", Severity.Normal, (options) =>
             {
-                options.CloseAfterNavigation = true;
+                options.CloseAfterNavigation = false;
             });
         }
 

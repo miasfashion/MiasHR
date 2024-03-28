@@ -8,7 +8,7 @@
 
 <MudDialog>
     <DialogContent>
-        <MudText Class="mb-2">Add Reject Reason</MudText>
+        <MudText Class="mb-2">Please describe your reject reason</MudText>
         <MudTextField @bind-Value="rejectReason" Label="Reject Reason" Variant="Variant.Text" Lines="6" />
     </DialogContent>
     <DialogActions>
@@ -50,10 +50,11 @@
                     id = Dto.seq,
                     statusType = "REJECT",
                     managerEmplCode = managerEmplCode,
-                    rejectReason = "TTT"
+                    rejectReason = rejectReason
                 };
 
             var result = await DayTimeOffRequestService.ChangeRequestStatus(request);
+            _processing = false;
             if (result.result_message.Contains("Already"))
             {
                 Snackbar.Add(result.result_message, Severity.Warning, (options) =>
@@ -61,11 +62,17 @@
                     options.CloseAfterNavigation = true;
                 });
                 return;
-            }
+            }                                 
         }
-
-        _processing = false;
-
+        else
+        {           
+            Snackbar.Add("Cannot find your employee ID. Please Contact IT", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;              
+            });
+            _processing = false;
+            return;
+        }
         MudDialog.Close(DialogResult.Ok(true));
     }
 }
