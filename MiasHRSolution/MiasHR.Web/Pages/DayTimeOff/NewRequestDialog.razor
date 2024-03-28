@@ -16,7 +16,7 @@
             <MudItem xs="6">
                 <MudPaper Class="pa-2" Elevation="0">
                     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4" SelectedValuesChanged="OnTypeOptionChanged">
                             <MudSelectItem T="string" Value="@("Vacation")" />
                             <MudSelectItem T="string" Value="@("Sick Day")" />
                             <MudSelectItem T="string" Value="@("Absence")" />
@@ -360,5 +360,10 @@
     private List<vacDays> remainingDays = new List<vacDays>();
     //private List<vacDays> selectedDays = new List<vacDays>();
 
+    //When User chooses time off type, associated Values reset to default
+    private void OnTypeOptionChanged()
+    {
+        reasonValue = "";
+    }
 
 }

@@ -48,10 +48,6 @@ namespace MiasHR.Api.Repositories
                             )
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
-            if (results.Count == 0)
-            {
-                throw new Exception("No data found for the specified employee and year.");
-            }
 
             var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
 
