@@ -219,10 +219,10 @@ namespace MiasHR.Api.Repositories
                 //Retrieve the output 
                 if (result.result_message == "Canceled Successfully !")
                 {
-                    var userEmail = await _authRepository.GetUserEmail(emplCode);
+                    var userName = await _authRepository.GetUserName(emplCode);
                     EmailDTO emailInfo = new EmailDTO
                     {
-                        Body = "eMHRS request has been Canceled by " + userEmail.com_email + ". <br>Please log into eMHRS to confirm.",
+                        Body = "eMHRS request has been Canceled by " + userName + ". <br>Please log into eMHRS to confirm.",
                         Subject = "eMHRS Request Canceled",
                         To = emplCode,
                         ApprovStep = "CANCEL"
