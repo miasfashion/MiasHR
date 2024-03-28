@@ -4,6 +4,7 @@ using MiasHR.Api.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace MiasHR.Api.Repositories
 {
@@ -42,19 +43,32 @@ namespace MiasHR.Api.Repositories
                 var ms = new MemoryStream(imageBytes.Photo);
                 var originalBitmap = new Bitmap(ms);
 
-                int originalWidth = originalBitmap.Width;
-                int newHeight = originalWidth;
+                // Calculate the size for the square crop
+                int cropSize = Math.Min(originalBitmap.Width, originalBitmap.Height);
 
-                var resizedBitmap = new Bitmap(originalWidth, newHeight);
-                using (var graphics = Graphics.FromImage(resizedBitmap))
+                // Calculate cropping rectangle to center the crop area
+                int cropX = (originalBitmap.Width - cropSize) / 2;
+                int cropY = (originalBitmap.Height - cropSize) / 2;
+
+                // Create a new bitmap for the cropped image
+                using (Bitmap croppedBitmap = new Bitmap(cropSize, cropSize))
                 {
-                    graphics.DrawImage(originalBitmap, 0,0, originalWidth, newHeight);
-                }
+                    using (Graphics g = Graphics.FromImage(croppedBitmap))
+                    {
+                        g.DrawImage(originalBitmap,
+                                    new Rectangle(0, 0, cropSize, cropSize),
+                                    new Rectangle(cropX, cropY, cropSize, cropSize),
+                                    GraphicsUnit.Pixel);
 
-                // Convert back to byte array
-                var resultStream = new MemoryStream();
-                resizedBitmap.Save(resultStream, originalBitmap.RawFormat); // Preserve original format
-                return resultStream.ToArray();
+                        // Prepare to save the image to a MemoryStream
+                        MemoryStream memoryStream = new MemoryStream();
+
+                        // Save the resized image to the MemoryStream, preserving the original format
+                        croppedBitmap.Save(memoryStream, originalBitmap.RawFormat);
+
+                        return memoryStream.ToArray();
+                    }
+                }
             }
         }
     }
