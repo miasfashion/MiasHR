@@ -222,7 +222,7 @@ namespace MiasHR.Api.Repositories
                     var userEmail = await _authRepository.GetUserEmail(emplCode);
                     EmailDTO emailInfo = new EmailDTO
                     {
-                        Body = "eMHRS reqeust has been canceled by " + userEmail.com_email + ". <br>Please log into eMHRS to confirm.",
+                        Body = "eMHRS request has been Canceled by " + userEmail.com_email + ". <br>Please log into eMHRS to confirm.",
                         Subject = "eMHRS Request Canceled",
                         To = emplCode,
                         ApprovStep = "CANCEL"

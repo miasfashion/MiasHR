@@ -280,5 +280,12 @@ namespace MiasHR.Api.Repositories
             }
         }
 
+        public async Task<UpdateMessageDTO> GetUserName(string emplCode)
+        {
+            var name = await _miasHRDbContext.HrEmployees
+                .AsNoTrackingWithIdentityResolution()
+                .FirstOrDefaultAsync(x => x.EmplCode == emplCode && )
+        }
+
     }
 }
