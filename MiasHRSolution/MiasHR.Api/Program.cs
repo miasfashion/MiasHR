@@ -17,7 +17,8 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins("https://hr2.miasfashion.com",
-                                             "http://hr2.miasfashion.com")
+                                             "http://hr2.miasfashion.com",
+                                             "https://localhost:7187")
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();
