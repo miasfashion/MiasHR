@@ -1,0 +1,25 @@
+﻿@layout TelerikLayout
+@inherits LayoutComponentBase
+
+@attribute [AllowAnonymous]
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudMainContent>
+        <MudContainer Class="mt-16 px-8">
+            <MudPaper Class="d-flex m-5 mt-0 justify-content-center" Elevation="0">
+                <MudStack>
+                    @Body
+                </MudStack>
+            </MudPaper>
+            <Footer />
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+
+}
