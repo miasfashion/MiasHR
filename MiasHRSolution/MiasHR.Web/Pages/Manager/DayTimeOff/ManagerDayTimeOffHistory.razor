@@ -27,11 +27,23 @@
                 <MudSpacer />
                 <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col style="width: 30%" />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+            </ColGroup>
             <HeaderContent>
                 <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffApprovalHistoryDTO, object>(x=>x.req_date)">Request Date</MudTableSortLabel></MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffApprovalHistoryDTO, object>(x=>x.req_date)">Request Date</MudTableSortLabel>
+                </MudTh>
                 <MudTh>Name</MudTh>
                 <MudTh>Type</MudTh>
+                <MudTh>Used Days</MudTh>
                 <MudTh>From</MudTh>
                 <MudTh>To</MudTh>
                 <MudTh Style="text-align:center">First Approval</MudTh>
@@ -41,6 +53,7 @@
                 <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="Name">@context.empl_name</MudTd>
                 <MudTd DataLabel="Type">@context.req_sub_type</MudTd>
+                <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="FirstApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_1st_yn)</MudTd>

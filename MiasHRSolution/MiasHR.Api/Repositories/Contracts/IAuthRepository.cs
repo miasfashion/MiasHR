@@ -10,5 +10,6 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPasswordHash);
         Task<UpdateMessageDTO> GetUserExist(string username, DateOnly birthDate);
         Task<UpdateMessageDTO> GetUserEmail(string emplCode);
+        Task<string> GetUserName(string emplCode);
     }
 }

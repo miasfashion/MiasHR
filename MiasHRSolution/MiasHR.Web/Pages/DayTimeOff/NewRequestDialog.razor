@@ -16,7 +16,7 @@
             <MudItem xs="6">
                 <MudPaper Class="pa-2" Elevation="0">
                     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4">
+                        <MudSelect @bind-Value="typeValue" T="string" Label="Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" Class="ma-4" SelectedValuesChanged="OnTypeOptionChanged">
                             <MudSelectItem T="string" Value="@("Vacation")" />
                             <MudSelectItem T="string" Value="@("Sick Day")" />
                             <MudSelectItem T="string" Value="@("Absence")" />
@@ -190,6 +190,39 @@
                 return;
             }
 
+            //Validate Requested Days
+            decimal checkDay = 0;
+            if (typeValue.Equals("Sick Day"))
+            {
+                checkDay = decimal.Parse(remainingDays[1].Days);
+                if (checkDay - dayCnt < 0)
+                {
+                    _processing = false;
+
+                    Snackbar.Add("Check if you have enough Sick Days!", Severity.Normal, (options) =>
+                    {
+                        options.CloseAfterNavigation = true;
+                    });
+
+                    return;
+                }
+            }
+            else if (typeValue.Equals("Vacation"))
+            {
+                checkDay = decimal.Parse(remainingDays[0].Days);
+                if(checkDay - dayCnt < 0)
+                {
+                    _processing = false;
+
+                    Snackbar.Add("Check if you have enough Vacations!", Severity.Normal, (options) =>
+                    {
+                        options.CloseAfterNavigation = true;
+                    });
+
+                    return;
+                }
+            }
+
             //Create Request
             newRequest = new CreateRequestDTO();            
 
@@ -234,7 +267,7 @@
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add("Reqeusted Successfully !", Severity.Normal, (options) =>
                 {
-                    options.CloseAfterNavigation = true;
+                    options.CloseAfterNavigation = false;
                 });
             }
             else
@@ -347,7 +380,7 @@
     // Use for PTO Request Reasons
     List<string> commonReasons = new List<string>
     {
-        "Vacation", "Personal Matters", "Sick Day", "Business Related",
+        "Vacation", "Personal Matters", "Business Related",
         "Death in Family", "Jury Duty / Witness", "Maternity / Paternity", "Other"
     };
 
@@ -360,5 +393,10 @@
     private List<vacDays> remainingDays = new List<vacDays>();
     //private List<vacDays> selectedDays = new List<vacDays>();
 
+    //When User chooses time off type, associated Values reset to default
+    private void OnTypeOptionChanged()
+    {
+        reasonValue = "";
+    }
 
 }

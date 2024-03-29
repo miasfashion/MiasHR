@@ -14,7 +14,24 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://api.miasfashion.com:8080/") });
+var baseAddress = builder.HostEnvironment.BaseAddress;
+Console.WriteLine($"Current Base Address : {baseAddress}");
+
+if (builder.HostEnvironment.Environment == "Production")
+{
+    if (builder.HostEnvironment.BaseAddress != "https://hr2.miasfashion.com/")
+    {
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://192.168.1.18:8080/") });
+    }
+    else
+    {
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://api.miasfashion.com:8080/") });
+    }
+}
+else
+{
+    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7211/") });
+}
 builder.Services.AddMudServices();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, MiasAuthStateProvider>();

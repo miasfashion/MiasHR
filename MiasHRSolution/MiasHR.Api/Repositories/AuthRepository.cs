@@ -280,5 +280,20 @@ namespace MiasHR.Api.Repositories
             }
         }
 
+        public async Task<string> GetUserName(string emplCode)
+        {
+            var name = await _miasHRDbContext.HrEmployees
+                .AsNoTrackingWithIdentityResolution()
+                .FirstOrDefaultAsync(x => x.EmplCode == emplCode && x.Status != 3);
+            if(name is null)
+            {
+                throw new Exception($"Generating Name Failed with ID {emplCode}");
+            }
+            else
+            {         
+                return name.FirstName + " " + name.LastName;
+            }
+        }
+
     }
 }

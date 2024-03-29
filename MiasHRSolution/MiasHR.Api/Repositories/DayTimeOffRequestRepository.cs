@@ -48,10 +48,6 @@ namespace MiasHR.Api.Repositories
                             )
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
-            if (results.Count == 0)
-            {
-                throw new Exception("No data found for the specified employee and year.");
-            }
 
             var DTOList = _mapper.Map<List<DayTimeOffRequestDTO>>(results);
 
@@ -219,10 +215,10 @@ namespace MiasHR.Api.Repositories
                 //Retrieve the output 
                 if (result.result_message == "Canceled Successfully !")
                 {
-                    var userEmail = await _authRepository.GetUserEmail(emplCode);
+                    var userName = await _authRepository.GetUserName(emplCode);
                     EmailDTO emailInfo = new EmailDTO
                     {
-                        Body = "eMHRS reqeust has been canceled by " + userEmail.com_email + ". <br>Please log into eMHRS to confirm.",
+                        Body = "eMHRS request has been Canceled by " + userName + ". <br>Please log into eMHRS to confirm.",
                         Subject = "eMHRS Request Canceled",
                         To = emplCode,
                         ApprovStep = "CANCEL"
