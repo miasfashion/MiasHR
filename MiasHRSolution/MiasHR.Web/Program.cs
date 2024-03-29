@@ -11,8 +11,9 @@ using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-var baseAddress = builder.HostEnvironment.BaseAddress;
-Console.WriteLine($"Current Base Address : {baseAddress}");
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
+
 
 if (builder.HostEnvironment.Environment == "Production")
 {
