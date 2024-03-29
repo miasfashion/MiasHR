@@ -17,6 +17,7 @@
         <MudPaper Class="pa-4" Elevation="0">
             <MudStack>
                 <MudText>Type: @Dto.req_type</MudText>
+                <MudText>Used Days: @Dto.days_cnt</MudText>
                 <MudStack Row="true">
                     <MudText>Start Date: @DateTime.ParseExact(Dto.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudText>
                     <MudDivider Vertical="true" />
