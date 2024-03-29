@@ -194,7 +194,7 @@
             decimal checkDay = 0;
             if (typeValue.Equals("Sick Day"))
             {
-                checkDay = (int)double.Parse(remainingDays[1].Days);
+                checkDay = decimal.Parse(remainingDays[1].Days);
                 if (checkDay - dayCnt < 0)
                 {
                     _processing = false;

@@ -217,7 +217,7 @@
             }
             else if (typeValue.Equals("Vacation"))
             {
-                checkDay = (int)double.Parse(remainingDays[0].Days);
+                checkDay = decimal.Parse(remainingDays[0].Days);
                 if (checkDay - dayCnt < 0)
                 {
                     _processing = false;
