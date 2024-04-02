@@ -30,8 +30,8 @@
             </ToolBarContent>
             <ColGroup>
                 <col />
-                <col style="width: 20%" />
                 <col />
+                <col style="width: 30%" />
                 <col />
                 <col />
                 <col />
@@ -52,7 +52,11 @@
             <RowTemplate>
                 <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="Name">@context.empl_name</MudTd>
-                <MudTd DataLabel="Type">@context.req_type</MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText>@context.req_sub_type</MudText>
+                    <hr />
+                <MudText Typo="Typo.caption">@context.req_content</MudText>
+                </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
@@ -62,6 +66,9 @@
                     <MudButton OnClick="@(() => Review(context))" Class="mud-theme-primary">Review</MudButton>
                 </MudTd>
             </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
             <NoRecordsContent>
                 <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
                     <MudText>No approvals yet</MudText>

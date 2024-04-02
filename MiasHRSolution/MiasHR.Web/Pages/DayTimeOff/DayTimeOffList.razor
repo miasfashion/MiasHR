@@ -42,7 +42,7 @@
             <ColGroup>
                 <col />
                 <col />
-                <col />
+                <col style="width: 45%" />
                 <col />
                 <col />
                 <col />
@@ -86,6 +86,11 @@
             <PagerContent>
                 <MudTablePager />
             </PagerContent>
+            <NoRecordsContent>
+                <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
+                    <MudText>No Time Off Requests</MudText>
+                </MudPaper>
+            </NoRecordsContent>
         </MudTable>
     </MudPaper>
 </MudContainer>
