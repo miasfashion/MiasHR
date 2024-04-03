@@ -64,24 +64,26 @@
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                    <MudTd DataLabel="Request Detail">
-                        <MudText >
-                            @context.ReqSubType
-                        </MudText>
-                        <hr />
+                <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
+                <MudTd DataLabel="Request Detail" Style="width:100px">
+                    <MudText>
+                        @context.ReqSubType
+                    </MudText>
+                    <hr />
+                    <div class="text-container" title="@context.ReqContent">
                         <MudText Typo="Typo.caption">
                             @context.ReqContent
                         </MudText>
-                    </MudTd>                  
-                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
-                    <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
-                    <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
-                    <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
-                    <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                    </div>
+                </MudTd>
+                <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
+                <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
+                <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
+                <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
@@ -94,6 +96,15 @@
         </MudTable>
     </MudPaper>
 </MudContainer>
+
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
 
 @code {
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;

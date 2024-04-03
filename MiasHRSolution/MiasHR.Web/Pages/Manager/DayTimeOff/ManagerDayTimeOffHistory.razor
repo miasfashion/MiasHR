@@ -55,7 +55,10 @@
                 <MudTd DataLabel="Type">
                     <MudText>@context.req_sub_type</MudText>
                     <hr />
-                    <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    <div class="text-container" title="@context.req_content">
+
+                        <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
@@ -75,7 +78,14 @@
     </MudPaper>
 </MudContainer>
 
-
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
 @code {
     private IReadOnlyList<DayTimeOffApprovalHistoryDTO> approvalHistory = new List<DayTimeOffApprovalHistoryDTO>();
 

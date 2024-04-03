@@ -12,7 +12,7 @@
 @inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" /> 
+<MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
     <MudPaper Class="d-flex px-8 justify-left align-items-center flex-grow-1" Elevation="0">
         <MudText Class="ml-4" Typo="Typo.h4">Day Time Off Requests</MudText>
@@ -55,7 +55,9 @@
                 <MudTd DataLabel="Type">
                     <MudText>@context.req_sub_type</MudText>
                     <hr />
-                <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    <div class="text-container" title="@context.req_content">
+                        <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
@@ -78,6 +80,14 @@
     </MudPaper>
 </MudContainer>
 
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
 @code {
     private bool dense = false;
     private bool hover = true;
@@ -90,12 +100,13 @@
         var parameters = new DialogParameters<ReviewRequestDialog>();
         parameters.Add(x => x.Dto, dto);
 
-        var options = new DialogOptions { 
-            MaxWidth = MudBlazor.MaxWidth.Small, 
-            FullWidth = true, 
-            DisableBackdropClick = true,
-            CloseButton = true
-        };
+        var options = new DialogOptions
+            {
+                MaxWidth = MudBlazor.MaxWidth.Small,
+                FullWidth = true,
+                DisableBackdropClick = true,
+                CloseButton = true
+            };
 
         var dialog = DialogService.Show<ReviewRequestDialog>("Review Time Off Request", parameters, options);
 
@@ -129,7 +140,7 @@
         if (activeIndex == 0)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/requests");
-        } 
+        }
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
@@ -148,9 +159,9 @@
 
     // handle table search by employee name and request type
     private string searchString1 = "";
-    
+
     private bool FilterFunc1(PendingDayTimeOffApprovalDTO request) => FilterFunc(request, searchString1);
-    
+
     private bool FilterFunc(PendingDayTimeOffApprovalDTO request, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
