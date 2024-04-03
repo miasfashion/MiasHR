@@ -28,7 +28,7 @@
         </MudButton>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists">
+        <MudTable T="DayTimeOffRequestDTO" Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists" OnRowMouseEnter="RowMouseEnterEvent">
             <ToolBarContent>
                 <MudSpacer />
                 <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
@@ -42,8 +42,7 @@
             <ColGroup>
                 <col />
                 <col />
-                <col />
-                <col />
+                <col style="width: 45%" />
                 <col />
                 <col />
                 <col />
@@ -54,7 +53,6 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
-                <MudTh>Type</MudTh>
                 <MudTh>Used Days</MudTh>
                 <MudTh>Request Detail</MudTh>
                 <MudTh>From</MudTh>
@@ -66,28 +64,52 @@
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                @if (@context.Status != 3 && context.Status != 0)
-                {
-                    <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="Type">@context.ReqType</MudTd>
-                    <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
-                    <MudTd DataLabel="Request Detail">@context.ReqSubType</MudTd>
-                    <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
-                    <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
-                    <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
-                    <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
-                    <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
-                    <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
-                }
+                <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="UsedDays">@context.DaysCnt</MudTd>
+                <MudTd DataLabel="Request Detail" Style="width:100px">
+                    <MudText>
+                        @context.ReqSubType
+                    </MudText>
+                    <hr />
+                    <div class="text-container" title="@context.ReqContent">
+                        <MudText Typo="Typo.caption">
+                            @context.ReqContent
+                        </MudText>
+                    </div>
+                </MudTd>
+                <MudTd DataLabel="From">@DateTime.ParseExact(@context.PeriodFrom, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="To">@DateTime.ParseExact(@context.PeriodTo, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="1st Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve1stYn)</MudTd>
+                <MudTd DataLabel="2nd Approved" Style="text-align:center">@RenderApprovalIcon(context.Approve2ndYn)</MudTd>
+                <MudTd DataLabel="Status" Style="text-align:center">@RenderStatusChip(context.Status, context.Approve1stYn, context.Approve2ndYn)</MudTd>
+                <MudTd Style="text-align:center">@RenderActionButton1(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
+                <MudTd Style="text-align:center">@RenderActionButton2(context.Status, context.Approve1stYn, context.Approve2ndYn, context.Seq)</MudTd>
             </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+            <NoRecordsContent>
+                <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
+                    <MudText>No Time Off Requests</MudText>
+                </MudPaper>
+            </NoRecordsContent>
         </MudTable>
     </MudPaper>
 </MudContainer>
 
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
+
 @code {
     private IReadOnlyList<DayTimeOffRequestDTO>? TimeOffLists;
     private string selectedYear = DateTime.Now.Year.ToString();
+    private string pto_reason;
 
     string? employee;
     List<string> years;
@@ -367,5 +389,23 @@
         {
             return null;
         }
+    }
+
+    private void RowMouseEnterEvent(TableRowHoverEventArgs<DayTimeOffRequestDTO> eventArgs)
+    {
+        if (eventArgs is null)
+        {
+            throw new ArgumentNullException(nameof(eventArgs));
+        }
+        pto_reason = eventArgs.Item.ReqContent;
+    }
+
+    private void RowMouseLeaveEvent(TableRowHoverEventArgs<DayTimeOffRequestDTO> eventArgs)
+    {
+        if (eventArgs is null)
+        {
+            throw new ArgumentNullException(nameof(eventArgs));
+        }
+        pto_reason = eventArgs.Item.ReqContent;
     }
 }
