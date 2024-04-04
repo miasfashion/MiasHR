@@ -70,7 +70,7 @@
             else
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(message, Severity.Normal, (options) =>
+                Snackbar.Add(message, Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
