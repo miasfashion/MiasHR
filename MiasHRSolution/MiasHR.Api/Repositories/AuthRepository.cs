@@ -155,7 +155,7 @@ namespace MiasHR.Api.Repositories
             {
                 EmplCode = employee.EmplCode,
                 Status = 1,
-                Username = username,
+                Username = username.ToLower(),
                 PasswordHash = passwordHash,
                 CreatedDate = DateTime.Now,
                 CreatedUser = logName,
