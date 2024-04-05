@@ -14,6 +14,17 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
 
+<style>
+    .mud-table-cell-custom-group {
+        font-weight: 500;
+    }
+
+    .mud-table-cell-custom-group-footer {
+        padding-bottom: 50px;
+        text-align: right;
+    }
+</style>
+
 <PageTitle>Day Time Off Information</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
@@ -51,11 +62,23 @@
                         </TelerikChart>
                     </MudPaper>
                 </MudPaper>
-                <MudTable Items="@vacData" Elevation="0">
+                <MudTable Items="@vacTable" 
+                          GroupBy="@_groupDefinition"
+                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                          GroupFooterClass="mb-4" 
+                          Dense="true"
+                          Elevation="0">
+                    <ColGroup>
+                        <col />
+                        <col />
+                    </ColGroup>
                     <HeaderContent>
                         <MudTh Style="font-size:large;">Type</MudTh>
                         <MudTh Style="font-size:large;">Days</MudTh>
                     </HeaderContent>
+                    <GroupHeaderTemplate>
+                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                    </GroupHeaderTemplate>
                     <RowTemplate>
                         <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
                         <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
@@ -88,11 +111,23 @@
                         </TelerikChart>
                     </MudPaper>
                 </MudPaper>
-                <MudTable Items="@sickData" Elevation="0">
+                <MudTable Items="@sickTable" 
+                          GroupBy="@_groupDefinition"
+                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                          GroupFooterClass="mb-4" 
+                          Dense="true"
+                          Elevation="0">
+                    <ColGroup>
+                        <col />
+                        <col />
+                    </ColGroup>
                     <HeaderContent>
                         <MudTh Style="font-size:large;">Type</MudTh>
                         <MudTh Style="font-size:large;">Days</MudTh>
                     </HeaderContent>
+                    <GroupHeaderTemplate>
+                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                    </GroupHeaderTemplate>
                     <RowTemplate>
                         <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
                         <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
@@ -117,35 +152,75 @@
         public string? Category { get; set; }
         public double Value { get; set; }
         public string? Color { get; set; }
+        public string? Group { get; set; }
         public bool ShouldShowInLegend { get; set; } = true;
     }
+
+    private TableGroupDefinition<ModelData> _groupDefinition = new()
+    {
+        GroupName = "Group",
+        Indentation = false,
+        Expandable = false,
+        Selector = (e) => e.Group
+    };
 
     // default values for vacation data
     private List<ModelData> vacData = new List<ModelData>
     {
         new ModelData
         {
+            Group = " ",
             Category = "Used",
             Value = 0,
             Color = "#616161"
         },
         new ModelData
         {
+            Group = " ",
             Category = "Available",
             Value = 0,
             Color = "#1DE9B6"
         },
         new ModelData
         {
-            Category = "Not Accrued",
+            Group = " ",
+            Category = "Available Later",
             Value = 0,
             Color = "#B0BEC5"
+        }
+    };
+
+    private List<ModelData> vacTable = new List<ModelData>
+    {
+        new ModelData
+        {
+            Group = " ",
+            Category = "Carried Over",
+            Value = 0
         },
         new ModelData
         {
+            Group = " ",
+            Category = "Accrued",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = " ",
             Category = "Adjusted",
-            Value = 0,
-            Color = "#FF9100"
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Used",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = "Total",
+            Category = "Available",
+            Value = 0
         }
     };
 
@@ -160,6 +235,29 @@
         },
         new ModelData
         {
+            Category = "Available",
+            Value = 0,
+            Color = "#1DE9B6"
+        }
+    };
+
+    private List<ModelData> sickTable = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Sick Days",
+            Value = 5,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Used",
+            Value = 0,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Group = "Total",
             Category = "Available",
             Value = 0,
             Color = "#1DE9B6"
@@ -182,10 +280,19 @@
             vacData[0].Value = (double)dto.s_used_days;
             vacData[1].Value = (double)dto.s_available_curr_days;
             vacData[2].Value = (double)dto.s_year_basic_days - (double)dto.s_curr_basic_days;
-            vacData[3].Value = (double)dto.s_adjust_days;
+
+            vacTable[0].Value = (double)dto.s_carry_over_days;
+            vacTable[1].Value = (double)dto.s_curr_basic_days;
+            vacTable[2].Value = (double)dto.s_adjust_days;
+            vacTable[3].Value = (double)dto.s_used_days;
+            vacTable[4].Value = (double)dto.s_available_curr_days;
 
             sickData[0].Value = (double)dto.s_used_sick_days;
             sickData[1].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
+
+            sickTable[0].Value = (double)5;
+            sickTable[1].Value = (double)dto.s_used_sick_days;
+            sickTable[2].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
         }
         catch (Exception ex)
         {
