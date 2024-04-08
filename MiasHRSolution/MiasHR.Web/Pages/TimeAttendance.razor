@@ -1,6 +1,19 @@
-﻿@* @page "/timeattendance" *@
+﻿@page "/timeattendance" 
 
 @attribute [Authorize]
+
+@using MiasHR.Models.DTOs
+@using Microsoft.AspNetCore.Components
+@using MiasHR.Web.Services.Contracts
+@using System.Text.RegularExpressions
+@using System.Globalization
+@inject IJSRuntime JSRuntime
+
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ITimeAttendanceService TimeAttendanceService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
 
 <PageTitle>Time & Attendance</PageTitle>
 <MudBreadcrumbs Items="_breadcrumbs" />
@@ -16,23 +29,25 @@
             </MudPaper>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@summary">
+            <MudTable Items="@TimeList">
                 <HeaderContent>
+                    <MudTh>Name</MudTh>
                     <MudTh>Level One Count</MudTh>
                     <MudTh>Level One Minute</MudTh>
                     <MudTh>Level Two Count</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Type">@context.LevelOneCount</MudTd>
-                    <MudTd DataLabel="Days">@context.LevelOneMins</MudTd>
-                    <MudTd DataLabel="Days">@context.LevelTwoCount</MudTd>
+                    <MudTd DataLabel="Name">@context.empl_name</MudTd>
+                    <MudTd DataLabel="level1">@context.level_1_cnt</MudTd>
+                    <MudTd DataLabel="level1_min">@context.level_1_minutesum</MudTd>
+                    <MudTd DataLabel="level2">@context.level_2_cnt</MudTd>
                 </RowTemplate>
             </MudTable>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@timeAttendanceHistory">
+            <MudTable Items="@TimeHistory" AllowUnsorted="false">
                 <HeaderContent>
-                    <MudTh>Date</MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
                     <MudTh>In Out</MudTh>
                     <MudTh>Time</MudTh>
                     <MudTh>Level</MudTh>
@@ -40,63 +55,60 @@
                     <MudTh>Reason</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd DataLabel="Type">@context.Date</MudTd>
-                    <MudTd DataLabel="Days">@context.InOut</MudTd>
-                    <MudTd DataLabel="Days">@context.Time</MudTd>
-                    <MudTd DataLabel="Days">@context.Level</MudTd>
-                    <MudTd DataLabel="Days">@context.DaySchedule</MudTd>
-                    <MudTd DataLabel="Days">@context.Reason</MudTd>
+                    <MudTd DataLabel="Date">@context.date</MudTd>
+                    <MudTd DataLabel="Inout">@context.inout</MudTd>
+                    <MudTd DataLabel="StartTime">@context.work_start_time</MudTd>
+                    <MudTd DataLabel="Latelvl">@context.late_level</MudTd>
+                    <MudTd DataLabel="Update">@context.update_type</MudTd>
+                    <MudTd DataLabel="Reason">@context.reason_desc</MudTd>
                 </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+                <NoRecordsContent>
+                    <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
+                        <MudText>No Time & Attendance Record</MudText>
+                    </MudPaper>
+                </NoRecordsContent>
             </MudTable>
         </MudPaper>
     </MudContainer>
 </MudContainer>
 
 @code {
-    public class TimeAttendanceRecord
+    private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory;
+    private List<EmployeeTimeListDTO> TimeList;
+    private TimeAttendanceDTO employeeInfo = new TimeAttendanceDTO();
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
     {
-        public DateOnly Date { get; set; }
-        public string InOut { get; set; }
-        public TimeOnly Time { get; set; }
-        public int Level { get; set; }
-        public string? DaySchedule { get; set; }
-        public string? Reason { get; set; }
-    }
-
-    public class TimeAttendanceSummary
-    {
-        public string Name { get; set; }
-        public int LevelOneCount { get; set; }
-        public int LevelOneMins { get; set; }
-        public int LevelTwoCount { get; set; }
-    }
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Time Attendance", href: null, disabled: true)
+    };
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        summarizeTimeAttendance();
+        //summarizeTimeAttendance();
     }
 
-    private DateRange _dateRange = new DateRange(DateTime.Now.AddDays(-7).Date, DateTime.Now.Date);
+    private DateRange _dateRange = new DateRange(DateTime.Now.AddDays(-7).Date, DateTime.Now.Date);    
 
-    private List<TimeAttendanceRecord> timeAttendanceHistory = new List<TimeAttendanceRecord>
+    private async Task submit()
     {
-        new TimeAttendanceRecord { Date=new DateOnly(2023,11,30), InOut="In", Time=new TimeOnly(8,5), Level=1, DaySchedule="", Reason=""},
-        new TimeAttendanceRecord { Date=new DateOnly(2023,11,30), InOut="Out", Time=new TimeOnly(17,0), Level=0, DaySchedule="", Reason=""},
-        new TimeAttendanceRecord { Date=new DateOnly(2023,12,01), InOut="In", Time=new TimeOnly(8,6), Level=1, DaySchedule="", Reason=""}
-    };
+        employeeInfo.EmplCode = await AuthService.GetUserEmplCode();
+        employeeInfo.DateFrom = _dateRange.Start.Value;
+        employeeInfo.DateTo = _dateRange.End.Value;
 
-    private List<TimeAttendanceSummary> summary = new List<TimeAttendanceSummary>
-    {
-        new TimeAttendanceSummary() 
-    };
+        //await Task.Delay(2000);
+        TimeList = new List<EmployeeTimeListDTO>();
 
-    async Task submit()
-    {
-        await Task.Delay(2000);
-        @*Do something*@
+        TimeList.Add(await TimeAttendanceService.GetEmployeeTimeList(employeeInfo));
+        
+        TimeHistory = await TimeAttendanceService.GetHrEmployeeTimeHistory(employeeInfo);
     }
 
+    /*
     public void summarizeTimeAttendance()
     {
         int levelOneCount = 0;
@@ -121,11 +133,5 @@
         summary[0].LevelOneMins = levelOneMins;
         summary[0].LevelTwoCount = levelTwoCount;
     }
-
-    // Breadcrumbs
-    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
-    {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Time Attendance", href: null, disabled: true)
-    };
-}
+    */
+   }
