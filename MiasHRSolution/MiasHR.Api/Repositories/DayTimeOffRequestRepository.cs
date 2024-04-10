@@ -43,6 +43,7 @@ namespace MiasHR.Api.Repositories
                 .Where(r => r.EmplCode == emplCode
                             && r.ReqType != "CHANGE"
                             && r.Status != 3
+                            && r.Status != 0
                             && (Convert.ToInt32(r.PeriodTo.Substring(0, 4)) == targetYear
                             || Convert.ToInt32(r.PeriodFrom.Substring(0, 4)) == targetYear)
                             )

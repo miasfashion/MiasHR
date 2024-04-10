@@ -2,8 +2,6 @@
 
 @attribute [Authorize(Roles = "Manager")]
 
-@using MiasHR.Models.DTOs;
-@using MiasHR.Web.Services.Contracts;
 @using System.Globalization
 
 @inject NavigationManager NavigationManager
@@ -18,7 +16,7 @@
         <MudPaper Elevation="0" Style="width: 200px; height: 60px;"></MudPaper>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable AllowUnsorted="false" Filter="new Func<DayTimeOffApprovalHistoryDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@approvalHistory">
+        <MudTable Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffApprovalHistoryDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@approvalHistory">
             <ToolBarContent>
                 <MudSpacer />
                 <MudSpacer />
@@ -52,13 +50,23 @@
             <RowTemplate>
                 <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="Name">@context.empl_name</MudTd>
-                <MudTd DataLabel="Type">@context.req_sub_type</MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText>@context.req_sub_type</MudText>
+                    <hr />
+                    <div class="text-container" title="@context.req_content">
+
+                        <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    </div>
+                </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="FirstApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_1st_yn)</MudTd>
                 <MudTd DataLabel="SecondApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_2nd_yn)</MudTd>
             </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
             <NoRecordsContent>
                 <MudPaper Height="100px" Elevation="0">
                     <MudText>No approvals yet</MudText>
@@ -68,7 +76,14 @@
     </MudPaper>
 </MudContainer>
 
-
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
 @code {
     private IReadOnlyList<DayTimeOffApprovalHistoryDTO> approvalHistory = new List<DayTimeOffApprovalHistoryDTO>();
 
@@ -100,7 +115,7 @@
 
         if (managerEmplCode != null)
         {
-           approvalHistory = await DayTimeOffRequestService.GetHrDayTimeOffApprovalHistory(managerEmplCode);
+            approvalHistory = await DayTimeOffRequestService.GetHrDayTimeOffApprovalHistory(managerEmplCode);
         }
     }
 

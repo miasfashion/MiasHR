@@ -2,8 +2,6 @@
 
 @attribute [Authorize(Roles = "Manager")]
 
-@using MiasHR.Models.DTOs;
-@using MiasHR.Web.Services.Contracts;
 @using System.Globalization
 
 @inject NavigationManager NavigationManager
@@ -12,14 +10,14 @@
 @inject IDialogService DialogService
 
 <PageTitle>Manage Day Time Off Requests</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbs" /> 
+<MudBreadcrumbs Items="_breadcrumbs" />
 <MudContainer Class="d-block">
     <MudPaper Class="d-flex px-8 justify-left align-items-center flex-grow-1" Elevation="0">
         <MudText Class="ml-4" Typo="Typo.h4">Day Time Off Requests</MudText>
         <MudPaper Elevation="0" Style="width: 200px; height: 60px;"></MudPaper>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable AllowUnsorted="false" Filter="new Func<PendingDayTimeOffApprovalDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@pendingRequests" @ref="requestTable">
+        <MudTable Hover="true" AllowUnsorted="false" Filter="new Func<PendingDayTimeOffApprovalDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@pendingRequests" @ref="requestTable">
             <ToolBarContent>
                 <MudSpacer />
                 <MudSpacer />
@@ -30,8 +28,8 @@
             </ToolBarContent>
             <ColGroup>
                 <col />
-                <col style="width: 20%" />
                 <col />
+                <col style="width: 30%" />
                 <col />
                 <col />
                 <col />
@@ -52,7 +50,13 @@
             <RowTemplate>
                 <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="Name">@context.empl_name</MudTd>
-                <MudTd DataLabel="Type">@context.req_type</MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText>@context.req_sub_type</MudText>
+                    <hr />
+                    <div class="text-container" title="@context.req_content">
+                        <MudText Typo="Typo.caption">@context.req_content</MudText>
+                    </div>
+                </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
@@ -62,6 +66,9 @@
                     <MudButton OnClick="@(() => Review(context))" Class="mud-theme-primary">Review</MudButton>
                 </MudTd>
             </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
             <NoRecordsContent>
                 <MudPaper Elevation="0" Class="d-flex justify-center" Width="100%" Height="100%">
                     <MudText>No approvals yet</MudText>
@@ -71,6 +78,14 @@
     </MudPaper>
 </MudContainer>
 
+<style>
+    .text-container {
+        max-width: 300px; /* Set maximum width to limit text length */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Display ellipsis (...) for overflow text */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+</style>
 @code {
     private bool dense = false;
     private bool hover = true;
@@ -83,12 +98,13 @@
         var parameters = new DialogParameters<ReviewRequestDialog>();
         parameters.Add(x => x.Dto, dto);
 
-        var options = new DialogOptions { 
-            MaxWidth = MudBlazor.MaxWidth.Small, 
-            FullWidth = true, 
-            DisableBackdropClick = true,
-            CloseButton = true
-        };
+        var options = new DialogOptions
+            {
+                MaxWidth = MudBlazor.MaxWidth.Small,
+                FullWidth = true,
+                DisableBackdropClick = true,
+                CloseButton = true
+            };
 
         var dialog = DialogService.Show<ReviewRequestDialog>("Review Time Off Request", parameters, options);
 
@@ -122,7 +138,7 @@
         if (activeIndex == 0)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/requests");
-        } 
+        }
         else if (activeIndex == 1)
         {
             NavigationManager.NavigateTo("/manager/daytimeoff/history");
@@ -141,9 +157,9 @@
 
     // handle table search by employee name and request type
     private string searchString1 = "";
-    
+
     private bool FilterFunc1(PendingDayTimeOffApprovalDTO request) => FilterFunc(request, searchString1);
-    
+
     private bool FilterFunc(PendingDayTimeOffApprovalDTO request, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))

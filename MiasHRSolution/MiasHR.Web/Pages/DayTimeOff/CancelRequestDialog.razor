@@ -1,9 +1,6 @@
 ﻿@attribute [Authorize]
 
-@using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-@using MiasHR.Web.Services.Contracts
-@using MiasHR.Models.DTOs
 @using System.Globalization
 
 @inject IDayTimeOffRequestService DayTimeOffRequestService
@@ -70,7 +67,7 @@
             else
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(message, Severity.Normal, (options) =>
+                Snackbar.Add(message, Severity.Warning, (options) =>
                 {
                     options.CloseAfterNavigation = true;
                 });
