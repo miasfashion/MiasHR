@@ -1,5 +1,4 @@
-﻿@using MiasHR.Models.DTOs;
-@using MiasHR.Web.Services.Contracts;
+﻿@attribute [Authorize(Roles = "Manager")]
 
 @inject IDayTimeOffRequestService DayTimeOffRequestService
 @inject IAuthService AuthService
