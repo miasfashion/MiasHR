@@ -14,25 +14,31 @@
         <MudText Class="ml-4" Typo="Typo.h4">Time & Attendance</MudText>
     </MudContainer>
     <MudContainer Class="d-flex flex-column">
-        <MudPaper Class="pa-4" Elevation="0">
-            <MudSelect T="ManagerEmployeeListDTO" MultiSelection="true" SelectAll="true" SelectAllText="Select All Employees" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
-                       Class="ma-2 mb-4" @bind-Value="@employee" @bind-SelectedValues="@selectedEmployees" Label="Managing Employees"
-                       AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="HandleInquiry" AnchorOrigin="Origin.BottomCenter">
-                @foreach (var empl in employees)
-                {
-                    <MudSelectItem Value="@empl">@empl.last_name, @empl.first_name @empl.empl_name</MudSelectItem>
-                }
-            </MudSelect>
+        <MudPaper Class="d-flex pa-4" Elevation="0">
             <MudPaper Class="d-inline-flex mx-4 mb-4 pa-4">
-                <MudDateRangePicker Class="ma-2" Label="Date Range" @bind-DateRange="_dateRange" />
+                <MudStack Class="mx-2 mb-2">
+                    <MudSelect T="ManagerEmployeeListDTO" MultiSelection="true" SelectAll="true" SelectAllText="Select All Employees" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
+                               @bind-Value="@employee" @bind-SelectedValues="@selectedEmployees" Label="Managing Employees"
+                               AdornmentIcon="@Icons.Material.Filled.Search" AnchorOrigin="Origin.BottomCenter">
+                        @foreach (var empl in employees)
+                        {
+                            <MudSelectItem Value="@empl">@empl.last_name, @empl.first_name @empl.empl_name</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudDateRangePicker Label="Date Range" @bind-DateRange="_dateRange" />
+                </MudStack>
                 <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Disabled="@isProcessing" Color="Color.Primary">
                     @if (isProcessing)
                     {
-                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Medium" />
-                    }Search
+                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" />
+                    }
+                    else
+                    {
+                        <MudText>Search</MudText>
+                    }
                 </MudButton>
             </MudPaper>
-            <MudPaper Class="d-inline-block mx-16 mt-4 " Elevation="0">
+            <MudPaper Class="d-flex justify-center flex-grow-1" Elevation="0">
                 <img class="cover align-items-end" src="@imgProfile" height="140" width="120" />
             </MudPaper>
         </MudPaper>
