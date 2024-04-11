@@ -72,8 +72,8 @@
 </MudContainer>
 
 @code {
-    private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory;
-    private List<EmployeeTimeListDTO> TimeList;
+    private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory = new List<EmployeeTimeHistoryDTO>();
+    private List<EmployeeTimeListDTO> TimeList = new List<EmployeeTimeListDTO>();
     private TimeAttendanceDTO employeeInfo = new TimeAttendanceDTO();
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
