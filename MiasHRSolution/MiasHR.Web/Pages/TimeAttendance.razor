@@ -43,7 +43,7 @@
         <MudPaper Class="mx-4 pa-4" Elevation="0">
             <MudTable Items="@TimeHistory" AllowUnsorted="false">
                 <HeaderContent>
-                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
                     <MudTh>In Out</MudTh>
                     <MudTh>Time</MudTh>
                     <MudTh>Level</MudTh>
