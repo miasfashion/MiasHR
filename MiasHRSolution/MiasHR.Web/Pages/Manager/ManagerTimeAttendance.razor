@@ -27,7 +27,7 @@
                     </MudSelect>
                     <MudDateRangePicker Label="Date Range" @bind-DateRange="_dateRange" />
                 </MudStack>
-                <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Disabled="@isProcessing" Color="Color.Primary">
+                <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Disabled="@isProcessing" Color="Color.Primary" Style="width:100px">
                     @if (isProcessing)
                     {
                         <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" />

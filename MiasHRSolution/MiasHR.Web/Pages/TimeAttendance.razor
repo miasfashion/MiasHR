@@ -21,7 +21,16 @@
         <MudPaper Class="pa-4" Elevation="0">
             <MudPaper Class="d-inline-flex mx-4 mb-4 pa-4">
                 <MudDateRangePicker Class="ma-2" Label="Date Range" @bind-DateRange="_dateRange" />
-                <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
+                <MudButton Class="ma-2" OnClick="submit" Disabled="@isProcessing" Variant="Variant.Filled" Color="Color.Primary" Style="width:80px">
+                    @if (isProcessing)
+                    {
+                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" />
+                    }
+                    else
+                    {
+                        <MudText>Search</MudText>
+                    }
+                </MudButton>
             </MudPaper>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
@@ -72,6 +81,7 @@
 </MudContainer>
 
 @code {
+    private bool isProcessing = false;
     private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory = new List<EmployeeTimeHistoryDTO>();
     private List<EmployeeTimeListDTO> TimeList = new List<EmployeeTimeListDTO>();
     private TimeAttendanceDTO employeeInfo = new TimeAttendanceDTO();
@@ -92,6 +102,7 @@
 
     private async Task submit()
     {
+        isProcessing = true;
         employeeInfo.EmplCode = await AuthService.GetUserEmplCode();
         employeeInfo.DateFrom = _dateRange.Start.Value;
         employeeInfo.DateTo = _dateRange.End.Value;
@@ -100,8 +111,10 @@
         TimeList = new List<EmployeeTimeListDTO>();
 
         TimeList.Add(await TimeAttendanceService.GetEmployeeTimeList(employeeInfo));
-        
+
         TimeHistory = await TimeAttendanceService.GetHrEmployeeTimeHistory(employeeInfo);
+        
+        isProcessing = false;
     }
 
     /*
