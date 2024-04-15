@@ -23,17 +23,8 @@
         </MudButton>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable T="DayTimeOffRequestDTO" Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists" OnRowMouseEnter="RowMouseEnterEvent">
-            <ToolBarContent>
-                <MudSpacer />
-                <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput>
-                    @foreach (var yr in years)
-                    {
-                        <MudSelectItem Value="@yr">@yr</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudTextField Class="mt-0 mx-4" @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
-            </ToolBarContent>
+        <MudTable T="DayTimeOffRequestDTO" Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)"
+                  Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists" OnRowMouseEnter="RowMouseEnterEvent" HeaderClass="custom-table-header" CustomHeader="true">
             <ColGroup>
                 <col />
                 <col />
@@ -47,16 +38,33 @@
                 <col />
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
-                <MudTh>Used Days</MudTh>
-                <MudTh>Request Detail</MudTh>
-                <MudTh>From</MudTh>
-                <MudTh>To</MudTh>
-                <MudTh Style="text-align:center">1st Approved</MudTh>
-                <MudTh Style="text-align:center">2nd Approved</MudTh>
-                <MudTh Style="text-align:center">Status</MudTh>
-                <MudTh></MudTh>
-                <MudTh></MudTh>
+                <MudTHeadRow>
+                    <MudTh colspan="4"></MudTh>
+                    <MudTh colspan="5">
+                        <MudToolBar DisableGutters="true">
+                            <MudSelect Class="mt-0 mx-4" T="string" @bind-Value="@selectedYear" @bind-Value:after=@HandleYearInput Style="custom-table-header">
+                                @foreach (var yr in years)
+                                {
+                                    <MudSelectItem Value="@yr">@yr</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudTextField Class="mt-0 mx-4" @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                        </MudToolBar>
+                    </MudTh>
+                    <MudTh></MudTh>
+                </MudTHeadRow>
+                <MudTHeadRow>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
+                    <MudTh>Used Days</MudTh>
+                    <MudTh>Request Detail</MudTh>
+                    <MudTh>From</MudTh>
+                    <MudTh>To</MudTh>
+                    <MudTh Style="text-align:center">1st Approved</MudTh>
+                    <MudTh Style="text-align:center">2nd Approved</MudTh>
+                    <MudTh Style="text-align:center">Status</MudTh>
+                    <MudTh></MudTh>
+                    <MudTh></MudTh>
+                </MudTHeadRow>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Date">@DateTime.ParseExact(@context.ReqDate, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
@@ -126,15 +134,9 @@
         try
         {
             base.OnInitialized();
-            int currentYear = DateTime.Now.Year;
-            years = new List<string>();
-            for (int y = 2020; y <= currentYear; y++)
-            {
-                years.Add(y.ToString());
-            }
+            years = InitYearList();
             employee = await AuthService.GetUserEmplCode();
             TimeOffLists = await DayTimeOffRequestService.GetAllEmployeeDayTimeOffRequestList(employee, selectedYear);
-
 
             //Instead of refreshing whole page, just render values again
             StateHasChanged();
@@ -186,6 +188,22 @@
                 options.CloseAfterNavigation = true;
             });
         }
+    }
+
+    /// <summary>
+    /// Initializes year list for table toolbar
+    /// </summary>
+    private List<string> InitYearList()
+    {
+        List<string> list = new List<string>();
+        int currentYear = DateTime.Now.Year;
+
+        for (int y = currentYear; y >= 2020; y--)
+        {
+            list.Add(y.ToString());
+        }
+
+        return list;
     }
 
     /// <summary>

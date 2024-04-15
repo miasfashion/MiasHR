@@ -43,7 +43,7 @@
             </MudPaper>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@TimeList">
+            <MudTable Items="@TimeList" HeaderClass="custom-table-header">
                 <HeaderContent>
                     <MudTh>Name</MudTh>
                     <MudTh>Level One Count</MudTh>
@@ -59,7 +59,7 @@
             </MudTable>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@TimeHistory" AllowUnsorted="false">
+            <MudTable Items="@TimeHistory" AllowUnsorted="false" HeaderClass="custom-table-header">
                 <HeaderContent>
                     <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
                     <MudTh>In Out</MudTh>
