@@ -24,7 +24,7 @@
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
         <MudTable T="DayTimeOffRequestDTO" Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffRequestDTO,bool>(FilterFunc1)"
-                  Class="m-4 flex-grow-1 gap-4" Items="@TimeOffLists" OnRowMouseEnter="RowMouseEnterEvent" HeaderClass="custom-table-header" CustomHeader="true">
+                  Class="m-2 flex-grow-1 gap-4" Items="@TimeOffLists" OnRowMouseEnter="RowMouseEnterEvent" HeaderClass="custom-table-header" CustomHeader="true">
             <ColGroup>
                 <col />
                 <col />
@@ -54,11 +54,15 @@
                     <MudTh></MudTh>
                 </MudTHeadRow>
                 <MudTHeadRow>
-                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">Requested Date</MudTableSortLabel></MudTh>
-                    <MudTh>Used Days</MudTh>
-                    <MudTh>Request Detail</MudTh>
-                    <MudTh>From</MudTh>
-                    <MudTh>To</MudTh>
+                    <MudTh Style="text-align:center">
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffRequestDTO, object>(x=>x.ReqDate)">
+                            Requested Date
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="text-align:center">Used Days</MudTh>
+                    <MudTh Style="text-align:center">Request Detail</MudTh>
+                    <MudTh Style="text-align:center">From</MudTh>
+                    <MudTh Style="text-align:center">To</MudTh>
                     <MudTh Style="text-align:center">1st Approved</MudTh>
                     <MudTh Style="text-align:center">2nd Approved</MudTh>
                     <MudTh Style="text-align:center">Status</MudTh>

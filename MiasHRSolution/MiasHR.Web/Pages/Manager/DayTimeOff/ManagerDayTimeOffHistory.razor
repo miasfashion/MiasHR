@@ -16,15 +16,8 @@
         <MudPaper Elevation="0" Style="width: 200px; height: 60px;"></MudPaper>
     </MudPaper>
     <MudPaper Class="d-block" Elevation="0">
-        <MudTable Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffApprovalHistoryDTO,bool>(FilterFunc1)" Class="m-4 flex-grow-1 gap-4" Items="@approvalHistory" HeaderClass="custom-table-header">
-            <ToolBarContent>
-                <MudSpacer />
-                <MudSpacer />
-                <MudSpacer />
-                <MudSpacer />
-                <MudSpacer />
-                <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-            </ToolBarContent>
+        <MudTable Hover="true" AllowUnsorted="false" Filter="new Func<DayTimeOffApprovalHistoryDTO,bool>(FilterFunc1)" 
+            Class="m-4 flex-grow-1 gap-4" Items="@approvalHistory" HeaderClass="custom-table-header" CustomHeader="true">
             <ColGroup>
                 <col />
                 <col />
@@ -36,16 +29,30 @@
                 <col />
             </ColGroup>
             <HeaderContent>
-                <MudTh>
-                    <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffApprovalHistoryDTO, object>(x=>x.req_date)">Request Date</MudTableSortLabel>
-                </MudTh>
-                <MudTh>Name</MudTh>
-                <MudTh>Type</MudTh>
-                <MudTh>Used Days</MudTh>
-                <MudTh>From</MudTh>
-                <MudTh>To</MudTh>
-                <MudTh Style="text-align:center">First Approval</MudTh>
-                <MudTh Style="text-align:center">Second Approval</MudTh>
+                <MudTHeadRow>
+                    <MudTh colspan="5"></MudTh>
+                    <MudTh colspan="3">
+                        <MudToolBar DisableGutters="true">
+                            <MudTextField @bind-Value="searchString1" Placeholder="Search by name or request type" Adornment="Adornment.Start" 
+                                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+                            </MudTextField>
+                        </MudToolBar>
+                    </MudTh>
+                </MudTHeadRow>
+                <MudTHeadRow>
+                    <MudTh Style="text-align:center">
+                        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<DayTimeOffApprovalHistoryDTO, object>(x=>x.req_date)">
+                            Request Date
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="text-align:center">Name</MudTh>
+                    <MudTh Style="text-align:center">Type</MudTh>
+                    <MudTh Style="text-align:center">Used Days</MudTh>
+                    <MudTh Style="text-align:center">From</MudTh>
+                    <MudTh Style="text-align:center">To</MudTh>
+                    <MudTh Style="text-align:center">First Approval</MudTh>
+                    <MudTh Style="text-align:center">Second Approval</MudTh>
+                </MudTHeadRow>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="ReqDate">@DateTime.ParseExact(@context.req_date, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
