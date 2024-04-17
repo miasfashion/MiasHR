@@ -21,11 +21,20 @@
         <MudPaper Class="pa-4" Elevation="0">
             <MudPaper Class="d-inline-flex mx-4 mb-4 pa-4">
                 <MudDateRangePicker Class="ma-2" Label="Date Range" @bind-DateRange="_dateRange" />
-                <MudButton Class="ma-2" OnClick="submit" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
+                <MudButton Class="ma-2" OnClick="submit" Disabled="@isProcessing" Variant="Variant.Filled" Color="Color.Primary" Style="width:80px">
+                    @if (isProcessing)
+                    {
+                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" />
+                    }
+                    else
+                    {
+                        <MudText>Search</MudText>
+                    }
+                </MudButton>
             </MudPaper>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@TimeList">
+            <MudTable Items="@TimeList" HeaderClass="custom-table-header">
                 <HeaderContent>
                     <MudTh>Name</MudTh>
                     <MudTh>Level One Count</MudTh>
@@ -41,9 +50,9 @@
             </MudTable>
         </MudPaper>
         <MudPaper Class="mx-4 pa-4" Elevation="0">
-            <MudTable Items="@TimeHistory" AllowUnsorted="false">
+            <MudTable Items="@TimeHistory" AllowUnsorted="false" HeaderClass="custom-table-header">
                 <HeaderContent>
-                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<EmployeeTimeHistoryDTO, object>(x=>x.date)">Date</MudTableSortLabel></MudTh>
                     <MudTh>In Out</MudTh>
                     <MudTh>Time</MudTh>
                     <MudTh>Level</MudTh>
@@ -72,8 +81,9 @@
 </MudContainer>
 
 @code {
-    private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory;
-    private List<EmployeeTimeListDTO> TimeList;
+    private bool isProcessing = false;
+    private IReadOnlyList<EmployeeTimeHistoryDTO> TimeHistory = new List<EmployeeTimeHistoryDTO>();
+    private List<EmployeeTimeListDTO> TimeList = new List<EmployeeTimeListDTO>();
     private TimeAttendanceDTO employeeInfo = new TimeAttendanceDTO();
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -92,6 +102,7 @@
 
     private async Task submit()
     {
+        isProcessing = true;
         employeeInfo.EmplCode = await AuthService.GetUserEmplCode();
         employeeInfo.DateFrom = _dateRange.Start.Value;
         employeeInfo.DateTo = _dateRange.End.Value;
@@ -100,8 +111,10 @@
         TimeList = new List<EmployeeTimeListDTO>();
 
         TimeList.Add(await TimeAttendanceService.GetEmployeeTimeList(employeeInfo));
-        
+
         TimeHistory = await TimeAttendanceService.GetHrEmployeeTimeHistory(employeeInfo);
+        
+        isProcessing = false;
     }
 
     /*

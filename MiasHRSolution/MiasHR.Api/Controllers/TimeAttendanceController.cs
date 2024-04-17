@@ -2,6 +2,7 @@
 using MiasHR.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Common;
 
 namespace MiasHR.Api.Controllers
 {
@@ -34,10 +35,13 @@ namespace MiasHR.Api.Controllers
 
                 return hrEmployeeTimeHistory is null ? NotFound() : Ok(hrEmployeeTimeHistory);
             }
-            catch (Exception)
+            catch (DbException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                                       "Error retrieving data from database");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -59,10 +63,14 @@ namespace MiasHR.Api.Controllers
 
                 return hrEmployeeTimeList is null ? NotFound() : Ok(hrEmployeeTimeList);
             }
+            catch (DbException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database error occurred");
+            }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                                                          "Error retrieving data from database");
+                                                     "Error retrieving data from database");
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using MiasHR.Models.DTOs;
 using MiasHR.Web.Services.Contracts;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace MiasHR.Web.Services
@@ -25,9 +26,9 @@ namespace MiasHR.Web.Services
 
                 response.EnsureSuccessStatusCode();
 
-                var data = await response.Content.ReadAsStringAsync();
+                var data = await response.Content.ReadFromJsonAsync<IReadOnlyList<ManagerEmployeeListDTO>>();
 
-                return new List<ManagerEmployeeListDTO> { };
+                return data?.ToList() ?? new List<ManagerEmployeeListDTO>();
             }
             catch (HttpRequestException ex)
             {
