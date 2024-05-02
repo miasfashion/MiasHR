@@ -69,7 +69,7 @@
                 </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
                 <MudTd DataLabel="From">
-                    @if (context.start_time == new TimeSpan(8,0,0))
+                    @if (context.start_time == new TimeSpan(8,0,0) && context.hours_cnt % 8 == 0)
                     {
                         @DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
                     }
