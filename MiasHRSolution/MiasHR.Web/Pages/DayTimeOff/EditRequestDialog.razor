@@ -307,8 +307,8 @@
             remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
             remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
 
-            currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
-
+            var info = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
+            currInfo = info;
             //Fill the Form with existing Data
             dayCnt = currInfo.DaysCnt.Value;
             startTime = currInfo.StartTime;
@@ -345,7 +345,16 @@
             typeValue = parts[0].Trim();
             parts = parts[1].Split('[');
             reasonValue = parts[0].Trim();
-            timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
+            if (parts[1].Contains('@'))
+            {
+                parts = parts[1].Split(',');
+                timeOption = parts[0].Trim();
+            }
+            else
+            {
+                timeOption = parts[1].Substring(0, parts[1].Length - 1).Trim();
+            }
+            
 
             //Find which PTOOption was selected
             if (timeOption == "AM" || timeOption == "PM")
