@@ -68,7 +68,19 @@
                     </div>
                 </MudTd>
                 <MudTd DataLabel="UsedDays">@context.days_cnt</MudTd>
-                <MudTd DataLabel="From">@DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
+                <MudTd DataLabel="From">
+                    @if (context.start_time == new TimeSpan(8,0,0))
+                    {
+                        @DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
+                    }
+                    else
+                    {
+                        @DateTime.ParseExact(@context.period_from, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")
+                        <hr />
+                        @context.start_time
+                    }
+
+                </MudTd>
                 <MudTd DataLabel="To">@DateTime.ParseExact(@context.period_to, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")</MudTd>
                 <MudTd DataLabel="FirstApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_1st_yn)</MudTd>
                 <MudTd DataLabel="SecondApproval" Style="text-align:center">@RenderApprovalIcon(@context.approve_2nd_yn)</MudTd>
