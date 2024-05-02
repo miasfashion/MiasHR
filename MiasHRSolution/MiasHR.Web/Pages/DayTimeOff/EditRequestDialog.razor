@@ -307,8 +307,7 @@
             remainingDays.Add(new vacDays { Type = "Vacation", Days = vacationDays });
             remainingDays.Add(new vacDays { Type = "Sick Days", Days = sickDays });
 
-            var info = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
-            currInfo = info;
+            currInfo = await DayTimeOffRequestService.GetDayTimeOffRequest(seq);
             //Fill the Form with existing Data
             dayCnt = currInfo.DaysCnt.Value;
             startTime = currInfo.StartTime;
