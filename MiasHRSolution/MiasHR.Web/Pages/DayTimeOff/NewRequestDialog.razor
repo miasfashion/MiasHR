@@ -239,14 +239,17 @@
             if (!PTOOption.Equals("HOUR"))
             {
                 newRequest.hours = 0;
+                newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
             }
             else
             {
                 newRequest.hours = hour;
+                string timeStr = startTime.Value.ToString(@"hh\:mm");
+                newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + ", @ " + timeStr +" ]";
             }
 
             newRequest.emplCode = await AuthService.GetUserEmplCode();
-            newRequest.subType = typeValue + " : " + reasonValue + " [ " + timeOption + " ]";
+            
             newRequest.fromDate = Convert.ToDateTime(startDate);
             newRequest.toDate = Convert.ToDateTime(endDate);
             newRequest.content = remark;
