@@ -450,18 +450,17 @@ namespace MiasHR.Api.Repositories
                         {
                             emailInfo = new EmailDTO
                             {
-                                Body = result.email_content,
-                                Subject = result.email_title,
+                                Body = result.email_content2,
+                                Subject = result.email_title2,
                                 To = managerEmplCode,
                                 ApprovStep = "OTHERNOTICE",
                                 role = "MANAGER",
-                                managerEmployee = result.email,
+                                managerEmployee = result.email2,
                                 managerNotice = result.email_ptonotice,
-                                managerOther = result.email_othernotice
+                                managerOther = result.email_othernotice                                
                             };
-                        }
-                        else
-                        {
+                            await _emailRepository.SendEmail(emailInfo);
+                        }                                               
                             emailInfo = new EmailDTO
                             {
                                 Body = result.email_content,
@@ -470,8 +469,7 @@ namespace MiasHR.Api.Repositories
                                 ApprovStep = "APPROVE",
                                 role = "MANAGER",
                                 managerEmployee = result.email
-                            };
-                        }
+                            };                        
                     }
                     // REJECT (Only Possible when nothing has been approved)
                     else

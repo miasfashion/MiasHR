@@ -48,8 +48,7 @@ namespace MiasHR.Api.Repositories
                         }
                         else
                         {
-                            email.To.Add(MailboxAddress.Parse(request.managerEmployee));
-                            email.Cc.Add(MailboxAddress.Parse(toEmail.com_email));
+                            email.To.Add(MailboxAddress.Parse(request.managerEmployee));                            
                             email.Cc.Add(MailboxAddress.Parse(request.managerOther));
                             email.Cc.Add(MailboxAddress.Parse(request.managerNotice));
                         }
