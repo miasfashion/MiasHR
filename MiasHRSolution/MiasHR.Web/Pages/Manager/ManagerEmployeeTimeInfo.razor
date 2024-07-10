@@ -1,0 +1,378 @@
+﻿
+@page "/manager/employeeinfo"
+
+@attribute [Authorize(Roles = "Manager")]
+
+@inject IEmployeeInfoRequestService EmployeeInfoRequestService
+@inject IAuthService AuthService
+
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
+<style>
+    .mud-table-cell-custom-group {
+        font-weight: 500;
+    }
+
+    .mud-table-cell-custom-group-footer {
+        padding-bottom: 50px;
+        text-align: right;
+    }
+</style>
+
+<PageTitle>Employee Day Time Off Information</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbs" />
+<MudContainer Class="d-block">
+    <MudPaper Class="d-flex px-8 justify-space-between align-items-center flex-grow-1" Elevation="0">
+        <MudText Class="ml-2" Typo="Typo.h4">Day Time Off Information</MudText>
+        <MudPaper Class="mt-0 mb-2" Width="400px">
+        <MudSelect Class="p-4" T="ManagerEmployeeListDTO"
+                   @bind-Value="@employee" Label="Managing Employees" 
+                   AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomCenter" @bind-Value:after=@HandleEmplInput>
+            @foreach (var empl in employees)
+            {
+                <MudSelectItem Value="@empl">@empl.last_name, @empl.first_name @empl.empl_name</MudSelectItem>
+            }
+        </MudSelect>
+        </MudPaper>
+    </MudPaper>
+    <MudGrid >
+        <MudItem  Class="d-flex justify-center" xs="12" md="6">
+            <MudPaper  Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
+                <MudText Typo="Typo.h6">Vacation</MudText>
+                @* TODO: Make chart size adaptable to small screens *@
+                <MudPaper Class="d-flex align-content-center" Elevation="0">
+                    <MudPaper  Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                        <TelerikChart Width="100%" Height="380px" @ref="TotalChart">
+                            <ChartSeriesItems >
+                                <ChartSeries  Type="ChartSeriesType.Donut"
+                                             Data="@vacData"
+                                             HoleSize="80"
+                                             ColorField="@nameof(ModelData.Color)"
+                                             Field="@nameof(ModelData.Value)"
+                                             CategoryField="@nameof(ModelData.Category)">
+                                    <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                       Visible="true"
+                                                       Background="transparent"
+                                                       Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                    </ChartSeriesLabels>
+                                </ChartSeries>
+                            </ChartSeriesItems>
+                            <ChartLegend Visible="false">
+                            </ChartLegend>
+                        </TelerikChart>
+                    </MudPaper>
+                </MudPaper>
+                <MudTable Items="@vacTable" 
+                          GroupBy="@_groupDefinition"
+                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                          GroupFooterClass="mb-4" 
+                          Dense="true"
+                          Elevation="0">
+                    <ColGroup>
+                        <col />
+                        <col />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh Style="font-size:large;">Type</MudTh>
+                        <MudTh Style="font-size:large;">Days</MudTh>
+                    </HeaderContent>
+                    <GroupHeaderTemplate>
+                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                    </GroupHeaderTemplate>
+                    <RowTemplate>
+                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudItem>
+        <MudItem Class="d-flex justify-center" xs="12" md="6">
+            <MudPaper Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
+                <MudText Typo="Typo.h6">Sick Days</MudText>
+                <MudPaper Class="d-flex align-content-center" Elevation="0">
+                    <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                        <TelerikChart Width="100%" Height="380px" @ref="PTOChart">
+                            <ChartSeriesItems>
+                                <ChartSeries Type="ChartSeriesType.Donut"
+                                             Data="@sickData"
+                                             HoleSize="80"
+                                             ColorField="@nameof(ModelData.Color)"
+                                             Field="@nameof(ModelData.Value)"
+                                             CategoryField="@nameof(ModelData.Category)">
+                                    <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                       Visible="true"
+                                                       Background="transparent"
+                                                       Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                    </ChartSeriesLabels>
+                                </ChartSeries>
+                            </ChartSeriesItems>
+                            <ChartLegend Visible="false">
+                            </ChartLegend>
+                        </TelerikChart>
+                    </MudPaper>
+                </MudPaper>
+                <MudTable Items="@sickTable" 
+                          GroupBy="@_groupDefinition"
+                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                          GroupFooterClass="mb-4" 
+                          Dense="true"
+                          Elevation="0">
+                    <ColGroup>
+                        <col />
+                        <col />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh Style="font-size:large;">Type</MudTh>
+                        <MudTh Style="font-size:large;">Days</MudTh>
+                    </HeaderContent>
+                    <GroupHeaderTemplate>
+                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                    </GroupHeaderTemplate>
+                    <RowTemplate>
+                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+<script>
+    window.windowResizeHandler = function (dotnetHelper) {
+        window.addEventListener('resize', () => {
+            dotnetHelper.invokeMethodAsync('HandleWindowResize');
+        });
+    };
+
+</script>
+@code {
+
+    //
+    private IEnumerable<ManagerEmployeeListDTO> selectedEmployees = new List<ManagerEmployeeListDTO>();
+    private ManagerEmployeeListDTO employee;
+    private IReadOnlyList<ManagerEmployeeListDTO> employees = new List<ManagerEmployeeListDTO>();
+
+
+    // binder class for Telerik Chart
+    private class ModelData
+    {
+        public string? Category { get; set; }
+        public double Value { get; set; }
+        public string? Color { get; set; }
+        public string? Group { get; set; }
+        public bool ShouldShowInLegend { get; set; } = true;
+    }
+
+    private TableGroupDefinition<ModelData> _groupDefinition = new()
+    {
+        GroupName = "Group",
+        Indentation = false,
+        Expandable = false,
+        Selector = (e) => e.Group
+    };
+
+    // default values for vacation data
+    private List<ModelData> vacData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Group = " ",
+            Category = "Used",
+            Value = 0,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Available",
+            Value = 0,
+            Color = "#1DE9B6"
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Available Later",
+            Value = 0,
+            Color = "#B0BEC5"
+        }
+    };
+
+    private List<ModelData> vacTable = new List<ModelData>
+    {
+        new ModelData
+        {
+            Group = " ",
+            Category = "Carried Over",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Accrued",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Adjusted",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = " ",
+            Category = "Used",
+            Value = 0
+        },
+        new ModelData
+        {
+            Group = "Total",
+            Category = "Available",
+            Value = 0
+        }
+    };
+
+    // default values for sick day data
+    private List<ModelData> sickData = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Used",
+            Value = 0,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Available",
+            Value = 0,
+            Color = "#1DE9B6"
+        }
+    };
+
+    private List<ModelData> sickTable = new List<ModelData>
+    {
+        new ModelData
+        {
+            Category = "Sick Days",
+            Value = 0,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Category = "Used",
+            Value = 0,
+            Color = "#616161"
+        },
+        new ModelData
+        {
+            Group = "Total",
+            Category = "Available",
+            Value = 0,
+            Color = "#1DE9B6"
+        }
+    };
+
+    // Fetch data from DB and populate chart
+    private async Task PopulateChart(List<ModelData> vacData, List<ModelData> sickData)
+    {
+        try
+        {
+            var dto = new EmployeeDayTimeOffRemainingDTO { };
+
+            if (employee.empl_code != null)
+            {
+                dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(employee.empl_code, DateTime.Now.Year);
+            }
+
+            vacData[0].Value = (double)dto.s_used_days;
+            vacData[1].Value = (double)dto.s_available_curr_days;
+            vacData[2].Value = (double)dto.s_year_basic_days - (double)dto.s_curr_basic_days;
+
+            vacTable[0].Value = (double)dto.s_carry_over_days;
+            vacTable[1].Value = (double)dto.s_curr_basic_days;
+            vacTable[2].Value = (double)dto.s_adjust_days;
+            vacTable[3].Value = (double)dto.s_used_days;
+            vacTable[4].Value = (double)dto.s_available_curr_days;
+
+            sickData[0].Value = (double)dto.s_used_sick_days;
+            sickData[1].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
+
+            sickTable[0].Value = (double)5;
+            sickTable[1].Value = (double)dto.s_used_sick_days;
+            sickTable[2].Value = (double)dto.s_sick_days - (double)dto.s_used_sick_days;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while Populating Chart: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+        }
+    }
+
+    // Breadcrumbs
+    private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: null, disabled: true),
+        new BreadcrumbItem("Employee Time Off Information", href: null, disabled: true)
+    };
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var managerEmpl = await AuthService.GetUserEmplCode();
+        employees = await EmployeeInfoRequestService.GetManagerEmployeeList(managerEmpl);
+        if (employees.Count > 0)
+        {
+            employee = employees[0];
+        }
+        await PopulateChart(vacData, sickData);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the input of the selected employee to retrieve the Day Time Off (DTO) information.
+    /// </summary>
+    private async Task HandleEmplInput()
+    {
+        try
+        {
+            //employee = await AuthService.GetUserEmplCode(); Already called during Init
+            await PopulateChart(vacData, sickData);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"An Error occured while loading Request History: {ex.Message}", Severity.Warning, (options) =>
+            {
+                options.CloseAfterNavigation = true;
+            });
+        }
+    }
+
+
+    TelerikChart TotalChart { get; set; }
+    TelerikChart PTOChart { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("window.windowResizeHandler", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task HandleWindowResize()
+    {
+        await Task.Delay(20);
+
+
+        // Call chart refresh method here
+        TotalChart.Refresh();
+        PTOChart.Refresh();
+    }
+
+}
