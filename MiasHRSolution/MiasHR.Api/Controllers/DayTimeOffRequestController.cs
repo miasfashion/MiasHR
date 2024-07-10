@@ -133,7 +133,7 @@ namespace MiasHR.Api.Controllers
         //GetDayTimeOffRemainingByEmployee
         [HttpGet]
         [Route("api/[controller]/[action]/{emplCode}/{year}")]
-        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRemainingByEmployee(string emplCode, int year)
+        public async Task<ActionResult<EmployeeDayTimeOffRemainingDTO>>? GetDayTimeOffRemainingByEmployee(string emplCode, string year)
         {
             try
             {

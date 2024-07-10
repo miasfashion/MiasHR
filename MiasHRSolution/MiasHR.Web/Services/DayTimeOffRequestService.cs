@@ -172,7 +172,7 @@ namespace MiasHR.Web.Services
 
         }
 
-        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, int year)
+        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year)
         {
 
             var response = await SendHttpRequestAsync(() => _httpClient.GetAsync($"/api/DayTimeOffRequest/GetDayTimeOffRemainingByEmployee/{emplCode}/{year}"));
