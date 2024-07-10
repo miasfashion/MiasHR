@@ -248,7 +248,7 @@ namespace MiasHR.Api.Repositories
         /// <param name="emplCode">The employee code.</param>
         /// <param name="year">The year for which the employee's day time off is requested.</param>
         /// <returns>The remaining day time off for the employee.</returns>
-        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, int year)
+        public async Task<EmployeeDayTimeOffRemainingDTO> GetDayTimeOffRemainingByEmployee(string emplCode, string year)
         {
             var param = new
             {
