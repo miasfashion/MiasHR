@@ -270,7 +270,7 @@
 
             if (emplCode != null)
             {
-                dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(emplCode, "2024");
+                dto = await DayTimeOffRequestService.GetDayTimeOffRemainingByEmployee(emplCode, DateTime.Now.Year);
             }
 
             vacData[0].Value = (double)dto.s_used_days;
