@@ -83,7 +83,7 @@ namespace MiasHR.Web.Services
         {
             return new List<ModelData>
         {
-            new ModelData { Category = "Sick Days", Value = 5, Color = "#616161" },
+            new ModelData { Category = "Sick Days", Value = 0, Color = "#616161" },
             new ModelData { Category = "Used", Value = 0, Color = "#616161" },
             new ModelData { Group = "Total", Category = "Available", Value = 0, Color = "#1DE9B6" }
         };
