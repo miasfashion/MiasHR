@@ -1,0 +1,138 @@
+﻿@attribute [Authorize]
+
+@inject IEmployeeInfoRequestService EmployeeInfoRequestService
+@inject IAuthService AuthService
+
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject IDayTimeOffRequestService DayTimeOffRequestService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
+@using MiasHR.Web.Shared
+
+<MudGrid>
+    <MudItem Class="d-flex justify-center" xs="12" md="6">
+        <MudPaper Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
+            <MudText Typo="Typo.h6">Vacation</MudText>
+            @* TODO: Make chart size adaptable to small screens *@
+            <MudPaper Class="d-flex align-content-center" Elevation="0">
+                <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                    <TelerikChart Width="100%" Height="380px" @ref="TotalChart">
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Donut"
+                                         Data="@vacData"
+                                         HoleSize="80"
+                                         ColorField="@nameof(ModelData.Color)"
+                                         Field="@nameof(ModelData.Value)"
+                                         CategoryField="@nameof(ModelData.Category)">
+                                <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                   Visible="true"
+                                                   Background="transparent"
+                                                   Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                </ChartSeriesLabels>
+                            </ChartSeries>
+                        </ChartSeriesItems>
+                        <ChartLegend Visible="false">
+                        </ChartLegend>
+                    </TelerikChart>
+                </MudPaper>
+            </MudPaper>
+            <MudTable Items="@vacTable"
+                      GroupBy="@_groupDefinition"
+                      GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                      GroupFooterClass="mb-4"
+                      Dense="true"
+                      Elevation="0">
+                <ColGroup>
+                    <col />
+                    <col />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh Style="font-size:large;">Type</MudTh>
+                    <MudTh Style="font-size:large;">Days</MudTh>
+                </HeaderContent>
+                <GroupHeaderTemplate>
+                    <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                </GroupHeaderTemplate>
+                <RowTemplate>
+                    <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                    <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+    <MudItem Class="d-flex justify-center" xs="12" md="6">
+        <MudPaper Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
+            <MudText Typo="Typo.h6">Sick Days</MudText>
+            <MudPaper Class="d-flex align-content-center" Elevation="0">
+                <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
+                    <TelerikChart Width="100%" Height="380px" @ref="PTOChart">
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Donut"
+                                         Data="@sickData"
+                                         HoleSize="80"
+                                         ColorField="@nameof(ModelData.Color)"
+                                         Field="@nameof(ModelData.Value)"
+                                         CategoryField="@nameof(ModelData.Category)">
+                                <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
+                                                   Visible="true"
+                                                   Background="transparent"
+                                                   Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
+                                </ChartSeriesLabels>
+                            </ChartSeries>
+                        </ChartSeriesItems>
+                        <ChartLegend Visible="false">
+                        </ChartLegend>
+                    </TelerikChart>
+                </MudPaper>
+            </MudPaper>
+            <MudTable Items="@sickTable"
+                      GroupBy="@_groupDefinition"
+                      GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+                      GroupFooterClass="mb-4"
+                      Dense="true"
+                      Elevation="0">
+                <ColGroup>
+                    <col />
+                    <col />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh Style="font-size:large;">Type</MudTh>
+                    <MudTh Style="font-size:large;">Days</MudTh>
+                </HeaderContent>
+                <GroupHeaderTemplate>
+                    <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+                </GroupHeaderTemplate>
+                <RowTemplate>
+                    <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
+                    <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public List<ModelData> vacData { get; set; }
+    [Parameter]
+    public List<ModelData> vacTable { get; set; }
+
+    [Parameter]
+    public List<ModelData> sickData { get; set; }
+    [Parameter]
+    public List<ModelData> sickTable { get; set; }
+
+    TelerikChart TotalChart { get; set; }
+    TelerikChart PTOChart { get; set; }
+
+    private TableGroupDefinition<ModelData> _groupDefinition = new()
+        {
+            GroupName = "Group",
+            Indentation = false,
+            Expandable = false,
+            Selector = (e) => e.Group
+        };
+
+}
