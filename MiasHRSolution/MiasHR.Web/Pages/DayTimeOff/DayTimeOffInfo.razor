@@ -3,6 +3,9 @@
 
 @attribute [Authorize]
 
+@using MiasHR.Web.Shared
+
+@inject IEmployeeInfoRequestService EmployeeInfoRequestService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
 @inject IDayTimeOffRequestService DayTimeOffRequestService
@@ -31,107 +34,8 @@
             Request Time Off
         </MudButton>
     </MudPaper>
-    <MudGrid >
-        <MudItem  Class="d-flex justify-center" xs="12" md="6">
-            <MudPaper  Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
-                <MudText Typo="Typo.h6">Vacation</MudText>
-                @* TODO: Make chart size adaptable to small screens *@
-                <MudPaper Class="d-flex align-content-center" Elevation="0">
-                    <MudPaper  Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
-                        <TelerikChart Width="100%" Height="380px" @ref="TotalChart">
-                            <ChartSeriesItems >
-                                <ChartSeries  Type="ChartSeriesType.Donut"
-                                             Data="@vacData"
-                                             HoleSize="80"
-                                             ColorField="@nameof(ModelData.Color)"
-                                             Field="@nameof(ModelData.Value)"
-                                             CategoryField="@nameof(ModelData.Category)">
-                                    <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
-                                                       Visible="true"
-                                                       Background="transparent"
-                                                       Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
-                                    </ChartSeriesLabels>
-                                </ChartSeries>
-                            </ChartSeriesItems>
-                            <ChartLegend Visible="false">
-                            </ChartLegend>
-                        </TelerikChart>
-                    </MudPaper>
-                </MudPaper>
-                <MudTable Items="@vacTable" 
-                          GroupBy="@_groupDefinition"
-                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
-                          GroupFooterClass="mb-4" 
-                          Dense="true"
-                          Elevation="0">
-                    <ColGroup>
-                        <col />
-                        <col />
-                    </ColGroup>
-                    <HeaderContent>
-                        <MudTh Style="font-size:large;">Type</MudTh>
-                        <MudTh Style="font-size:large;">Days</MudTh>
-                    </HeaderContent>
-                    <GroupHeaderTemplate>
-                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
-                    </GroupHeaderTemplate>
-                    <RowTemplate>
-                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
-                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            </MudPaper>
-        </MudItem>
-        <MudItem Class="d-flex justify-center" xs="12" md="6">
-            <MudPaper Class="mt-4 ma-2 pa-4" Width="550px" Height="100%" Elevation="1">
-                <MudText Typo="Typo.h6">Sick Days</MudText>
-                <MudPaper Class="d-flex align-content-center" Elevation="0">
-                    <MudPaper Class="d-flex flex-grow-1 justify-center align-center auto" Elevation="0">
-                        <TelerikChart Width="100%" Height="380px" @ref="PTOChart">
-                            <ChartSeriesItems>
-                                <ChartSeries Type="ChartSeriesType.Donut"
-                                             Data="@sickData"
-                                             HoleSize="80"
-                                             ColorField="@nameof(ModelData.Color)"
-                                             Field="@nameof(ModelData.Value)"
-                                             CategoryField="@nameof(ModelData.Category)">
-                                    <ChartSeriesLabels Position="ChartSeriesLabelsPosition.OutsideEnd"
-                                                       Visible="true"
-                                                       Background="transparent"
-                                                       Template="#= dataItem.Category # :\n #= dataItem.Value # day(s)">
-                                    </ChartSeriesLabels>
-                                </ChartSeries>
-                            </ChartSeriesItems>
-                            <ChartLegend Visible="false">
-                            </ChartLegend>
-                        </TelerikChart>
-                    </MudPaper>
-                </MudPaper>
-                <MudTable Items="@sickTable" 
-                          GroupBy="@_groupDefinition"
-                          GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
-                          GroupFooterClass="mb-4" 
-                          Dense="true"
-                          Elevation="0">
-                    <ColGroup>
-                        <col />
-                        <col />
-                    </ColGroup>
-                    <HeaderContent>
-                        <MudTh Style="font-size:large;">Type</MudTh>
-                        <MudTh Style="font-size:large;">Days</MudTh>
-                    </HeaderContent>
-                    <GroupHeaderTemplate>
-                        <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
-                    </GroupHeaderTemplate>
-                    <RowTemplate>
-                        <MudTd Style="font-size:medium;" DataLabel="Type">@context.Category</MudTd>
-                        <MudTd Style="font-size:medium;" DataLabel="Days">@context.Value</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+    <TimeOffInfo vacData="vacData" sickData="sickData" sickTable="sickTable" vacTable="vacTable">
+    </TimeOffInfo>
 </MudContainer>
 <script>
     window.windowResizeHandler = function (dotnetHelper) {
@@ -142,123 +46,14 @@
 
 </script>
 @code {
-    // binder class for Telerik Chart
-    private class ModelData
-    {
-        public string? Category { get; set; }
-        public double Value { get; set; }
-        public string? Color { get; set; }
-        public string? Group { get; set; }
-        public bool ShouldShowInLegend { get; set; } = true;
-    }
-
-    private TableGroupDefinition<ModelData> _groupDefinition = new()
-    {
-        GroupName = "Group",
-        Indentation = false,
-        Expandable = false,
-        Selector = (e) => e.Group
-    };
+    TelerikChart TotalChart { get; set; }
+    TelerikChart PTOChart { get; set; }
 
     // default values for vacation data
-    private List<ModelData> vacData = new List<ModelData>
-    {
-        new ModelData
-        {
-            Group = " ",
-            Category = "Used",
-            Value = 0,
-            Color = "#616161"
-        },
-        new ModelData
-        {
-            Group = " ",
-            Category = "Available",
-            Value = 0,
-            Color = "#1DE9B6"
-        },
-        new ModelData
-        {
-            Group = " ",
-            Category = "Available Later",
-            Value = 0,
-            Color = "#B0BEC5"
-        }
-    };
-
-    private List<ModelData> vacTable = new List<ModelData>
-    {
-        new ModelData
-        {
-            Group = " ",
-            Category = "Carried Over",
-            Value = 0
-        },
-        new ModelData
-        {
-            Group = " ",
-            Category = "Accrued",
-            Value = 0
-        },
-        new ModelData
-        {
-            Group = " ",
-            Category = "Adjusted",
-            Value = 0
-        },
-        new ModelData
-        {
-            Group = " ",
-            Category = "Used",
-            Value = 0
-        },
-        new ModelData
-        {
-            Group = "Total",
-            Category = "Available",
-            Value = 0
-        }
-    };
-
-    // default values for sick day data
-    private List<ModelData> sickData = new List<ModelData>
-    {
-        new ModelData
-        {
-            Category = "Used",
-            Value = 0,
-            Color = "#616161"
-        },
-        new ModelData
-        {
-            Category = "Available",
-            Value = 0,
-            Color = "#1DE9B6"
-        }
-    };
-
-    private List<ModelData> sickTable = new List<ModelData>
-    {
-        new ModelData
-        {
-            Category = "Sick Days",
-            Value = 5,
-            Color = "#616161"
-        },
-        new ModelData
-        {
-            Category = "Used",
-            Value = 0,
-            Color = "#616161"
-        },
-        new ModelData
-        {
-            Group = "Total",
-            Category = "Available",
-            Value = 0,
-            Color = "#1DE9B6"
-        }
-    };
+    private List<ModelData> vacData;
+    private List<ModelData> vacTable;
+    private List<ModelData> sickData;
+    private List<ModelData> sickTable;
 
     // Fetch data from DB and populate chart
     private async Task PopulateChart(List<ModelData> vacData, List<ModelData> sickData)
@@ -335,12 +130,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        vacData = EmployeeInfoRequestService.GetDefaultVacData();
+        vacTable = EmployeeInfoRequestService.GetDefaultVacTable();
+        sickData = EmployeeInfoRequestService.GetDefaultSickData();
+        sickTable = EmployeeInfoRequestService.GetDefaultSickTable();
+
         await PopulateChart(vacData, sickData);
         StateHasChanged();
     }
-
-    TelerikChart TotalChart { get; set; }
-    TelerikChart PTOChart { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
