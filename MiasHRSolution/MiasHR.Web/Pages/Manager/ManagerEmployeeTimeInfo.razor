@@ -65,6 +65,7 @@
     private List<ModelData> vacTable;
     private List<ModelData> sickData;
     private List<ModelData> sickTable;
+    private string jmnOption = "N";
 
 
     // Fetch data from DB and populate chart
@@ -122,8 +123,13 @@
         sickData = EmployeeInfoRequestService.GetDefaultSickData();
         sickTable = EmployeeInfoRequestService.GetDefaultSickTable();
         var managerEmpl = await AuthService.GetUserEmplCode();
+        if (managerEmpl == "100165")
+        {
+            jmnOption = "Y";
+        }
 
-        employees = await EmployeeInfoRequestService.GetManagerEmployeeList(managerEmpl);
+        // jmn option will be used to get all members from the department JMN manages (Requested 7/12/24)
+        employees = await EmployeeInfoRequestService.GetManagerEmployeeList(managerEmpl, jmnOption);
         if (employees.Count > 0)
         {
             employee = employees[0];

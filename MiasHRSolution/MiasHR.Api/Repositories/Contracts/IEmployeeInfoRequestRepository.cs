@@ -11,6 +11,6 @@ namespace MiasHR.Api.Repositories.Contracts
         Task<IReadOnlyList<TransferHistoryDTO>> GetEmployeeTransferHistory(string emplCode);
         Task<IReadOnlyList<ADHistoryDTO>> GetEmployeeAwardDiscHistory(string emplCode);
         Task<RequestResultDTO> UpdateUserPassword(string emplCode, string newPass);
-        Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string emplCode);
+        Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string emplCode,string jmnOption);
     }
 }

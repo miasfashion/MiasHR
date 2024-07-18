@@ -19,11 +19,13 @@ namespace MiasHR.Web.Services
             _authStateProvider = authStateProvider;
         }
 
-        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string managerEmplCode)
+        // jmn option will be used to get all members from the department JMN manages (Requested 7/12/24)
+
+        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string managerEmplCode, string jmnOption = "N")
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/EmployeeInfoRequest/GetManagerEmployeeList/{managerEmplCode}");
+                var response = await _httpClient.GetAsync($"/api/EmployeeInfoRequest/GetManagerEmployeeList/{managerEmplCode}/{jmnOption}");
 
                 response.EnsureSuccessStatusCode();
 
