@@ -94,6 +94,7 @@
 
     private bool isProcessing = false;
     private string imgProfile = "images/group.png";
+    private string jmnOption = "N";
 
     // Breadcrumbs
     private List<BreadcrumbItem> _breadcrumbs = new List<BreadcrumbItem>()
@@ -107,7 +108,13 @@
     {
         base.OnInitialized();
         var managerEmpl = await AuthService.GetUserEmplCode();
-        employees = await EmployeeInfoRequestService.GetManagerEmployeeList(managerEmpl);
+        if (managerEmpl == "100165")
+        {
+            jmnOption = "Y";
+        }
+
+        // jmn option will be used to get all members from the department JMN manages (Requested 7/12/24)
+        employees = await EmployeeInfoRequestService.GetManagerEmployeeList(managerEmpl, jmnOption);
 
     }
 

@@ -163,12 +163,14 @@ namespace MiasHR.Api.Controllers
         }
 
         //Get the List of Employee for Manager
-        [HttpGet("{emplCode}")]
-        public async Task<ActionResult<IReadOnlyList<ManagerEmployeeListDTO>>> GetManagerEmployeeList(string emplCode)
+        // jmn option will be used to get all members from the department JMN manages (Requested 7/12/24)
+
+        [HttpGet("{emplCode}/{jmnOption}")]
+        public async Task<ActionResult<IReadOnlyList<ManagerEmployeeListDTO>>> GetManagerEmployeeList(string emplCode, string jmnOption)
         {
             try
             {
-                var managingEmployee = await _employeeInfoRequestRepository.GetManagerEmployeeList(emplCode);
+                var managingEmployee = await _employeeInfoRequestRepository.GetManagerEmployeeList(emplCode, jmnOption);
                 if (managingEmployee is null)
                 {
                     return NotFound();
