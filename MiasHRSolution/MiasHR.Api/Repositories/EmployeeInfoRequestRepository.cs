@@ -153,14 +153,17 @@ namespace MiasHR.Api.Repositories
 
         /// <summary>
         /// Retrieves employee list for given manager emplCode
+        /// jmn option will be used to get all members from the department JMN manages (Requested 7/12/24)
         /// </summary>
         /// <param name="emplCode">The employee code.</param>
+        /// <param name="jmnOption">The flag for jmn employee list option</param>
         /// <returns>Get List of Employees for manager</returns>
-        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string emplCode)
+        public async Task<IReadOnlyList<ManagerEmployeeListDTO>> GetManagerEmployeeList(string emplCode, string jmnOption)
         {
             var parameters = new
             {
-                pEmplCode = emplCode
+                pEmplCode = emplCode,
+                pJmnOption = jmnOption
             };
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
